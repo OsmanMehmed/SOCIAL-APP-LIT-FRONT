@@ -5,17 +5,20 @@ import { navigate } from '../router';
 @customElement('app-post-card')
 export class AppPostCard extends LitElement {
   @property() postId = '';
-  @property() username = 'usuario';
-  @property() caption = 'Descripción del post';
+  @property() username = 'chef';
+  @property() caption = 'Descripción de la receta';
   @property() image = '';
 
   static styles = css`
     .card {
       border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
-      background: radial-gradient(circle at top left, var(--accent-soft), #020817f7);
+      border: 1px solid rgba(255, 179, 71, 0.26);
+      background:
+        radial-gradient(circle at top left, rgba(255, 75, 58, 0.06), transparent),
+        rgba(15, 4, 4, 0.98);
       box-shadow: var(--shadow-soft);
       padding: 0.75rem;
+      cursor: pointer;
     }
     .header {
       display: flex;
@@ -30,23 +33,20 @@ export class AppPostCard extends LitElement {
     .image {
       margin: 0.4rem 0;
       border-radius: var(--radius-md);
-      background: #111827;
+      background: #2b0909;
       height: 220px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.75rem;
-      color: var(--muted-foreground);
+      color: rgba(255, 204, 196, 0.85);
     }
     .actions {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.6rem;
       margin-top: 0.25rem;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       color: var(--muted-foreground);
-    }
-    .card-click {
-      cursor: pointer;
     }
   `;
 
@@ -56,19 +56,20 @@ export class AppPostCard extends LitElement {
 
   render() {
     return html`
-      <article class="card card-click" @click=${this.openPost}>
+      <article class="card" @click=${this.openPost}>
         <div class="header">
           <app-avatar .size=${28}></app-avatar>
           <div class="username">@${this.username}</div>
+          <span class="recipe-tag">Receta</span>
         </div>
         <div class="image">
-          ${this.image ? html`<img src=${this.image} />` : 'Imagen del post'}
+          ${this.image ? html`<img src=${this.image} />` : 'Foto del plato'}
         </div>
         <div class="caption">${this.caption}</div>
         <div class="actions">
           <span>❤ 120</span>
-          <span>💬 8</span>
-          <span>⤴ Guardar</span>
+          <span>💬 18</span>
+          <span>⭐ Guardar</span>
         </div>
       </article>
     `;

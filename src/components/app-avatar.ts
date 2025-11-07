@@ -11,8 +11,8 @@ export class AppAvatar extends LitElement {
     .avatar {
       border-radius: var(--radius-full);
       overflow: hidden;
-      border: 2px solid rgba(249, 115, 22, 0.8);
-      background: #111827;
+      border: 2px solid var(--accent);
+      background: #2b0909;
       display: inline-flex;
     }
     img {

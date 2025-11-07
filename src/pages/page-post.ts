@@ -13,13 +13,6 @@ export class PagePost extends LitElement {
       cursor: pointer;
       margin-bottom: 0.4rem;
     }
-    .card {
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
-      background: radial-gradient(circle at top left, var(--accent-soft), #020817f7);
-      box-shadow: var(--shadow-soft);
-      padding: 0.75rem;
-    }
   `;
 
   private goBack() {
@@ -31,9 +24,9 @@ export class PagePost extends LitElement {
     return html`
       <div class="back" @click=${this.goBack}>← Volver al feed</div>
       <div class="card">
-        <div class="chip-muted">Post ${id}</div>
-        <h2>Detalle del post</h2>
-        <p>Contenido completo, comentarios e interacciones.</p>
+        <div class="chip-muted">Receta ${id}</div>
+        <h2>Detalle de la receta</h2>
+        <p>Ingredientes, pasos y comentarios de la comunidad.</p>
       </div>
     `;
   }

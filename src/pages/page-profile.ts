@@ -28,7 +28,7 @@ export class PageProfile extends LitElement {
             <app-avatar .size=${64}></app-avatar>
             <div>
               <h2>@${id}</h2>
-              <div class="chip-muted">Datos de visualización del perfil</div>
+              <div class="chip-muted">Perfil de creador de recetas</div>
             </div>
           </div>
           <div style="display:flex;gap:0.4rem;margin-top:0.5rem;">
@@ -42,8 +42,8 @@ export class PageProfile extends LitElement {
         </div>
 
         <div class="card">
-          <div class="chip-muted">Posts</div>
-          <p>Rejilla/tabla de posts del usuario.</p>
+          <div class="chip-muted">Recetas publicadas</div>
+          <p>Rejilla con tus platos más valorados.</p>
         </div>
       </section>
     `;

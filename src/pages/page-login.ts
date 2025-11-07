@@ -19,14 +19,14 @@ export class PageLogin extends LitElement {
       padding: 1rem;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-subtle);
-      background: #020817f7;
+      background: rgba(15, 4, 4, 0.98);
       box-shadow: var(--shadow-soft);
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
     }
     .title {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 600;
       text-align: center;
     }
@@ -47,21 +47,23 @@ export class PageLogin extends LitElement {
     return html`
       <div class="wrap">
         <form class="panel" @submit=${this.onLogin}>
-          <div class="title">Social App</div>
+          <div class="title">Social Recipes</div>
           <input
+            id="user"
             class="input"
-            placeholder="Usuario o email"
+            placeholder="Tu usuario chef"
             @input=${this.onInput}
             required
           />
           <input
+            id="pass"
             class="input"
             type="password"
             placeholder="Contraseña"
             required
           />
-          <button class="btn" type="submit">Login</button>
-          <div class="chip-muted">Cierre de sesión disponible en el menú superior.</div>
+          <button class="btn" type="submit">Entrar a la cocina</button>
+          <div class="chip-muted">Comparte tus recetas con la comunidad.</div>
         </form>
       </div>
     `;

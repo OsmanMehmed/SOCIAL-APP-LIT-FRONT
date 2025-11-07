@@ -10,10 +10,10 @@ export class PageSearch extends LitElement {
   render() {
     return html`
       <section class="flow-column">
-        <input class="input" placeholder="Buscar perfiles, posts o mensajes" />
+        <input class="input" placeholder="Buscar recetas, chefs o ingredientes" />
         <div class="card">
-          <div class="chip-muted">Resultados sugeridos</div>
-          <p>Búsqueda social integrada con navegación a Perfil, Post o Mensaje directo.</p>
+          <div class="chip-muted">Búsquedas populares</div>
+          <p>Pizza napolitana, ramen casero, tiramisú, meal prep saludable.</p>
         </div>
       </section>
     `;

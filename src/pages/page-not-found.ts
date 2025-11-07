@@ -12,9 +12,9 @@ export class PageNotFound extends LitElement {
     return html`
       <div class="card">
         <div class="chip-muted">404</div>
-        <p>Pantalla no encontrada.</p>
+        <p>Página no encontrada.</p>
         <button class="btn btn-sm" @click=${() => navigate('/feed')}>
-          Ir al feed
+          Volver al feed de recetas
         </button>
       </div>
     `;

@@ -16,13 +16,13 @@ export class PageConversations extends LitElement {
     return html`
       <section class="flow-column">
         <div class="card" @click=${() => this.openDm('1')}>
-          <div class="chip-muted">Perfiles / Mensajes</div>
-          <strong>@ana.runner</strong>
-          <p>Vista previa de últimos mensajes.</p>
+          <div class="chip-muted">Chefs / Mensajes</div>
+          <strong>@ana.cocina</strong>
+          <p>Consejos sobre fermentación y panes.</p>
         </div>
         <div class="card" @click=${() => this.openDm('2')}>
-          <strong>@dev.team</strong>
-          <p>Coordinación del proyecto.</p>
+          <strong>@equipo.recetas</strong>
+          <p>Organiza un reto semanal de recetas.</p>
         </div>
       </section>
     `;

@@ -14,21 +14,23 @@ export class AppIconButton extends LitElement {
       background: transparent;
       border: none;
       color: var(--muted-foreground);
-      padding: 0.2rem;
+      padding: 0.25rem;
       cursor: pointer;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       transition: all 0.15s ease;
     }
     button[selected] {
       color: var(--accent);
-      background: rgba(249, 115, 22, 0.06);
+      background: rgba(255, 75, 58, 0.12);
+      box-shadow: var(--shadow-soft);
     }
     button:hover {
       transform: translateY(-1px);
+      color: var(--accent);
     }
   `;
 

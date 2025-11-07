@@ -14,9 +14,9 @@ export class AppBottomNav extends LitElement {
       <nav class="bottom-nav">
         <app-icon-button label="Inicio" @click=${() => navigate('/feed')}>🏠</app-icon-button>
         <app-icon-button label="Buscar" @click=${() => navigate('/search')}>🔍</app-icon-button>
-        <app-icon-button label="Nuevo" @click=${() => navigate('/post/new')}>➕</app-icon-button>
-        <app-icon-button label="Mensajes" @click=${() => navigate('/messages')}>✉</app-icon-button>
-        <app-icon-button label="Perfil" @click=${() => navigate('/profile/me')}>👤</app-icon-button>
+        <app-icon-button label="Nueva receta" @click=${() => navigate('/post/new')}>➕</app-icon-button>
+        <app-icon-button label="Mensajes" @click=${() => navigate('/messages')}>💌</app-icon-button>
+        <app-icon-button label="Perfil" @click=${() => navigate('/profile/me')}>👨‍🍳</app-icon-button>
       </nav>
     `;
   }

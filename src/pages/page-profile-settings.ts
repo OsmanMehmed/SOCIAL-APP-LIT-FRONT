@@ -20,12 +20,12 @@ export class PageProfileSettings extends LitElement {
   render() {
     return html`
       <form class="flow-column card" @submit=${this.save}>
-        <div class="chip-muted">Configuración del perfil</div>
-        <input class="input" placeholder="Nombre visible" />
-        <input class="input" placeholder="Bio" />
-        <input class="input" placeholder="Enlace" />
+        <div class="chip-muted">Configurar perfil culinario</div>
+        <input class="input" placeholder="Nombre del chef" />
+        <input class="input" placeholder="Especialidad (italiana, vegana, etc.)" />
+        <input class="input" placeholder="Enlace a tu blog o canal" />
         <div style="display:flex;gap:0.5rem;">
-          <button class="btn btn-sm" type="submit">Confirmar</button>
+          <button class="btn btn-sm" type="submit">Guardar</button>
           <button
             class="btn-outline btn-sm"
             type="button"

@@ -14,16 +14,16 @@ export class PageDirectMessage extends LitElement {
       margin-bottom: 0.5rem;
     }
     .msg {
-      padding: 0.35rem 0.55rem;
+      padding: 0.35rem 0.6rem;
       border-radius: var(--radius-md);
-      background: rgba(15, 23, 42, 0.98);
+      background: rgba(26, 5, 5, 0.98);
       font-size: 0.8rem;
       max-width: 70%;
     }
     .me {
       align-self: flex-end;
       background: var(--accent);
-      color: #020817;
+      color: #290202;
     }
     form {
       display: flex;
@@ -48,15 +48,15 @@ export class PageDirectMessage extends LitElement {
     const id = this.params?.id ?? '';
     return html`
       <section>
-        <div class="chip-muted">DM con usuario ${id}</div>
+        <div class="chip-muted">DM con chef ${id}</div>
         <div class="thread">
-          <div class="msg">Mensaje anterior del contacto.</div>
-          <div class="msg me">Mensaje enviado por ti.</div>
+          <div class="msg">Tip anterior sobre la receta.</div>
+          <div class="msg me">Gracias, salió increíble.</div>
         </div>
         <form @submit=${this.send}>
           <input
             class="input"
-            placeholder="Escribe un mensaje..."
+            placeholder="Comparte un truco o pregunta..."
             .value=${this.draft}
             @input=${this.onInput}
           />

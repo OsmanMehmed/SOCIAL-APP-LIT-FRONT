@@ -39,19 +39,19 @@ export class AppRoot extends LitElement {
   private getTitle(): string {
     switch (this.location.route) {
       case 'feed':
-        return 'Feed / Main';
+        return 'Feed de Recetas';
       case 'post':
-        return 'Post';
+        return 'Receta';
       case 'search':
-        return 'Búsqueda social';
+        return 'Buscar recetas';
       case 'conversations':
-        return 'Perfiles / Mensajes';
+        return 'Chefs / Mensajes';
       case 'dm':
         return 'Mensaje directo';
       case 'profile':
-        return 'Perfil';
+        return 'Perfil culinario';
       case 'profile-settings':
-        return 'Configuración del perfil';
+        return 'Configurar perfil';
       default:
         return '';
     }

@@ -21,7 +21,7 @@ export class AppMiniProfile extends LitElement {
     .cta {
       margin-left: auto;
       font-size: 0.7rem;
-      color: var(--accent);
+      color: var(--accent-alt);
       cursor: pointer;
     }
   `;
@@ -35,8 +35,8 @@ export class AppMiniProfile extends LitElement {
       <div class="root">
         <app-avatar .size=${36}></app-avatar>
         <div class="meta">
-          <span class="username">@usuario.demo</span>
-          <span class="chip-muted">Perfil en miniatura</span>
+          <span class="username">@chef.demo</span>
+          <span class="chip-muted">Perfil culinario</span>
         </div>
         <span class="cta" @click=${this.goProfile}>Ver</span>
       </div>
