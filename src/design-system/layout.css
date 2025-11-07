@@ -1,8 +1,10 @@
+/* src/design-system/layout.css */
 .app-shell {
   display: grid;
   grid-template-rows: var(--toolbar-height) 1fr var(--bottom-nav-height);
   height: 100vh;
-  background: radial-gradient(circle at top, rgba(255, 75, 58, 0.05), transparent);
+  /* Transparente para dejar ver el patrón del body */
+  background: transparent;
 }
 
 .app-main {
@@ -12,42 +14,38 @@
   margin: 0 auto;
 }
 
+/* Barra superior */
 .toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 0.9rem;
   border-bottom: 1px solid var(--border-subtle);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(10px);
   background:
-    radial-gradient(circle at top left, var(--accent-soft), transparent),
-    rgba(10, 1, 1, 0.98);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.38);
+    linear-gradient(to right, rgba(255, 255, 255, 0.92), rgba(255, 226, 226, 0.9));
+  box-shadow: 0 4px 14px rgba(183, 32, 46, 0.12);
 }
 
+/* Navegación inferior */
 .bottom-nav {
   display: flex;
   align-items: center;
   justify-content: space-around;
   border-top: 1px solid var(--border-subtle);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(10px);
   background:
-    radial-gradient(circle at bottom, rgba(255, 75, 58, 0.12), transparent),
-    rgba(5, 0, 0, 0.98);
+    linear-gradient(to top, rgba(255, 255, 255, 0.96), rgba(255, 226, 226, 0.9));
 }
 
 .page-title {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
   display: flex;
   align-items: baseline;
   gap: 0.25rem;
-}
-
-.page-title::before {
-  content: "🍽️";
-  font-size: 1rem;
+  color: var(--red-dark);
 }
 
 .flow-column {
