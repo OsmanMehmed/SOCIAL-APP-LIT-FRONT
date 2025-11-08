@@ -1,4 +1,3 @@
-
 export const USERNAME_PREFIX = "@";
 
 export const NAV_LABEL_HOME = "Inicio";
@@ -35,11 +34,9 @@ export const FEED_SIDEBAR_TITLE = "Explora sabores";
 export const FEED_SIDEBAR_TEXT =
   "Busca recetas, sigue a otros chefs y guarda tus platos favoritos.";
 
-
 export const MINI_PROFILE_USERNAME = "@chef.demo";
 export const MINI_PROFILE_SUBTITLE = "Perfil culinario";
 export const MINI_PROFILE_ACTION_VIEW = "Ver";
-
 
 export const POST_BACK_TO_FEED = "← Volver al feed";
 export const POST_CHIP_LABEL_PREFIX = "Receta";

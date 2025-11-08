@@ -1,14 +1,15 @@
-import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { navigate } from '../router';
+import { LitElement, html, css, unsafeCSS } from "lit";
+import componentsCSS from "../design-system/components.css?inline";
+import { customElement, property } from "lit/decorators.js";
+import { navigate } from "../router";
 import {
   PROFILE_EDIT_BUTTON,
   PROFILE_PUBLISHED_RECIPES,
   PROFILE_PUBLISHED_GRID_TEXT,
-} from '../shared/constants';
-import '../components/app-avatar';
+} from "../shared/constants";
+import "../components/app-avatar";
 
-@customElement('page-profile')
+@customElement("page-profile")
 export class PageProfile extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
 
@@ -17,15 +18,17 @@ export class PageProfile extends LitElement {
   }
 
   private editProfile() {
-    navigate('/profile-settings');
+    navigate("/profile-settings");
   }
 
+  static styles = [unsafeCSS(componentsCSS)];
+
   private openDm() {
-    navigate('/dm/me');
+    navigate("/dm/me");
   }
 
   render() {
-    const id = this.params?.id ?? 'me';
+    const id = this.params?.id ?? "me";
     return html`
       <section class="flow-column">
         <div class="card">
@@ -40,7 +43,10 @@ export class PageProfile extends LitElement {
             <button class="btn-outline btn-pill btn-sm" @click=${this.openDm}>
               Mensaje
             </button>
-            <button class="btn-outline btn-pill btn-sm" @click=${this.editProfile}>
+            <button
+              class="btn-outline btn-pill btn-sm"
+              @click=${this.editProfile}
+            >
               ${PROFILE_EDIT_BUTTON}
             </button>
           </div>

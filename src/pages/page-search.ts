@@ -1,16 +1,19 @@
-import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { LitElement, html, css, unsafeCSS } from "lit";
+import componentsCSS from "../design-system/components.css?inline";
+import { customElement } from "lit/decorators.js";
 import {
   SEARCH_INPUT_PLACEHOLDER,
   SEARCH_POPULAR_TITLE,
   SEARCH_POPULAR_TEXT,
-} from '../shared/constants';
+} from "../shared/constants";
 
-@customElement('page-search')
+@customElement("page-search")
 export class PageSearch extends LitElement {
   createRenderRoot() {
     return this;
   }
+
+  static styles = [unsafeCSS(componentsCSS)];
 
   render() {
     return html`

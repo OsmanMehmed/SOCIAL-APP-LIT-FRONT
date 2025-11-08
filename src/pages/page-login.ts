@@ -1,4 +1,4 @@
-import { LitElement, html, css, unsafeCSS } from 'lit';
+import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { authStore } from "../state/auth-store";
@@ -30,33 +30,33 @@ export class PageLogin extends LitElement {
     }
   }
 
-static styles = [
-  unsafeCSS(componentsCSS),
-  css`
-    .wrap {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .panel {
-      width: 320px;
-      padding: 1rem;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border-subtle);
-      background: var(--color-primary);
-      box-shadow: var(--shadow-soft);
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-    .title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      text-align: center;
-    }
-  `,
-];
+  static styles = [
+    unsafeCSS(componentsCSS),
+    css`
+      .wrap {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .panel {
+        width: 320px;
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-subtle);
+        background: var(--color-primary);
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        text-align: center;
+      }
+    `,
+  ];
 
   private onLogin(e: Event) {
     e.preventDefault();
@@ -88,7 +88,9 @@ static styles = [
             required
           />
           <button class="btn" type="submit">${LOGIN_BUTTON_TEXT}</button>
-          <div class="chip-muted align-center"><span>${LOGIN_HELP_TEXT}</span></div>
+          <div class="chip-muted align-center">
+            <span>${LOGIN_HELP_TEXT}</span>
+          </div>
         </form>
       </div>
     `;

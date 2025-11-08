@@ -1,32 +1,36 @@
-import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { navigate } from '../router';
+import { LitElement, html, css, unsafeCSS } from "lit";
+import componentsCSS from "../design-system/components.css?inline";
+import { customElement, property } from "lit/decorators.js";
+import { navigate } from "../router";
 import {
   POST_BACK_TO_FEED,
   POST_CHIP_LABEL_PREFIX,
   POST_TITLE,
   POST_BODY,
-} from '../shared/constants';
+} from "../shared/constants";
 
-@customElement('page-post')
+@customElement("page-post")
 export class PagePost extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
 
-  static styles = css`
-    .back {
-      font-size: 0.8rem;
-      color: var(--muted-foreground);
-      cursor: pointer;
-      margin-bottom: 0.4rem;
-    }
-  `;
+  static styles = [
+    unsafeCSS(componentsCSS),
+    css`
+      .back {
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+        cursor: pointer;
+        margin-bottom: 0.4rem;
+      }
+    `,
+  ];
 
   private goBack() {
-    navigate('/feed');
+    navigate("/feed");
   }
 
   render() {
-    const id = this.params?.id ?? '';
+    const id = this.params?.id ?? "";
     return html`
       <div class="back" @click=${this.goBack}>${POST_BACK_TO_FEED}</div>
       <div class="card">
