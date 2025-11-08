@@ -1,9 +1,3 @@
-/* src/design-system/tokens.css */
-/* Paleta pastel basada en tres tonos de rojo del diagrama:
-   - --red-base: rojo principal
-   - --red-light: rojo claro pastel
-   - --red-dark: rojo más intenso para contraste
-*/
 :root {
   --red-base: #ff4b4b;
   --red-light: #ffe2e2;
@@ -32,6 +26,13 @@
 
   --toolbar-height: 60px;
   --bottom-nav-height: 56px;
+
+  --color-text-color: #1f1414;
+  --color-primary: #ffeaca;
+  --color-secondary: #f5cba7;
+  --color-tertiary: #f8e2cf;
+  --color-quaternary: #d7bde2;
+  --color-quinary: #aed6f1;
 }
 
 *,
@@ -43,9 +44,8 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  color: var(--foreground);
+  color: var(--color-text-color);
 
-  /* Fondo: base clara + patrón SVG con doodles de comida en pastel muy suave */
   background-color: var(--background);
   background-image:
     url("./food-pattern.png");
