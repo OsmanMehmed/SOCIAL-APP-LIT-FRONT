@@ -1,12 +1,20 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { navigate } from '../router';
+import {
+  POST_CARD_DEFAULT_USERNAME,
+  POST_CARD_DEFAULT_CAPTION,
+  POST_CARD_FALLBACK_IMAGE_TEXT,
+  POST_CARD_LIKES_TEXT,
+  POST_CARD_COMMENTS_TEXT,
+  POST_CARD_SAVE_TEXT,
+} from '../shared/constants';
 
 @customElement('app-post-card')
 export class AppPostCard extends LitElement {
   @property() postId = '';
-  @property() username = 'chef';
-  @property() caption = 'Descripción de la receta';
+  @property() username = POST_CARD_DEFAULT_USERNAME;
+  @property() caption = POST_CARD_DEFAULT_CAPTION;
   @property() image = '';
 
   static styles = css`
@@ -63,13 +71,13 @@ export class AppPostCard extends LitElement {
           <span class="recipe-tag">Receta</span>
         </div>
         <div class="image">
-          ${this.image ? html`<img src=${this.image} />` : 'Foto del plato'}
+          ${this.image ? html`<img src=${this.image} />` : POST_CARD_FALLBACK_IMAGE_TEXT}
         </div>
         <div class="caption">${this.caption}</div>
         <div class="actions">
-          <span>❤ 120</span>
-          <span>💬 18</span>
-          <span>⭐ Guardar</span>
+          <span>${POST_CARD_LIKES_TEXT}</span>
+          <span>${POST_CARD_COMMENTS_TEXT}</span>
+          <span>${POST_CARD_SAVE_TEXT}</span>
         </div>
       </article>
     `;

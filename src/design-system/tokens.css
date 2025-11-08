@@ -48,7 +48,7 @@ body {
   /* Fondo: base clara + patrón SVG con doodles de comida en pastel muy suave */
   background-color: var(--background);
   background-image:
-    url("./food-pattern.svg");
+    url("./food-pattern.png");
   background-repeat: repeat;
-  background-size: 260px 260px;
+  background-size: 500px 500px;
 }

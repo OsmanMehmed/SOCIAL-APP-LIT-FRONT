@@ -1,6 +1,14 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { authStore } from '../state/auth-store';
+import {
+  LOGIN_CHIP_COMMUNITY,
+  LOGIN_TITLE,
+  LOGIN_INPUT_USERNAME_PLACEHOLDER,
+  LOGIN_INPUT_PASSWORD_PLACEHOLDER,
+  LOGIN_BUTTON_TEXT,
+  LOGIN_HELP_TEXT,
+} from '../shared/constants';
 import { navigate } from '../router';
 
 @customElement('page-login')
@@ -47,11 +55,11 @@ export class PageLogin extends LitElement {
     return html`
       <div class="wrap">
         <form class="panel" @submit=${this.onLogin}>
-          <div class="title">Social Recipes</div>
+          <div class="title">${LOGIN_TITLE}</div>
           <input
             id="user"
             class="input"
-            placeholder="Tu usuario chef"
+            placeholder="${LOGIN_INPUT_USERNAME_PLACEHOLDER}"
             @input=${this.onInput}
             required
           />
@@ -59,11 +67,11 @@ export class PageLogin extends LitElement {
             id="pass"
             class="input"
             type="password"
-            placeholder="Contraseña"
+            placeholder="${LOGIN_INPUT_PASSWORD_PLACEHOLDER}"
             required
           />
-          <button class="btn" type="submit">Entrar a la cocina</button>
-          <div class="chip-muted">Comparte tus recetas con la comunidad.</div>
+          <button class="btn" type="submit">${LOGIN_BUTTON_TEXT}</button>
+          <div class="chip-muted">${LOGIN_HELP_TEXT}</div>
         </form>
       </div>
     `;

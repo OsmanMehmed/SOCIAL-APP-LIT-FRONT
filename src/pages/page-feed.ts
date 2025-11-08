@@ -2,6 +2,14 @@ import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import '../components/app-mini-profile';
 import '../components/app-post-card';
+import {
+  FEED_POST1_USERNAME,
+  FEED_POST1_CAPTION,
+  FEED_POST2_USERNAME,
+  FEED_POST2_CAPTION,
+  FEED_SIDEBAR_TITLE,
+  FEED_SIDEBAR_TEXT,
+} from '../shared/constants';
 
 @customElement('page-feed')
 export class PageFeed extends LitElement {
@@ -39,16 +47,16 @@ export class PageFeed extends LitElement {
           ></app-post-card>
           <app-post-card
             postId="2"
-            username="osman.chef"
-            caption="Bowl de desayuno con avena, frutos rojos y miel."
+            username=${FEED_POST2_USERNAME}
+            caption=${FEED_POST2_CAPTION}
           ></app-post-card>
         </section>
         <aside class="sidebar">
           <app-mini-profile></app-mini-profile>
           <div class="card">
-            <div class="chip-muted">Explora sabores</div>
+            <div class="chip-muted">${FEED_SIDEBAR_TITLE}</div>
             <div style="margin-top:0.3rem;">
-              Busca recetas, sigue a otros chefs y guarda tus platos favoritos.
+              ${FEED_SIDEBAR_TEXT}
             </div>
           </div>
         </aside>

@@ -1,5 +1,9 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import {
+  DM_INPUT_PLACEHOLDER,
+  DM_SEND_BUTTON,
+} from '../shared/constants';
 
 @customElement('page-direct-message')
 export class PageDirectMessage extends LitElement {
@@ -56,11 +60,11 @@ export class PageDirectMessage extends LitElement {
         <form @submit=${this.send}>
           <input
             class="input"
-            placeholder="Comparte un truco o pregunta..."
+            placeholder=${DM_INPUT_PLACEHOLDER}
             .value=${this.draft}
             @input=${this.onInput}
           />
-          <button class="btn btn-sm" type="submit">Enviar</button>
+          <button class="btn btn-sm" type="submit">${DM_SEND_BUTTON}</button>
         </form>
       </section>
     `;

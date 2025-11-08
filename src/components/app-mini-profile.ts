@@ -1,6 +1,11 @@
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { navigate } from '../router';
+import {
+  MINI_PROFILE_USERNAME,
+  MINI_PROFILE_SUBTITLE,
+  MINI_PROFILE_ACTION_VIEW,
+} from '../shared/constants';
 
 @customElement('app-mini-profile')
 export class AppMiniProfile extends LitElement {
@@ -35,10 +40,10 @@ export class AppMiniProfile extends LitElement {
       <div class="root">
         <app-avatar .size=${36}></app-avatar>
         <div class="meta">
-          <span class="username">@chef.demo</span>
-          <span class="chip-muted">Perfil culinario</span>
+          <span class="username">${MINI_PROFILE_USERNAME}</span>
+          <span class="chip-muted">${MINI_PROFILE_SUBTITLE}</span>
         </div>
-        <span class="cta" @click=${this.goProfile}>Ver</span>
+        <span class="cta" @click=${this.goProfile}>${MINI_PROFILE_ACTION_VIEW}</span>
       </div>
     `;
   }

@@ -12,6 +12,15 @@ import '../pages/page-direct-message';
 import '../pages/page-profile';
 import '../pages/page-profile-settings';
 import '../pages/page-not-found';
+import {
+  TITLE_FEED,
+  TITLE_POST,
+  TITLE_SEARCH,
+  TITLE_CONVERSATIONS,
+  TITLE_DM,
+  TITLE_PROFILE,
+  TITLE_PROFILE_SETTINGS,
+} from '../shared/constants';
 import { authStore } from '../state/auth-store';
 
 @customElement('app-root')
@@ -39,19 +48,19 @@ export class AppRoot extends LitElement {
   private getTitle(): string {
     switch (this.location.route) {
       case 'feed':
-        return 'Feed de Recetas';
+        return TITLE_FEED;
       case 'post':
-        return 'Receta';
+        return TITLE_POST;
       case 'search':
-        return 'Buscar recetas';
+        return TITLE_SEARCH;
       case 'conversations':
-        return 'Chefs / Mensajes';
+        return TITLE_CONVERSATIONS;
       case 'dm':
-        return 'Mensaje directo';
+        return TITLE_DM;
       case 'profile':
-        return 'Perfil culinario';
+        return TITLE_PROFILE;
       case 'profile-settings':
-        return 'Configurar perfil';
+        return TITLE_PROFILE_SETTINGS;
       default:
         return '';
     }

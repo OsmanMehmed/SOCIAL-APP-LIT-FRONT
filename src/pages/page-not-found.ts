@@ -1,6 +1,11 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { navigate } from '../router';
+import {
+  NOT_FOUND_404,
+  NOT_FOUND_TEXT,
+  NOT_FOUND_BACK_BUTTON,
+} from '../shared/constants';
 
 @customElement('page-not-found')
 export class PageNotFound extends LitElement {
@@ -11,10 +16,10 @@ export class PageNotFound extends LitElement {
   render() {
     return html`
       <div class="card">
-        <div class="chip-muted">404</div>
-        <p>Página no encontrada.</p>
+        <div class="chip-muted">${NOT_FOUND_404}</div>
+        <p>${NOT_FOUND_TEXT}</p>
         <button class="btn btn-sm" @click=${() => navigate('/feed')}>
-          Volver al feed de recetas
+          ${NOT_FOUND_BACK_BUTTON}
         </button>
       </div>
     `;

@@ -1,6 +1,11 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { navigate } from '../router';
+import {
+  PROFILE_EDIT_BUTTON,
+  PROFILE_PUBLISHED_RECIPES,
+  PROFILE_PUBLISHED_GRID_TEXT,
+} from '../shared/constants';
 import '../components/app-avatar';
 
 @customElement('page-profile')
@@ -36,14 +41,14 @@ export class PageProfile extends LitElement {
               Mensaje
             </button>
             <button class="btn-outline btn-pill btn-sm" @click=${this.editProfile}>
-              Editar perfil
+              ${PROFILE_EDIT_BUTTON}
             </button>
           </div>
         </div>
 
         <div class="card">
-          <div class="chip-muted">Recetas publicadas</div>
-          <p>Rejilla con tus platos más valorados.</p>
+          <div class="chip-muted">${PROFILE_PUBLISHED_RECIPES}</div>
+          <p>${PROFILE_PUBLISHED_GRID_TEXT}</p>
         </div>
       </section>
     `;

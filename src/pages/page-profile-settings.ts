@@ -1,6 +1,10 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { navigate } from '../router';
+import {
+  PROFILE_SETTINGS_SAVE,
+  PROFILE_SETTINGS_CANCEL,
+} from '../shared/constants';
 
 @customElement('page-profile-settings')
 export class PageProfileSettings extends LitElement {
@@ -25,13 +29,13 @@ export class PageProfileSettings extends LitElement {
         <input class="input" placeholder="Especialidad (italiana, vegana, etc.)" />
         <input class="input" placeholder="Enlace a tu blog o canal" />
         <div style="display:flex;gap:0.5rem;">
-          <button class="btn btn-sm" type="submit">Guardar</button>
+          <button class="btn btn-sm" type="submit">${PROFILE_SETTINGS_SAVE}</button>
           <button
             class="btn-outline btn-sm"
             type="button"
             @click=${this.cancel}
           >
-            Cancelar
+            ${PROFILE_SETTINGS_CANCEL}
           </button>
         </div>
       </form>
