@@ -53,6 +53,9 @@ export const CONSTANTS = {
   PROFILE_SETTINGS_FAVORITE_CUISINE: "Cocina favorita",
   PROFILE_SETTINGS_SAVE_TOAST: "Perfil actualizado. Volviendo a tu perfil.",
   PROFILE_SETTINGS_NAME: "Nombre del chef",
+  PROFILE_SETTINGS_URL: "Enlace a tu blog o canal",
+  PROFILE_SETTINGS_TITLE: "Configurar perfil culinario",
+  PROFILE_SETTINGS_SPECIALITY: "Especialidad (italiana, vegana, etc.)",
 
   SEARCH_INPUT_PLACEHOLDER: "Buscar recetas, chefs o ingredientes",
   SEARCH_POPULAR_TITLE: "Búsquedas populares",

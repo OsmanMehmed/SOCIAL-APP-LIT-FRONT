@@ -33,13 +33,13 @@ export class PageProfileSettings extends LitElement {
   render() {
     return html`
       <form class="flow-column card" @submit=${this.save}>
-        <div class="chip-muted">Configurar perfil culinario</div>
-        <input class="input" placeholder=${CONSTANTS.PROFILE_SETTINGS_NAME} />
+        <div class="chip-muted">${CONSTANTS.PROFILE_SETTINGS_TITLE}</div>
+        <input class="input" placeholder=${CONSTANTS.PROFILE_SETTINGS_NAME}/>
         <input
           class="input"
-          placeholder="Especialidad (italiana, vegana, etc.)"
+          placeholder=${CONSTANTS.PROFILE_SETTINGS_SPECIALITY}
         />
-        <input class="input" placeholder="Enlace a tu blog o canal" />
+        <input class="input" placeholder=${CONSTANTS.PROFILE_SETTINGS_URL}/>
         <div class="buttons">
           <button class="btn btn-sm" type="submit">
             ${CONSTANTS.PROFILE_SETTINGS_SAVE}
