@@ -1,5 +1,5 @@
-import { CURRENT_USER_ID } from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 export const authStore = {
   isAuthenticated: false,
-  currentUserId: CURRENT_USER_ID,
+  currentUserId: CONSTANTS.CURRENT_USER_ID,
 };
