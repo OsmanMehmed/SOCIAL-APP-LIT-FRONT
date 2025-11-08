@@ -3,19 +3,14 @@ import layoutCSS from "../design-system/layout.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import {
-  POST_CARD_DEFAULT_USERNAME,
-  POST_CARD_DEFAULT_CAPTION,
-  POST_CARD_FALLBACK_IMAGE_TEXT,
-  POST_CARD_LIKES_TEXT,
-  POST_CARD_COMMENTS_TEXT,
-  POST_CARD_SAVE_TEXT,
+  CONSTANTS
 } from "../shared/constants";
 
 @customElement("app-post-card")
 export class AppPostCard extends LitElement {
   @property() postId = "";
-  @property() username = POST_CARD_DEFAULT_USERNAME;
-  @property() caption = POST_CARD_DEFAULT_CAPTION;
+  @property() username = CONSTANTS.POST_CARD_DEFAULT_USERNAME;
+  @property() caption = CONSTANTS.POST_CARD_DEFAULT_CAPTION;
   @property() image = "";
 
   static styles = [
@@ -80,13 +75,13 @@ export class AppPostCard extends LitElement {
         <div class="image">
           ${this.image
             ? html`<img src=${this.image} />`
-            : POST_CARD_FALLBACK_IMAGE_TEXT}
+            : CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT}
         </div>
         <div class="caption">${this.caption}</div>
         <div class="actions">
-          <span>${POST_CARD_LIKES_TEXT}</span>
-          <span>${POST_CARD_COMMENTS_TEXT}</span>
-          <span>${POST_CARD_SAVE_TEXT}</span>
+          <span>${CONSTANTS.POST_CARD_LIKES_TEXT}</span>
+          <span>${CONSTANTS.POST_CARD_COMMENTS_TEXT}</span>
+          <span>${CONSTANTS.POST_CARD_SAVE_TEXT}</span>
         </div>
       </article>
     `;

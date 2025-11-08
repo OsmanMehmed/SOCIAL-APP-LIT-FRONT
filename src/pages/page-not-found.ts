@@ -3,9 +3,7 @@ import componentsCSS from "../design-system/components.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
 import {
-  NOT_FOUND_404,
-  NOT_FOUND_TEXT,
-  NOT_FOUND_BACK_BUTTON,
+  CONSTANTS
 } from "../shared/constants";
 
 @customElement("page-not-found")
@@ -19,10 +17,10 @@ export class PageNotFound extends LitElement {
   render() {
     return html`
       <div class="card">
-        <div class="chip-muted">${NOT_FOUND_404}</div>
-        <p>${NOT_FOUND_TEXT}</p>
+        <div class="chip-muted">${CONSTANTS.NOT_FOUND_404}</div>
+        <p>${CONSTANTS.NOT_FOUND_TEXT}</p>
         <button class="btn btn-sm" @click=${() => navigate("/feed")}>
-          ${NOT_FOUND_BACK_BUTTON}
+          ${CONSTANTS.NOT_FOUND_BACK_BUTTON}
         </button>
       </div>
     `;

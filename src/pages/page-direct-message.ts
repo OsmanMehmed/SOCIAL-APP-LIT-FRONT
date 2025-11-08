@@ -1,7 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
-import { DM_INPUT_PLACEHOLDER, DM_SEND_BUTTON } from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 
 @customElement("page-direct-message")
 export class PageDirectMessage extends LitElement {
@@ -61,11 +61,11 @@ export class PageDirectMessage extends LitElement {
         <form @submit=${this.send}>
           <input
             class="input"
-            placeholder=${DM_INPUT_PLACEHOLDER}
+            placeholder=${CONSTANTS.DM_INPUT_PLACEHOLDER}
             .value=${this.draft}
             @input=${this.onInput}
           />
-          <button class="btn btn-sm" type="submit">${DM_SEND_BUTTON}</button>
+          <button class="btn btn-sm" type="submit">${CONSTANTS.DM_SEND_BUTTON}</button>
         </form>
       </section>
     `;

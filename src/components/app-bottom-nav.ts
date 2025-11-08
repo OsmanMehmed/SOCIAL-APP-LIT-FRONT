@@ -2,13 +2,7 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
-import {
-  NAV_LABEL_HOME,
-  NAV_LABEL_SEARCH,
-  NAV_LABEL_NEW_RECIPE,
-  NAV_LABEL_MESSAGES,
-  NAV_LABEL_PROFILE,
-} from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 import "./app-icon-button";
 
 @customElement("app-bottom-nav")
@@ -23,27 +17,27 @@ export class AppBottomNav extends LitElement {
     return html`
       <nav class="bottom-nav">
         <app-icon-button
-          label=${NAV_LABEL_HOME}
+          label=${CONSTANTS.NAV_LABEL_HOME}
           @click=${() => navigate("/feed")}
           >🏠</app-icon-button
         >
         <app-icon-button
-          label=${NAV_LABEL_SEARCH}
+          label=${CONSTANTS.NAV_LABEL_SEARCH}
           @click=${() => navigate("/search")}
           >🔍</app-icon-button
         >
         <app-icon-button
-          label=${NAV_LABEL_NEW_RECIPE}
+          label=${CONSTANTS.NAV_LABEL_NEW_RECIPE}
           @click=${() => navigate("/post/new")}
           >➕</app-icon-button
         >
         <app-icon-button
-          label=${NAV_LABEL_MESSAGES}
+          label=${CONSTANTS.NAV_LABEL_MESSAGES}
           @click=${() => navigate("/messages")}
           >💌</app-icon-button
         >
         <app-icon-button
-          label=${NAV_LABEL_PROFILE}
+          label=${CONSTANTS.NAV_LABEL_PROFILE}
           @click=${() => navigate("/profile/me")}
           >👨‍🍳</app-icon-button
         >

@@ -14,13 +14,7 @@ import "../pages/page-profile";
 import "../pages/page-profile-settings";
 import "../pages/page-not-found";
 import {
-  TITLE_FEED,
-  TITLE_POST,
-  TITLE_SEARCH,
-  TITLE_CONVERSATIONS,
-  TITLE_DM,
-  TITLE_PROFILE,
-  TITLE_PROFILE_SETTINGS,
+  CONSTANTS
 } from "../shared/constants";
 import { authStore } from "../state/auth-store";
 
@@ -49,19 +43,19 @@ export class AppRoot extends LitElement {
   private getTitle(): string {
     switch (this.location.route) {
       case "feed":
-        return TITLE_FEED;
+        return CONSTANTS.TITLE_FEED;
       case "post":
-        return TITLE_POST;
+        return CONSTANTS.TITLE_POST;
       case "search":
-        return TITLE_SEARCH;
+        return CONSTANTS.TITLE_SEARCH;
       case "conversations":
-        return TITLE_CONVERSATIONS;
+        return CONSTANTS.TITLE_CONVERSATIONS;
       case "dm":
-        return TITLE_DM;
+        return CONSTANTS.TITLE_DM;
       case "profile":
-        return TITLE_PROFILE;
+        return CONSTANTS.TITLE_PROFILE;
       case "profile-settings":
-        return TITLE_PROFILE_SETTINGS;
+        return CONSTANTS.TITLE_PROFILE_SETTINGS;
       default:
         return "";
     }

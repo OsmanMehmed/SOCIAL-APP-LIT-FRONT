@@ -3,13 +3,7 @@ import componentsCSS from "../design-system/components.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { authStore } from "../state/auth-store";
 import {
-  LOGIN_CHIP_COMMUNITY,
-  LOGIN_TITLE,
-  LOGIN_INPUT_USERNAME_PLACEHOLDER,
-  LOGIN_INPUT_PASSWORD_PLACEHOLDER,
-  LOGIN_BUTTON_TEXT,
-  LOGIN_HELP_TEXT,
-  USERNAME_PREFIX,
+  CONSTANTS
 } from "../shared/constants";
 import { navigate } from "../router";
 
@@ -23,7 +17,7 @@ export class PageLogin extends LitElement {
     const withoutPrefix = input.value.replace(/^@+/, "");
     this.username = withoutPrefix;
 
-    const displayValue = this.username ? USERNAME_PREFIX + this.username : "";
+    const displayValue = this.username ? CONSTANTS.USERNAME_PREFIX + this.username : "";
 
     if (input.value !== displayValue) {
       input.value = displayValue;
@@ -65,17 +59,17 @@ export class PageLogin extends LitElement {
   }
 
   render() {
-    const displayValue = this.username ? USERNAME_PREFIX + this.username : "";
+    const displayValue = this.username ? CONSTANTS.USERNAME_PREFIX + this.username : "";
 
     return html`
       <div class="wrap">
         <form class="panel" @submit=${this.onLogin}>
-          <div class="title">${LOGIN_TITLE}</div>
+          <div class="title">${CONSTANTS.LOGIN_TITLE}</div>
           <input
             id="user"
             class="input"
             type="text"
-            placeholder="${LOGIN_INPUT_USERNAME_PLACEHOLDER}"
+            placeholder="${CONSTANTS.LOGIN_INPUT_USERNAME_PLACEHOLDER}"
             .value=${displayValue}
             @input=${this.onInput}
             required
@@ -84,12 +78,12 @@ export class PageLogin extends LitElement {
             id="pass"
             class="input"
             type="password"
-            placeholder="${LOGIN_INPUT_PASSWORD_PLACEHOLDER}"
+            placeholder="${CONSTANTS.LOGIN_INPUT_PASSWORD_PLACEHOLDER}"
             required
           />
-          <button class="btn" type="submit">${LOGIN_BUTTON_TEXT}</button>
+          <button class="btn" type="submit">${CONSTANTS.LOGIN_BUTTON_TEXT}</button>
           <div class="chip-muted align-center">
-            <span>${LOGIN_HELP_TEXT}</span>
+            <span>${CONSTANTS.LOGIN_HELP_TEXT}</span>
           </div>
         </form>
       </div>

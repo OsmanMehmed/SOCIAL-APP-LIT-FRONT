@@ -24,6 +24,8 @@
   border-color: var(--accent);
   color: var(--accent);
   box-shadow: none;
+  border-radius: 15px;
+  cursor: pointer;
 }
 
 .btn-outline:hover {

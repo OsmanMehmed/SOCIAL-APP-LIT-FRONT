@@ -3,9 +3,7 @@ import layoutCSS from "../design-system/layout.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
 import {
-  MINI_PROFILE_USERNAME,
-  MINI_PROFILE_SUBTITLE,
-  MINI_PROFILE_ACTION_VIEW,
+  CONSTANTS
 } from "../shared/constants";
 
 @customElement("app-mini-profile")
@@ -44,11 +42,11 @@ export class AppMiniProfile extends LitElement {
       <div class="root">
         <app-avatar .size=${36}></app-avatar>
         <div class="meta">
-          <span class="username">${MINI_PROFILE_USERNAME}</span>
-          <span class="chip-muted">${MINI_PROFILE_SUBTITLE}</span>
+          <span class="username">${CONSTANTS.MINI_PROFILE_USERNAME}</span>
+          <span class="chip-muted">${CONSTANTS.MINI_PROFILE_SUBTITLE}</span>
         </div>
         <span class="cta" @click=${this.goProfile}
-          >${MINI_PROFILE_ACTION_VIEW}</span
+          >${CONSTANTS.MINI_PROFILE_ACTION_VIEW}</span
         >
       </div>
     `;

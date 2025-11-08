@@ -4,12 +4,7 @@ import { customElement } from "lit/decorators.js";
 import "../components/app-mini-profile";
 import "../components/app-post-card";
 import {
-  FEED_POST1_USERNAME,
-  FEED_POST1_CAPTION,
-  FEED_POST2_USERNAME,
-  FEED_POST2_CAPTION,
-  FEED_SIDEBAR_TITLE,
-  FEED_SIDEBAR_TEXT,
+  CONSTANTS
 } from "../shared/constants";
 
 @customElement("page-feed")
@@ -46,20 +41,20 @@ export class PageFeed extends LitElement {
         <section class="flow-column">
           <app-post-card
             postId="1"
-            username=${FEED_POST1_USERNAME}
-            caption=${FEED_POST1_CAPTION}
+            username=${CONSTANTS.FEED_POST1_USERNAME}
+            caption=${CONSTANTS.FEED_POST1_CAPTION}
           ></app-post-card>
           <app-post-card
             postId="2"
-            username=${FEED_POST2_USERNAME}
-            caption=${FEED_POST2_CAPTION}
+            username=${CONSTANTS.FEED_POST2_USERNAME}
+            caption=${CONSTANTS.FEED_POST2_CAPTION}
           ></app-post-card>
         </section>
         <aside class="sidebar">
           <app-mini-profile></app-mini-profile>
           <div class="card">
-            <div class="chip-muted">${FEED_SIDEBAR_TITLE}</div>
-            <div style="margin-top:0.3rem;">${FEED_SIDEBAR_TEXT}</div>
+            <div class="chip-muted">${CONSTANTS.FEED_SIDEBAR_TITLE}</div>
+            <div style="margin-top:0.3rem;">${CONSTANTS.FEED_SIDEBAR_TEXT}</div>
           </div>
         </aside>
       </div>

@@ -3,10 +3,7 @@ import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import {
-  POST_BACK_TO_FEED,
-  POST_CHIP_LABEL_PREFIX,
-  POST_TITLE,
-  POST_BODY,
+  CONSTANTS
 } from "../shared/constants";
 
 @customElement("page-post")
@@ -32,11 +29,11 @@ export class PagePost extends LitElement {
   render() {
     const id = this.params?.id ?? "";
     return html`
-      <div class="back" @click=${this.goBack}>${POST_BACK_TO_FEED}</div>
+      <div class="back" @click=${this.goBack}>${CONSTANTS.POST_BACK_TO_FEED}</div>
       <div class="card">
-        <div class="chip-muted">${POST_CHIP_LABEL_PREFIX} ${id}</div>
-        <h2>${POST_TITLE}</h2>
-        <p>${POST_BODY}</p>
+        <div class="chip-muted">${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}</div>
+        <h2>${CONSTANTS.POST_TITLE}</h2>
+        <p>${CONSTANTS.POST_BODY}</p>
       </div>
     `;
   }

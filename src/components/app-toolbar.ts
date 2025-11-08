@@ -3,9 +3,7 @@ import layoutCSS from "../design-system/layout.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import {
-  TOOLBAR_LABEL_SEARCH_RECIPES,
-  TOOLBAR_LABEL_MESSAGES,
-  TOOLBAR_LABEL_PROFILE,
+  CONSTANTS
 } from "../shared/constants";
 import "./app-icon-button";
 import "./app-avatar";
@@ -38,17 +36,17 @@ export class AppToolbar extends LitElement {
         <div class="page-title">${this.title}</div>
         <div style="display:flex;gap:0.25rem;">
           <app-icon-button
-            label=${TOOLBAR_LABEL_SEARCH_RECIPES}
+            label=${CONSTANTS.TOOLBAR_LABEL_SEARCH_RECIPES}
             @click=${this.goSearch}
             >🔍</app-icon-button
           >
           <app-icon-button
-            label=${TOOLBAR_LABEL_MESSAGES}
+            label=${CONSTANTS.TOOLBAR_LABEL_MESSAGES}
             @click=${this.goMessages}
             >💌</app-icon-button
           >
           <app-icon-button
-            label=${TOOLBAR_LABEL_PROFILE}
+            label=${CONSTANTS.TOOLBAR_LABEL_PROFILE}
             @click=${this.goProfile}
             >👨‍🍳</app-icon-button
           >
