@@ -8,9 +8,6 @@ import {
 
 @customElement("page-profile-settings")
 export class PageProfileSettings extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
 
   static styles = [unsafeCSS(componentsCSS), css`
     .buttons {

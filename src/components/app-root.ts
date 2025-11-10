@@ -13,10 +13,9 @@ import "../pages/page-direct-message";
 import "../pages/page-profile";
 import "../pages/page-profile-settings";
 import "../pages/page-not-found";
-import {
-  CONSTANTS
-} from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 import { authStore } from "../state/auth-store";
+
 
 @customElement("app-root")
 export class AppRoot extends LitElement {
@@ -35,10 +34,6 @@ export class AppRoot extends LitElement {
   private onPopState = () => {
     this.location = parseLocation(location.pathname);
   };
-
-  createRenderRoot() {
-    return this;
-  }
 
   private getTitle(): string {
     switch (this.location.route) {

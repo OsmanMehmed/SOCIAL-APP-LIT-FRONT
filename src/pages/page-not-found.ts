@@ -8,10 +8,6 @@ import {
 
 @customElement("page-not-found")
 export class PageNotFound extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
   static styles = [unsafeCSS(componentsCSS)];
 
   render() {

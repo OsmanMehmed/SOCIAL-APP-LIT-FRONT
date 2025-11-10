@@ -3,7 +3,7 @@
   --red-light: #ffe2e2;
   --red-dark: #b7202e;
 
-  --background: #fffafa;
+  --background: #ffffff;
   --background-soft: var(--red-light);
   --foreground: #1f1414;
 
@@ -33,6 +33,31 @@
   --color-tertiary: #f8e2cf;
   --color-quaternary: #d7bde2;
   --color-quinary: #aed6f1;
+
+
+  .primary-color{
+    color: var(--color-primary);
+  }
+
+  .secondary-color{
+    color: var(--color-secondary);
+  }
+
+  .tertiary-color{
+    color: var(--color-tertiary);
+  }
+
+  .quaternary-color{
+    color: var(--color-quaternary);
+  }
+
+  .quinary-color{
+    color: var(--color-quinary);
+  }
+
+  .text-color {
+    color: var(--color-text-color);
+  }
 }
 
 *,
@@ -45,10 +70,21 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--color-text-color);
-
   background-color: var(--background);
-  background-image:
-    url("./food-pattern.png");
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Capa del patrón difuminado */
+body::before {
+  content: "";
+  position: fixed;     /* cubre toda la ventana */
+  inset: 0;
+  background-image: url("./food-pattern.png");
   background-repeat: repeat;
   background-size: 500px 500px;
+  filter: blur(0.3px);   /* ajusta intensidad */
+  transform: scale(1.05); /* evita bordes del blur */
+  z-index: -1;
 }

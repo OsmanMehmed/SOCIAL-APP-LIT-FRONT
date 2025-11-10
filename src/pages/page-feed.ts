@@ -22,11 +22,6 @@ export class PageFeed extends LitElement {
           grid-template-columns: 1fr;
         }
       }
-      .sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-      }
       .flow-column {
         display: flex;
         flex-direction: column;
@@ -50,13 +45,6 @@ export class PageFeed extends LitElement {
             caption=${CONSTANTS.FEED_POST2_CAPTION}
           ></app-post-card>
         </section>
-        <aside class="sidebar">
-          <app-mini-profile></app-mini-profile>
-          <div class="card">
-            <div class="chip-muted">${CONSTANTS.FEED_SIDEBAR_TITLE}</div>
-            <div style="margin-top:0.3rem;">${CONSTANTS.FEED_SIDEBAR_TEXT}</div>
-          </div>
-        </aside>
       </div>
     `;
   }

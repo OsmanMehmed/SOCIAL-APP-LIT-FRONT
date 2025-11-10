@@ -6,6 +6,7 @@ import { customElement, property } from "lit/decorators.js";
 export class AppIconButton extends LitElement {
   @property() label = "";
   @property() selected = false;
+  @property() name = "";
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -39,7 +40,8 @@ export class AppIconButton extends LitElement {
   ];
 
   render() {
-    return html`<button ?selected=${this.selected} title=${this.label}>
+    return html`
+    <button ?selected=${this.selected} title=${this.label}>
       <slot></slot>
     </button>`;
   }

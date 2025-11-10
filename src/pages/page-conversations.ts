@@ -6,10 +6,6 @@ import { navigate } from "../router";
 
 @customElement("page-conversations")
 export class PageConversations extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
   static styles = [unsafeCSS(componentsCSS)];
 
   private openDm(id: string) {

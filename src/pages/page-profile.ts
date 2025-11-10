@@ -11,10 +11,6 @@ import "../components/app-avatar";
 export class PageProfile extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
 
-  createRenderRoot() {
-    return this;
-  }
-
   private editProfile() {
     navigate("/profile-settings");
   }

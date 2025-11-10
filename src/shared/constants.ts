@@ -7,9 +7,7 @@ export const CONSTANTS = {
   NAV_LABEL_MESSAGES: "Mensajes",
   NAV_LABEL_PROFILE: "Perfil",
 
-  TOOLBAR_LABEL_SEARCH_RECIPES: "Buscar recetas",
-  TOOLBAR_LABEL_MESSAGES: "Mensajes",
-  TOOLBAR_LABEL_PROFILE: "Perfil",
+  TOOLBAR_LABEL_LOGOUT: "Cerrar sesión",
 
   TITLE_FEED: "Feed de Recetas",
   TITLE_POST: "Receta",
@@ -24,7 +22,7 @@ export const CONSTANTS = {
   LOGIN_INPUT_USERNAME_PLACEHOLDER: "@cool.cheff 😉",
   LOGIN_INPUT_PASSWORD_PLACEHOLDER: "Contraseña",
   LOGIN_BUTTON_TEXT: "Entrar a la cocina",
-  LOGIN_HELP_TEXT: "¡¡Comparte tus recetas con la comunidad!!",
+  LOGIN_HELP_TEXT: "¡Comparte tus recetas con la comunidad!",
 
   FEED_POST1_USERNAME: "ana.cocina",
   FEED_POST1_CAPTION: "Pasta fresca con salsa de tomate asado.",

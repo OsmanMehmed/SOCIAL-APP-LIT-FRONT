@@ -7,10 +7,6 @@ import {
 
 @customElement("page-search")
 export class PageSearch extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
   static styles = [unsafeCSS(componentsCSS)];
 
   render() {
