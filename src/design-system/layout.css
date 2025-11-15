@@ -22,7 +22,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 0.9rem;
-  margin-top: 0.5em;
+  margin-top: 0.8em;
   border-bottom: 1px solid var(--border-subtle);
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 14px rgba(183, 32, 46, 0.12);
@@ -39,6 +39,8 @@
   justify-content: space-around;
   border-radius: var(--radius-md);
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 4px 14px rgba(183, 32, 46, 0.12);
 }
 
 .page-title {

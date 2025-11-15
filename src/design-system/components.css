@@ -12,23 +12,25 @@
   color: #ffffff;
   font-weight: 600;
   box-shadow: 0 4px 10px rgba(255, 75, 75, 0.28);
+  width: 100%;
 }
 
 .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(255, 75, 75, 0.32);
+  transform: translateY(-0.7px);
+  box-shadow: 0 0.5em 0.8em rgba(129, 39, 39, 0.23);
 }
 
-.btn-outline {
+.btn-no-fill {
+  font-weight: bold;
   background: transparent;
-  border-color: var(--accent);
+  border-width: 0px;
   color: var(--accent);
   box-shadow: none;
   border-radius: 15px;
   cursor: pointer;
 }
 
-.btn-outline:hover {
+.btn-no-fill:hover {
   background: rgba(255, 75, 75, 0.08);
 }
 

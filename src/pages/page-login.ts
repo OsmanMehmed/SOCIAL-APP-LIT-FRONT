@@ -38,7 +38,7 @@ export class PageLogin extends LitElement {
         padding: 1rem;
         border-radius: var(--radius-md);
         border: 1px solid var(--border-subtle);
-        background: var(--color-primary);
+        background: var(--background);
         box-shadow: var(--shadow-soft);
         display: flex;
         flex-direction: column;

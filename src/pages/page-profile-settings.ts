@@ -2,21 +2,31 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
-import {
-  CONSTANTS
-} from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 
 @customElement("page-profile-settings")
 export class PageProfileSettings extends LitElement {
-
-  static styles = [unsafeCSS(componentsCSS), css`
-    .buttons {
+  static styles = [
+    unsafeCSS(componentsCSS),
+    css`
+      .buttons {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 0.5rem;
       }
-    
-    `];
+
+      .edit-profile-card {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        width: 35em;
+      }
+      
+      .edit-profile-input {
+        width: 95%;
+      }
+    `,
+  ];
 
   private save(e: Event) {
     e.preventDefault();
@@ -29,20 +39,20 @@ export class PageProfileSettings extends LitElement {
 
   render() {
     return html`
-      <form class="flow-column card" @submit=${this.save}>
+      <form class="edit-profile-card card" @submit=${this.save}>
         <div class="chip-muted">${CONSTANTS.PROFILE_SETTINGS_TITLE}</div>
-        <input class="input" placeholder=${CONSTANTS.PROFILE_SETTINGS_NAME}/>
+        <input class="input edit-profile-input" placeholder=${CONSTANTS.PROFILE_SETTINGS_NAME} />
         <input
-          class="input"
+          class="input edit-profile-input"
           placeholder=${CONSTANTS.PROFILE_SETTINGS_SPECIALITY}
         />
-        <input class="input" placeholder=${CONSTANTS.PROFILE_SETTINGS_URL}/>
+        <input class="input edit-profile-input" placeholder=${CONSTANTS.PROFILE_SETTINGS_URL} />
         <div class="buttons">
           <button class="btn btn-sm" type="submit">
             ${CONSTANTS.PROFILE_SETTINGS_SAVE}
           </button>
           <button
-            class="btn-outline btn-sm"
+            class="btn-no-fill btn-sm"
             type="button"
             @click=${this.cancel}
           >

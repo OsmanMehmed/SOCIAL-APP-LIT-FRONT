@@ -14,22 +14,19 @@ export class AppMiniProfile extends LitElement {
         align-items: center;
         gap: 0.5rem;
       }
+
       .meta {
         display: flex;
         flex-direction: column;
         font-size: 0.75rem;
       }
+
       .username {
         font-weight: 600;
         cursor: pointer;
       }
+
       .name {
-        cursor: pointer;
-      }
-      .cta {
-        margin-left: auto;
-        font-size: 0.7rem;
-        color: var(--accent-alt);
         cursor: pointer;
       }
     `,
@@ -51,9 +48,6 @@ export class AppMiniProfile extends LitElement {
             >${CONSTANTS.MINI_PROFILE_SUBTITLE}</span
           >
         </div>
-        <span class="cta" @click=${this.goProfile}
-          >${CONSTANTS.MINI_PROFILE_ACTION_VIEW}</span
-        >
       </div>
     `;
   }

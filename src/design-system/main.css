@@ -7,8 +7,8 @@
   --background-soft: var(--red-light);
   --foreground: #1f1414;
 
-  --color-bg-1: #FAF4EF;  /* arena claro */
-  --color-bg-2: #F6E7D8;  /* crema cálida */
+  --color-bg-1: #FAF4EF;
+  --color-bg-2: #F6E7D8;
 
   --muted: #f4d6d8;
   --muted-foreground: #8a4a4f;
@@ -82,16 +82,16 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-
-/* Capa del patrón difuminado */
 body::before {
   content: "";
-  position: fixed;     /* cubre toda la ventana */
+  position: fixed;
   inset: 0;
-  /*background-image: url("./food-pattern.png");*/
+  /*
+  background-image: url("./food-pattern.png");
   background-repeat: repeat;
   background-size: 500px 500px;
-  filter: blur(0.3px);   /* ajusta intensidad */
-  transform: scale(1.05); /* evita bordes del blur */
+  */
+  filter: blur(0.3px);
+  transform: scale(1.05);
   z-index: -1;
 }

@@ -14,7 +14,7 @@ export class PagePost extends LitElement {
     unsafeCSS(componentsCSS),
     css`
       .back {
-        font-size: 0.8rem;
+        font-size: 1rem;
         color: var(--muted-foreground);
         cursor: pointer;
         margin-bottom: 0.4rem;

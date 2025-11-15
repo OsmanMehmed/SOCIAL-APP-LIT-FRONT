@@ -18,12 +18,17 @@ export class PageProfile extends LitElement {
   static styles = [
     unsafeCSS(componentsCSS),
     css`
-      .buttons-1 {
+      .profile-info {
         display: flex;
         flex-direction: column;
         gap: 0.2rem;
         align-items:center;
         margin-bottom: 2em;
+      }
+
+      .profile-name {
+        width: 100%;
+        margin-left: 1em;
       }
 
       .buttons-2 {
@@ -48,9 +53,9 @@ export class PageProfile extends LitElement {
     return html`
       <section class="flow-column">
         <div class="card">
-          <div class="buttons-1">
+          <div class="profile-info">
             <app-avatar .cursorPointer=${false} .bigAvatar=${true}></app-avatar>
-            <div>
+            <div class="profile-name">
               <span>@${id}</span>
             </div>
           </div>
@@ -58,7 +63,7 @@ export class PageProfile extends LitElement {
             ${!isMe
             ? html`
                 <button
-                  class="btn-outline btn-pill btn-sm"
+                  class="btn-no-fill btn-pill btn-sm"
                   @click=${this.openDm}
                 >
                   Mensaje
@@ -66,7 +71,7 @@ export class PageProfile extends LitElement {
               `
             : null}
             <button
-              class="btn-outline btn-pill btn-sm"
+              class="btn btn-pill btn-sm"
               @click=${this.editProfile}
             >
               ${CONSTANTS.PROFILE_EDIT_BUTTON}

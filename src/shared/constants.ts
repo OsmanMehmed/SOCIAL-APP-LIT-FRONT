@@ -9,13 +9,14 @@ export const CONSTANTS = {
 
   TOOLBAR_LABEL_LOGOUT: "Cerrar sesión",
 
-  TITLE_FEED: "Feed de Recetas",
+  TITLE_FEED: "Feed",
   TITLE_POST: "Receta",
-  TITLE_SEARCH: "Buscar recetas",
+  TITLE_NEW_POST: "Nueva receta",
+  TITLE_SEARCH: "Búsqueda",
   TITLE_CONVERSATIONS: "Chefs / Mensajes",
   TITLE_DM: "Mensaje directo",
   TITLE_PROFILE: "Perfil culinario",
-  TITLE_PROFILE_SETTINGS: "Configurar perfil",
+  TITLE_PROFILE_SETTINGS: "Editar perfil",
 
   LOGIN_CHIP_COMMUNITY: "Comunidad Foodies",
   LOGIN_TITLE: "Inicia sesión",
@@ -77,7 +78,7 @@ export const CONSTANTS = {
   POST_CARD_DEFAULT_USERNAME: "chef",
   POST_CARD_DEFAULT_CAPTION: "Descripción de la receta",
   POST_CARD_FALLBACK_IMAGE_TEXT: "Foto del plato",
-  POST_CARD_LIKES_TEXT: "❤ 120",
-  POST_CARD_COMMENTS_TEXT: "💬 18",
-  POST_CARD_SAVE_TEXT: "⭐ Guardar",
+  POST_CARD_LIKES_TEXT: "120",
+  POST_CARD_COMMENTS_TEXT: "18",
+  POST_CARD_SAVE_TEXT: "15",
 };

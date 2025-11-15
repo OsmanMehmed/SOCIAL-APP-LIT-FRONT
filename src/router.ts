@@ -2,6 +2,7 @@ export type Route =
   | 'login'
   | 'feed'
   | 'post'
+  | 'new-post'
   | 'search'
   | 'conversations'
   | 'dm'
@@ -24,6 +25,8 @@ export function parseLocation(path: string): AppLocation {
       return { route: 'login' };
     case 'post':
       return { route: 'post', params: { id: id ?? '' } };
+    case 'new-post':
+      return { route: 'new-post'};
     case 'search':
       return { route: 'search' };
     case 'messages':

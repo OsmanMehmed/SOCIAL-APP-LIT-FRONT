@@ -41,6 +41,8 @@ export class AppRoot extends LitElement {
         return CONSTANTS.TITLE_FEED;
       case "post":
         return CONSTANTS.TITLE_POST;
+      case "new-post":
+        return CONSTANTS.TITLE_NEW_POST;
       case "search":
         return CONSTANTS.TITLE_SEARCH;
       case "conversations":
@@ -68,6 +70,8 @@ export class AppRoot extends LitElement {
         return html`<page-feed></page-feed>`;
       case "post":
         return html`<page-post .params=${this.location.params}></page-post>`;
+      case "new-post":
+        return html`<page-new-post></page-new-post>`;
       case "search":
         return html`<page-search></page-search>`;
       case "conversations":

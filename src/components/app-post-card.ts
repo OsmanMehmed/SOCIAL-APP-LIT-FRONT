@@ -26,6 +26,7 @@ export class AppPostCard extends LitElement {
         box-shadow: var(--shadow-soft);
         padding: 0.75rem;
         width: 90%;
+        background: var(--background);
       }
 
       .description {
@@ -46,18 +47,24 @@ export class AppPostCard extends LitElement {
         justify-content: center;
         font-size: 0.75rem;
         color: rgba(255, 204, 196, 0.85);
-        cursor: default;
+        cursor: pointer;
       }
 
-      .actions {
+      .caption {
+        cursor: pointer;
+      }
+
+      .stats {
         display: flex;
+        flex-direction: row;
         gap: 0.6rem;
-        margin-top: 0.25rem;
+        margin-top: 0.5rem;
         font-size: 0.8rem;
         color: var(--muted-foreground);
       }
 
       .sidebar {
+        margin-top: 1em;
         display: flex;
         flex-direction: column;
         gap: 0.6rem;
@@ -75,15 +82,26 @@ export class AppPostCard extends LitElement {
       <div class="post-card">
         <article class="card" @click=${this.openPost}>
           <div class="image">
-            ${this.image
-              ? html`<img src=${this.image} />`
-              : CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT}
+            ${
+              this.image
+                ? html`<img src=${this.image} />`
+                : CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT
+            }
           </div>
           <div class="caption">${this.caption}</div>
-          <div class="actions">
-            <span>${CONSTANTS.POST_CARD_LIKES_TEXT}</span>
-            <span>${CONSTANTS.POST_CARD_COMMENTS_TEXT}</span>
-            <span>${CONSTANTS.POST_CARD_SAVE_TEXT}</span>
+          <div class="stats">
+            <div>
+              <sl-icon name="hand-thumbs-up"></sl-icon>
+              <span>${CONSTANTS.POST_CARD_LIKES_TEXT}</span>
+            </div>
+            <div>
+              <sl-icon name="chat-dots""></sl-icon>
+              <span>${CONSTANTS.POST_CARD_COMMENTS_TEXT}</span>
+            </div>
+            <div>
+              <sl-icon name="bookmark""></sl-icon>
+              <span>${CONSTANTS.POST_CARD_SAVE_TEXT}</span>
+            </div>
           </div>
         </article>
         <aside class="sidebar">

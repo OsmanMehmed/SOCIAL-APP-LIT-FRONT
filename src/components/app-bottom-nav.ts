@@ -28,7 +28,7 @@ export class AppBottomNav extends LitElement {
 
         <app-icon-button
           label=${CONSTANTS.NAV_LABEL_NEW_RECIPE}
-          @click=${() => navigate("/post/new")}
+          @click=${() => navigate("/new-post")}
         >
           <sl-icon name="plus-square"></sl-icon>
         </app-icon-button>
