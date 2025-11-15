@@ -32,7 +32,6 @@ export class PageFeed extends LitElement {
 
   render() {
     return html`
-      <div class="grid">
         <section class="flow-column">
           <app-post-card
             postId="1"
@@ -45,7 +44,6 @@ export class PageFeed extends LitElement {
             caption=${CONSTANTS.FEED_POST2_CAPTION}
           ></app-post-card>
         </section>
-      </div>
     `;
   }
 }

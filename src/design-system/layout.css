@@ -7,7 +7,7 @@
 }
 
 .app-main {
-  overflow-y: auto;
+  overflow-y: visible;
   padding: 0.9rem;
   max-width: 1024px;
   margin: 0 auto;
@@ -49,6 +49,7 @@
   align-items: baseline;
   gap: 0.25rem;
   color: var(--red-dark);
+  cursor: default;
 }
 
 .flow-column {

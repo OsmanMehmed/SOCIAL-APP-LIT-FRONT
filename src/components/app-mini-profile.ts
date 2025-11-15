@@ -2,9 +2,7 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
-import {
-  CONSTANTS
-} from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 
 @customElement("app-mini-profile")
 export class AppMiniProfile extends LitElement {
@@ -23,6 +21,10 @@ export class AppMiniProfile extends LitElement {
       }
       .username {
         font-weight: 600;
+        cursor: pointer;
+      }
+      .name {
+        cursor: pointer;
       }
       .cta {
         margin-left: auto;
@@ -40,10 +42,14 @@ export class AppMiniProfile extends LitElement {
   render() {
     return html`
       <div class="root">
-        <app-avatar .size=${36}></app-avatar>
+        <app-avatar @click=${this.goProfile}></app-avatar>
         <div class="meta">
-          <span class="username">${CONSTANTS.MINI_PROFILE_USERNAME}</span>
-          <span class="chip-muted">${CONSTANTS.MINI_PROFILE_SUBTITLE}</span>
+          <span class="username" @click=${this.goProfile}
+            >${CONSTANTS.MINI_PROFILE_USERNAME}</span
+          >
+          <span class="chip-muted name" @click=${this.goProfile}
+            >${CONSTANTS.MINI_PROFILE_SUBTITLE}</span
+          >
         </div>
         <span class="cta" @click=${this.goProfile}
           >${CONSTANTS.MINI_PROFILE_ACTION_VIEW}</span

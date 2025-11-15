@@ -7,8 +7,13 @@ import {
 
 @customElement("page-search")
 export class PageSearch extends LitElement {
-  static styles = [unsafeCSS(componentsCSS)];
-
+    static styles = [
+    unsafeCSS(componentsCSS),
+    css`
+      .margin-top {
+      }
+    `,
+  ];
   render() {
     return html`
       <section class="flow-column">

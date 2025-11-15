@@ -21,8 +21,9 @@ export class PageProfile extends LitElement {
       .buttons-1 {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.2rem;
         align-items:center;
+        margin-bottom: 2em;
       }
 
       .buttons-2 {
@@ -32,6 +33,7 @@ export class PageProfile extends LitElement {
         margin-top: 0.5rem;
         flex-wrap: wrap;
         place-content: space-between;
+        align-content: center;
       }
     `,
   ];
@@ -42,19 +44,27 @@ export class PageProfile extends LitElement {
 
   render() {
     const id = this.params?.id ?? "me";
+    const isMe = id === "me";
     return html`
       <section class="flow-column">
         <div class="card">
           <div class="buttons-1">
-            <app-avatar .size=${64}></app-avatar>
+            <app-avatar .cursorPointer=${false} .bigAvatar=${true}></app-avatar>
             <div>
-              <h2>@${id}</h2>
+              <span>@${id}</span>
             </div>
           </div>
           <div class="buttons-2">
-            <button class="btn-outline btn-pill btn-sm" @click=${this.openDm}>
-              Mensaje
-            </button>
+            ${!isMe
+            ? html`
+                <button
+                  class="btn-outline btn-pill btn-sm"
+                  @click=${this.openDm}
+                >
+                  Mensaje
+                </button>
+              `
+            : null}
             <button
               class="btn-outline btn-pill btn-sm"
               @click=${this.editProfile}

@@ -14,21 +14,29 @@ export class AppPostCard extends LitElement {
   static styles = [
     unsafeCSS(layoutCSS),
     css`
-      .post-card{
+      .post-card {
         display: flex;
-        flex-direction: row;  
+        gap: 1.5em;
+        flex-direction: row;
       }
+
       .card {
         border-radius: var(--radius-md);
         border: 1px solid rgba(255, 179, 71, 0.26);
         box-shadow: var(--shadow-soft);
         padding: 0.75rem;
-        cursor: pointer;
+        width: 90%;
       }
+
+      .description {
+        cursor: default;
+      }
+
       .username {
         font-size: 0.85rem;
         font-weight: 600;
       }
+
       .image {
         margin: 0.4rem 0;
         border-radius: var(--radius-md);
@@ -38,7 +46,9 @@ export class AppPostCard extends LitElement {
         justify-content: center;
         font-size: 0.75rem;
         color: rgba(255, 204, 196, 0.85);
+        cursor: default;
       }
+
       .actions {
         display: flex;
         gap: 0.6rem;
@@ -46,10 +56,12 @@ export class AppPostCard extends LitElement {
         font-size: 0.8rem;
         color: var(--muted-foreground);
       }
+
       .sidebar {
         display: flex;
         flex-direction: column;
         gap: 0.6rem;
+        width: 30em;
       }
     `,
   ];
@@ -76,7 +88,7 @@ export class AppPostCard extends LitElement {
         </article>
         <aside class="sidebar">
           <app-mini-profile></app-mini-profile>
-          <div class="card">
+          <div class="card description">
             <div class="chip-muted">${CONSTANTS.FEED_SIDEBAR_TITLE}</div>
             <div style="margin-top:0.3rem;">${CONSTANTS.FEED_SIDEBAR_TEXT}</div>
           </div>

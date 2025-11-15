@@ -4,9 +4,9 @@ import { customElement, property } from "lit/decorators.js";
 
 @customElement("app-avatar")
 export class AppAvatar extends LitElement {
-  @property() size = 32;
-  @property() src = "";
-  @property() alt = "";
+  @property({ type: String }) src = "";
+  @property({ type: Boolean }) bigAvatar = false;
+  @property({ type: Boolean }) cursorPointer = true;
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -15,9 +15,21 @@ export class AppAvatar extends LitElement {
         border-radius: var(--radius-full);
         overflow: hidden;
         border: 2px solid var(--accent);
-        background: #2b0909;
+        background: #712222ff;
         display: inline-flex;
+        width: 3em;
+        height: 3em;
       }
+      
+      .big-avatar {
+        width: 5em;
+        height: 5em;
+      }
+
+      .pointer {
+        cursor: pointer;
+      }
+
       img {
         display: block;
         width: 100%;
@@ -28,12 +40,12 @@ export class AppAvatar extends LitElement {
   ];
 
   render() {
-    const size = `${this.size}px`;
     return html`
-      <div class="avatar" style="width:${size};height:${size}">
-        ${this.src
-          ? html`<img src=${this.src} alt=${this.alt} />`
-          : html`<span></span>`}
+      <div class="avatar ${this.cursorPointer ? "pointer" : ""} ${
+      this.bigAvatar ? "big-avatar" : ""
+    }">
+          ${this.src ? html`<img src=${this.src} />` : html`<span></span>`}
+        </div>
       </div>
     `;
   }

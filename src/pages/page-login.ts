@@ -49,6 +49,9 @@ export class PageLogin extends LitElement {
         font-weight: 600;
         text-align: center;
       }
+      .login-input {
+        width: 90%
+      }
     `,
   ];
 
@@ -67,7 +70,7 @@ export class PageLogin extends LitElement {
           <div class="title">${CONSTANTS.LOGIN_TITLE}</div>
           <input
             id="user"
-            class="input"
+            class="input login-input"
             type="text"
             placeholder="${CONSTANTS.LOGIN_INPUT_USERNAME_PLACEHOLDER}"
             .value=${displayValue}
@@ -76,7 +79,7 @@ export class PageLogin extends LitElement {
           />
           <input
             id="pass"
-            class="input"
+            class="input login-input"
             type="password"
             placeholder="${CONSTANTS.LOGIN_INPUT_PASSWORD_PLACEHOLDER}"
             required

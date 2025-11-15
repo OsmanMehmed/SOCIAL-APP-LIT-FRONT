@@ -15,18 +15,22 @@ export class PageDirectMessage extends LitElement {
         display: flex;
         flex-direction: column;
         gap: 0.35rem;
-        margin-bottom: 0.5rem;
+        margin-block: 2rem;
       }
-      .msg {
+      .msg-other {
         padding: 0.35rem 0.6rem;
         border-radius: var(--radius-md);
-        background: rgba(26, 5, 5, 0.98);
+        background: var(--color-tertiary);
         font-size: 0.8rem;
         max-width: 70%;
       }
-      .me {
+      .msg-me {
+        padding: 0.35rem 0.6rem;
+        border-radius: var(--radius-md);
+        font-size: 0.8rem;
+        max-width: 70%;
         align-self: flex-end;
-        background: var(--accent);
+        background: var(--color-quinary);
         color: #290202;
       }
       form {
@@ -53,10 +57,10 @@ export class PageDirectMessage extends LitElement {
     const id = this.params?.id ?? "";
     return html`
       <section>
-        <div class="chip-muted">DM con chef ${id}</div>
+        <app-mini-profile></app-mini-profile>
         <div class="thread">
-          <div class="msg">Tip anterior sobre la receta.</div>
-          <div class="msg me">Gracias, salió increíble.</div>
+          <div class="msg-other">Tip anterior sobre la receta.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
         </div>
         <form @submit=${this.send}>
           <input
