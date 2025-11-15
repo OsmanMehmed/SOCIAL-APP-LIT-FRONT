@@ -7,6 +7,7 @@ import "./app-bottom-nav";
 import "../pages/page-login";
 import "../pages/page-feed";
 import "../pages/page-post";
+import "../pages/page-new-post";
 import "../pages/page-search";
 import "../pages/page-conversations";
 import "../pages/page-direct-message";
