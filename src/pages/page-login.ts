@@ -33,6 +33,7 @@ export class PageLogin extends LitElement {
         align-items: center;
         justify-content: center;
       }
+
       .panel {
         width: 320px;
         padding: 1rem;
@@ -44,13 +45,19 @@ export class PageLogin extends LitElement {
         flex-direction: column;
         gap: 0.6rem;
       }
+
       .title {
         font-size: 1.3rem;
         font-weight: 600;
         text-align: center;
       }
+
       .login-input {
         width: 90%
+      }
+
+      .chip-login{
+        margin-top: 0.75em;
       }
     `,
   ];
@@ -85,7 +92,7 @@ export class PageLogin extends LitElement {
             required
           />
           <button class="btn" type="submit">${CONSTANTS.LOGIN_BUTTON_TEXT}</button>
-          <div class="chip-muted align-center">
+          <div class="chip-muted chip-login">
             <span>${CONSTANTS.LOGIN_HELP_TEXT}</span>
           </div>
         </form>

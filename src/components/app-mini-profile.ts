@@ -1,11 +1,15 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
-import { customElement } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 
 @customElement("app-mini-profile")
 export class AppMiniProfile extends LitElement {
+  @property({ type: String }) username = CONSTANTS.MINI_PROFILE_USERNAME;
+  @property({ type: String }) subtitle = CONSTANTS.MINI_PROFILE_SUBTITLE;
+  @property({ type: String }) profileId = CONSTANTS.CURRENT_USER_ID;
+
   static styles = [
     unsafeCSS(layoutCSS),
     css`
@@ -32,8 +36,10 @@ export class AppMiniProfile extends LitElement {
     `,
   ];
 
-  private goProfile() {
-    navigate("/profile/me");
+  private goProfile(event: Event) {
+    event.stopPropagation();
+    const id = this.profileId || CONSTANTS.CURRENT_USER_ID;
+    navigate(`/profile/${id}`);
   }
 
   render() {
@@ -42,10 +48,10 @@ export class AppMiniProfile extends LitElement {
         <app-avatar @click=${this.goProfile}></app-avatar>
         <div class="meta">
           <span class="username" @click=${this.goProfile}
-            >${CONSTANTS.MINI_PROFILE_USERNAME}</span
+            >${this.username}</span
           >
           <span class="chip-muted name" @click=${this.goProfile}
-            >${CONSTANTS.MINI_PROFILE_SUBTITLE}</span
+            >${this.subtitle}</span
           >
         </div>
       </div>

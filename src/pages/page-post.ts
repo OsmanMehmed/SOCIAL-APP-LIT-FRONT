@@ -2,9 +2,7 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
-import {
-  CONSTANTS
-} from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 
 @customElement("page-post")
 export class PagePost extends LitElement {
@@ -23,13 +21,19 @@ export class PagePost extends LitElement {
   ];
 
   private goBack() {
-    navigate("/feed");
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      navigate("/feed");
+    }
   }
 
   render() {
     const id = this.params?.id ?? "";
     return html`
-      <div class="back" @click=${this.goBack}>${CONSTANTS.POST_BACK_TO_FEED}</div>
+      <div class="back" @click=${this.goBack}>
+        ${CONSTANTS.POST_BACK_TO_FEED}
+      </div>
       <div class="card">
         <div class="chip-muted">${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}</div>
         <h2>${CONSTANTS.POST_TITLE}</h2>

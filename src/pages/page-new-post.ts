@@ -11,6 +11,8 @@ export class PageNewPost extends LitElement {
 
   @state() private errorMessage: string | null = null;
   @state() private draggingIndex: number | null = null;
+  @state() private tags: string[] = [];
+  @state() private newTag = "";
 
   static styles = [
     unsafeCSS(componentsCSS),
@@ -29,18 +31,17 @@ export class PageNewPost extends LitElement {
       .form {
         display: flex;
         flex-direction: column;
-        gap: 0.9rem;
       }
 
       .form-field {
         display: flex;
         flex-direction: column;
-        gap: 0.3rem;
+        margin-bottom: 0.7em;
       }
 
       .form-label {
         margin-left: 1em;
-        margin-bottom: 0.5em;
+        margin-bottom: 0.8em;
         margin-top: 1em;
         font-size: 0.85rem;
         font-weight: 600;
@@ -54,6 +55,11 @@ export class PageNewPost extends LitElement {
 
       .form-actions {
         margin-top: 0.6rem;
+        text-align: right;
+      }
+
+      .save-button {
+        width: 10em;
       }
 
       .error {
@@ -118,6 +124,7 @@ export class PageNewPost extends LitElement {
 
       .remove-btn {
         width: 10em;
+        height: 2.5em;
         font-size: 0.8rem;
         white-space: nowrap;
       }
@@ -175,8 +182,82 @@ export class PageNewPost extends LitElement {
         opacity: 0;
         cursor: pointer;
       }
+
+      .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.4rem;
+        margin-left: 0.3em;
+      }
+
+      .tag {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: var(--accent);
+        color: white;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        font-size: 0.8rem;
+      }
+
+      .tag button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        padding: 0;
+        line-height: 1;
+      }
+
+      .tag-input-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 32em;
+      }
+
+      .tag-input {
+        flex: 1;
+      }
+
+      .tag-add-btn {
+        white-space: nowrap;
+        width: 5em;
+        height: 2.5em;
+      }
     `,
   ];
+
+  private addTag() {
+    let t = this.newTag.trim();
+    if (!t) return;
+
+    if (t.startsWith("#")) {
+      t = t.slice(1).trim();
+    }
+
+    if (!t || this.tags.includes(t)) return;
+    this.tags = [...this.tags, t];
+    this.newTag = "";
+  }
+
+  private removeTag(t: string) {
+    this.tags = this.tags.filter((x) => x !== t);
+  }
+
+  private onTagInput(e: any) {
+    this.newTag = e.target.value;
+  }
+
+  private onTagKey(e: KeyboardEvent) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      this.addTag();
+    }
+  }
 
   private onTitleInput(e: Event) {
     const target = e.target as HTMLInputElement;
@@ -381,7 +462,7 @@ export class PageNewPost extends LitElement {
                           </div>
                           <button
                             type="button"
-                            class="btn btn-ghost remove-btn"
+                            class="btn-no-fill btn-ghost remove-btn"
                             @click=${() => this.removeImage(index)}
                           >
                             Eliminar
@@ -406,12 +487,42 @@ export class PageNewPost extends LitElement {
             ></textarea>
           </div>
 
+          <label class="form-label" for="recipe-body">Etiquetas</label>
+          <div class="tag-input-row">
+            <input
+              class="input tag-input"
+              placeholder="Añadir etiqueta..."
+              .value=${this.newTag}
+              @input=${this.onTagInput}
+              @keydown=${this.onTagKey}
+            />
+            <button
+              type="button"
+              class="btn-no-fill btn-pill btn-sm tag-add-btn"
+              @click=${this.addTag}
+            >
+              Añadir
+            </button>
+          </div>
+          <div class="tags-container">
+            ${this.tags.map(
+              (t) => html`
+                <span class="tag">
+                  #${t}
+                  <button @click=${() => this.removeTag(t)}>×</button>
+                </span>
+              `
+            )}
+          </div>
+
           ${this.errorMessage
             ? html`<div class="error">${this.errorMessage}</div>`
             : null}
 
           <div class="form-actions">
-            <button class="btn" type="submit">Guardar receta</button>
+            <button class="btn save-button" type="submit">
+              Guardar receta
+            </button>
           </div>
         </form>
       </div>

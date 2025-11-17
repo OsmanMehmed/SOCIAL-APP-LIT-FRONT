@@ -31,13 +31,14 @@ export const CONSTANTS = {
   FEED_POST2_CAPTION: "Bowl de desayuno con avena, frutos rojos y miel.",
 
   FEED_SIDEBAR_TITLE: "Explora sabores",
-  FEED_SIDEBAR_TEXT: "Busca recetas, sigue a otros chefs y guarda tus platos favoritos.",
+  FEED_SIDEBAR_TEXT:
+    "Busca recetas, sigue a otros chefs y guarda tus platos favoritos.",
 
   MINI_PROFILE_USERNAME: "@chef.demo",
   MINI_PROFILE_SUBTITLE: "Perfil culinario",
   MINI_PROFILE_ACTION_VIEW: "Ver",
 
-  POST_BACK_TO_FEED: "← Volver al feed",
+  POST_BACK_TO_FEED: "← Volver",
   POST_CHIP_LABEL_PREFIX: "Receta",
   POST_TITLE: "Detalle de la receta",
   POST_BODY: "Ingredientes, pasos y comentarios de la comunidad.",
@@ -58,12 +59,14 @@ export const CONSTANTS = {
 
   SEARCH_INPUT_PLACEHOLDER: "Buscar recetas, chefs o ingredientes",
   SEARCH_POPULAR_TITLE: "Búsquedas populares",
-  SEARCH_POPULAR_TEXT: "Pizza napolitana, ramen casero, tiramisú, meal prep saludable.",
+  SEARCH_POPULAR_TEXT:
+    "Pizza napolitana, ramen casero, tiramisú, meal prep saludable.",
 
-  CONVERSATIONS_CARD_TITLE: "Chefs / Mensajes",
   CONVERSATIONS_MSG1_USERNAME: "@ana.cocina",
+  CONVERSATIONS_MSG1_SUBTITLE: "Panes artesanos y fermentación lenta",
   CONVERSATIONS_MSG1_TEXT: "Consejos sobre fermentación y panes.",
   CONVERSATIONS_MSG2_USERNAME: "@equipo.recetas",
+  CONVERSATIONS_MSG2_SUBTITLE: "Equipo editorial de la comunidad",
   CONVERSATIONS_MSG2_TEXT: "Organiza un reto semanal de recetas.",
 
   DM_INPUT_PLACEHOLDER: "Comparte un truco o pregunta...",

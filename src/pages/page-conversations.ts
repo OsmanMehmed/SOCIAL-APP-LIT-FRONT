@@ -1,8 +1,9 @@
-import { CONSTANTS } from './../shared/constants';
+import { CONSTANTS } from "./../shared/constants";
 import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
+import "../components/app-mini-profile";
 
 @customElement("page-conversations")
 export class PageConversations extends LitElement {
@@ -13,15 +14,31 @@ export class PageConversations extends LitElement {
   }
 
   render() {
+    const chefId = CONSTANTS.CONVERSATIONS_MSG1_USERNAME.replace(
+      CONSTANTS.USERNAME_PREFIX,
+      ""
+    );
+    const teamId = CONSTANTS.CONVERSATIONS_MSG2_USERNAME.replace(
+      CONSTANTS.USERNAME_PREFIX,
+      ""
+    );
+
     return html`
       <section class="flow-column">
         <div class="card" @click=${() => this.openDm("1")}>
-          <div class="chip-muted">${CONSTANTS.CONVERSATIONS_CARD_TITLE}</div>
-          <strong>${CONSTANTS.CONVERSATIONS_MSG1_USERNAME}</strong>
+          <app-mini-profile
+            .username=${CONSTANTS.CONVERSATIONS_MSG1_USERNAME}
+            .subtitle=${CONSTANTS.CONVERSATIONS_MSG1_SUBTITLE}
+            .profileId=${chefId}
+          ></app-mini-profile>
           <p>${CONSTANTS.CONVERSATIONS_MSG1_TEXT}</p>
         </div>
         <div class="card" @click=${() => this.openDm("2")}>
-          <strong>${CONSTANTS.CONVERSATIONS_MSG2_USERNAME}</strong>
+          <app-mini-profile
+            .username=${CONSTANTS.CONVERSATIONS_MSG2_USERNAME}
+            .subtitle=${CONSTANTS.CONVERSATIONS_MSG2_SUBTITLE}
+            .profileId=${teamId}
+          ></app-mini-profile>
           <p>${CONSTANTS.CONVERSATIONS_MSG2_TEXT}</p>
         </div>
       </section>
