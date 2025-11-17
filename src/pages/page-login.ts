@@ -35,10 +35,10 @@ export class PageLogin extends LitElement {
       }
 
       .panel {
-        width: 320px;
+        width: 400px;
         padding: 1rem;
         border-radius: var(--radius-md);
-        border: 1px solid var(--border-subtle);
+        border: 1.25px solid var(--border-subtle);
         background: var(--background);
         box-shadow: var(--shadow-soft);
         display: flex;

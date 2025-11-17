@@ -14,10 +14,10 @@ export class PageFeed extends LitElement {
     css`
       .grid {
         display: grid;
-        grid-template-columns: minmax(0, 2fr) minmax(220px, 0.9fr);
+        grid-template-columns: minmax(0, 2fr) minmax(275px, 0.9fr);
         gap: 0.9rem;
       }
-      @media (max-width: 800px) {
+      @media (max-width: 1000px) {
         .grid {
           grid-template-columns: 1fr;
         }

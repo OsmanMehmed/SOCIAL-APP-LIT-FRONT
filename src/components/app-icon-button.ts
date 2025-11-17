@@ -20,7 +20,7 @@ export class AppIconButton extends LitElement {
         color: var(--muted-foreground);
         padding: 0.25rem;
         cursor: pointer;
-        border-radius: 999px;
+        border-radius: 1248.75px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -33,7 +33,7 @@ export class AppIconButton extends LitElement {
         box-shadow: var(--shadow-soft);
       }
       button:hover {
-        transform: translateY(-1px);
+        transform: translateY(-1.25px);
         color: var(--accent);
       }
     `,

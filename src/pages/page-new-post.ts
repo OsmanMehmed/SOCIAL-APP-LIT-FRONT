@@ -49,7 +49,7 @@ export class PageNewPost extends LitElement {
       }
 
       textarea.input {
-        min-height: 140px;
+        min-height: 175px;
         resize: vertical;
       }
 
@@ -84,13 +84,13 @@ export class PageNewPost extends LitElement {
         gap: 0.6rem;
         padding: 0.4rem 0.6rem;
         border-radius: 0.4rem;
-        border: 1px solid var(--border-subtle, #ddd);
+        border: 1.25px solid var(--border-subtle, #ddd);
         background-color: var(--bg-subtle, #fafafa);
       }
 
       .image-item.dragging {
         opacity: 0.7;
-        outline: 1px dashed var(--primary, #c00);
+        outline: 1.25px dashed var(--primary, #c00);
       }
 
       .drag-handle {
@@ -137,8 +137,8 @@ export class PageNewPost extends LitElement {
       .recipe-images::-webkit-file-upload-button {
         font-family: var(--font-sans);
         font-size: 0.8rem;
-        border-radius: 999px;
-        border: 1px solid transparent;
+        border-radius: 1248.75px;
+        border: 1.25px solid transparent;
         padding: 0.35rem 0.9rem;
         background: transparent;
         color: var(--foreground);
@@ -198,7 +198,7 @@ export class PageNewPost extends LitElement {
         background: var(--accent);
         color: white;
         padding: 0.15rem 0.55rem;
-        border-radius: 999px;
+        border-radius: 1248.75px;
         font-size: 0.8rem;
       }
 

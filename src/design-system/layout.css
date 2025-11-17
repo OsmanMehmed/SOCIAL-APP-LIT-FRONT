@@ -10,7 +10,7 @@
 .app-main {
   padding-block: 0.9rem;
   padding-inline: 3em;
-  max-width: 1024px;
+  max-width: 1280px;
   margin: 0 auto;
 
   overflow-y: auto;
@@ -23,7 +23,7 @@
 }
 
 .app-main::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 .app-main::-webkit-scrollbar-track {
@@ -33,7 +33,7 @@
 .app-main::-webkit-scrollbar-thumb {
   background: rgba(183, 32, 46, 0.45);
   border-radius: var(--radius-full);
-  border: 2px solid rgba(250, 244, 239, 0.9); 
+  border: 2.5px solid rgba(250, 244, 239, 0.9); 
 }
 
 .app-main::-webkit-scrollbar-thumb:hover {
@@ -50,9 +50,9 @@
   justify-content: space-between;
   padding: 0 0.9rem;
   margin-top: 0.8em;
-  border-bottom: 1px solid var(--border-subtle);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 14px rgba(183, 32, 46, 0.12);
+  border-bottom: 1.25px solid var(--border-subtle);
+  backdrop-filter: blur(12.5px);
+  box-shadow: 0 5px 17.5px rgba(183, 32, 46, 0.12);
   border-radius: var(--radius-md);
 }
 
@@ -65,9 +65,9 @@
   align-items: center;
   justify-content: space-around;
   border-radius: var(--radius-md);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-subtle);
-  box-shadow: 0 4px 14px rgba(183, 32, 46, 0.12);
+  backdrop-filter: blur(12.5px);
+  border-bottom: 1.25px solid var(--border-subtle);
+  box-shadow: 0 5px 17.5px rgba(183, 32, 46, 0.12);
 }
 
 .page-title {

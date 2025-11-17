@@ -22,7 +22,7 @@ export class AppPostCard extends LitElement {
 
       .card {
         border-radius: var(--radius-md);
-        border: 1px solid rgba(255, 179, 71, 0.26);
+        border: 1.25px solid rgba(255, 179, 71, 0.26);
         box-shadow: var(--shadow-soft);
         padding: 0.75rem;
         width: 90%;
@@ -41,7 +41,7 @@ export class AppPostCard extends LitElement {
       .image {
         margin: 0.4rem 0;
         border-radius: var(--radius-md);
-        height: 220px;
+        height: 275px;
         display: flex;
         align-items: center;
         justify-content: center;
