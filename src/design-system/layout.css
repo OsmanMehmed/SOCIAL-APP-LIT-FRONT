@@ -4,13 +4,40 @@
   grid-template-rows: var(--toolbar-height) 1fr var(--bottom-nav-height);
   height: 100vh;
   background: transparent;
+  overflow: hidden;
 }
 
 .app-main {
-  overflow-y: visible;
-  padding: 0.9rem;
+  padding-block: 0.9rem;
+  padding-inline: 3em;
   max-width: 1024px;
   margin: 0 auto;
+
+  overflow-y: auto;
+  overflow-x: hidden; 
+  min-height: 0;  
+  
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(183, 32, 46, 0.45) transparent;
+}
+
+.app-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.app-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-main::-webkit-scrollbar-thumb {
+  background: rgba(183, 32, 46, 0.45);
+  border-radius: var(--radius-full);
+  border: 2px solid rgba(250, 244, 239, 0.9); 
+}
+
+.app-main::-webkit-scrollbar-thumb:hover {
+  background: rgba(183, 32, 46, 0.7);
 }
 
 .toolbar {

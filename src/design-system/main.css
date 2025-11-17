@@ -81,6 +81,7 @@ body {
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
+  height: 100%;
 }
 body::before {
   content: "";

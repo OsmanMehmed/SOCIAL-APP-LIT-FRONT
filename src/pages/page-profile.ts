@@ -17,18 +17,10 @@ export class PageProfile extends LitElement {
     unsafeCSS(componentsCSS),
     css`
       .back {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-        margin-bottom: 0.75rem;
+        font-size: 1rem;
+        color: var(--muted-foreground);
         cursor: pointer;
-        font-size: 0.9rem;
-        color: var(--accent-foreground);
-      }
-
-      .back::before {
-        content: "←";
-        font-size: 0.9rem;
+        margin-bottom: 0.4rem;
       }
 
       .profile-info {
@@ -55,7 +47,7 @@ export class PageProfile extends LitElement {
         place-content: end space-between;
       }
 
-      .edit-profile-btn{
+      .edit-profile-btn {
         width: 10em;
       }
     `,
@@ -79,7 +71,7 @@ export class PageProfile extends LitElement {
     return html`
       <section class="flow-column">
         ${!isMe
-          ? html`<div class="back" @click=${this.goBack}>Volver</div>`
+          ? html`<div class="back" @click=${this.goBack}>${CONSTANTS.POST_BACK_TO_FEED}</div>`
           : null}
         <div class="card">
           <div class="profile-info">
