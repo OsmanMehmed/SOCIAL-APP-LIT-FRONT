@@ -9,10 +9,8 @@
 
 .app-main {
   padding-block: 0.9rem;
-  padding-inline: 3em;
-  max-width: 1280px;
-  margin: 0 auto;
-
+  justify-self: center;
+  width: 80%;
   overflow-y: auto;
   overflow-x: hidden; 
   min-height: 0;  
@@ -44,7 +42,7 @@
   height: 2.5em;
   justify-self: center;
   background-color: var(--background);
-  width: 80%;
+  width: 82%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -60,7 +58,7 @@
   height: 2.5em;
   justify-self: center;
   background-color: var(--background);
-  width: 80%;
+  width: 82%;
   display: flex;
   align-items: center;
   justify-content: space-around;

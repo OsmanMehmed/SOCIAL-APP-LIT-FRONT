@@ -56,6 +56,13 @@ export class PageSearch extends LitElement {
   static styles = [
     unsafeCSS(componentsCSS),
     css`
+      .component-container {
+        justify-self: center;
+        min-width: 20em;
+        max-width: 40em;
+        width: 60%;
+      }
+
       .results {
         display: flex;
         flex-direction: column;
@@ -149,7 +156,8 @@ export class PageSearch extends LitElement {
       : q;
 
     return this.mockProfiles.filter((profile) => {
-      const username = `${CONSTANTS.USERNAME_PREFIX}${profile.id}`.toLowerCase();
+      const username =
+        `${CONSTANTS.USERNAME_PREFIX}${profile.id}`.toLowerCase();
       return (
         username.includes(q) ||
         profile.name.toLowerCase().includes(withoutPrefix)
@@ -180,7 +188,7 @@ export class PageSearch extends LitElement {
     const recipes = this.filteredRecipes;
 
     return html`
-      <section class="flow-column">
+      <section class="flow-column component-container">
         <input
           class="input"
           placeholder=${CONSTANTS.SEARCH_INPUT_PLACEHOLDER}

@@ -25,10 +25,16 @@ export class PageNewPost extends LitElement {
       }
 
       .new-post-card {
-        width: 50em;
+        justify-self: center;
+        min-width: 20em;
+        max-width: 90em;
+        width: 60%;
       }
 
       .form {
+        min-width: 10em;
+        padding-left: 2em;
+        padding-right: 2em;
         display: flex;
         flex-direction: column;
       }
@@ -162,7 +168,18 @@ export class PageNewPost extends LitElement {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        pointer-events: none; /* el click pasa al input real */
+        pointer-events: none;
+      }
+
+      @media (max-width: 950px) {
+        .file-input-display {
+          flex-wrap: wrap;
+          width: 10em;
+        }
+
+        .file-input-text {
+          margin-left: 0.5em;
+        }
       }
 
       .file-input-trigger {
@@ -220,13 +237,16 @@ export class PageNewPost extends LitElement {
       }
 
       .tag-input {
-        flex: 1;
+        width: 30%;
       }
 
       .tag-add-btn {
         white-space: nowrap;
         width: 5em;
         height: 2.5em;
+      }
+
+      .recipe-body-container {
       }
     `,
   ];
@@ -475,7 +495,7 @@ export class PageNewPost extends LitElement {
               : null}
           </div>
 
-          <div class="form-field">
+          <div class="form-field recipe-body-container">
             <label class="form-label" for="recipe-body">Cuerpo</label>
             <textarea
               id="recipe-body"

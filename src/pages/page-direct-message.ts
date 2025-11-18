@@ -11,12 +11,23 @@ export class PageDirectMessage extends LitElement {
   static styles = [
     unsafeCSS(componentsCSS),
     css`
+      .component-container {
+        justify-self: center;
+        min-width: 20em;
+        max-width: 40em;
+        width: 60%;
+      }
+
       .thread {
         display: flex;
         flex-direction: column;
         gap: 0.35rem;
         margin-block: 2rem;
+        overflow-x: hidden;
+        max-height: 20.5em;
+        padding-inline: 1em;
       }
+
       .msg-other {
         padding: 0.35rem 0.6rem;
         border-radius: var(--radius-md);
@@ -24,6 +35,7 @@ export class PageDirectMessage extends LitElement {
         font-size: 0.8rem;
         max-width: 70%;
       }
+
       .msg-me {
         padding: 0.35rem 0.6rem;
         border-radius: var(--radius-md);
@@ -33,13 +45,28 @@ export class PageDirectMessage extends LitElement {
         background: var(--color-quinary);
         color: #290202;
       }
+
       form {
         display: flex;
         gap: 0.35rem;
         align-items: center;
       }
+
       input {
         flex: 1;
+      }
+
+      .send-button {
+        width: 9em;
+      }
+
+      .send-input {
+      }
+
+      .send-message-form {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
       }
     `,
   ];
@@ -56,20 +83,36 @@ export class PageDirectMessage extends LitElement {
   render() {
     const id = this.params?.id ?? "";
     return html`
-      <section>
+      <section class="component-container">
         <app-mini-profile></app-mini-profile>
         <div class="thread">
           <div class="msg-other">Tip anterior sobre la receta.</div>
           <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-other">Tip anterior sobre la receta.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
         </div>
-        <form @submit=${this.send}>
+        <form @submit=${this.send} class="send-message-form">
           <input
-            class="input"
+            class="input send-input"
             placeholder=${CONSTANTS.DM_INPUT_PLACEHOLDER}
             .value=${this.draft}
             @input=${this.onInput}
           />
-          <button class="btn btn-sm" type="submit">${CONSTANTS.DM_SEND_BUTTON}</button>
+          <button class="btn btn-sm send-button" type="submit">
+            ${CONSTANTS.DM_SEND_BUTTON}
+          </button>
         </form>
       </section>
     `;

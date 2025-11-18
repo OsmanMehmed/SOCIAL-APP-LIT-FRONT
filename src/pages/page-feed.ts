@@ -3,15 +3,18 @@ import componentsCSS from "../design-system/components.css?inline";
 import { customElement } from "lit/decorators.js";
 import "../components/app-mini-profile";
 import "../components/app-post-card";
-import {
-  CONSTANTS
-} from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 
 @customElement("page-feed")
 export class PageFeed extends LitElement {
   static styles = [
     unsafeCSS(componentsCSS),
     css`
+      .component-container {
+        justify-self: center;
+        min-width: 45em;
+        width: 60%;
+      }
       .grid {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(275px, 0.9fr);
@@ -32,18 +35,18 @@ export class PageFeed extends LitElement {
 
   render() {
     return html`
-        <section class="flow-column">
-          <app-post-card
-            postId="1"
-            username=${CONSTANTS.FEED_POST1_USERNAME}
-            caption=${CONSTANTS.FEED_POST1_CAPTION}
-          ></app-post-card>
-          <app-post-card
-            postId="2"
-            username=${CONSTANTS.FEED_POST2_USERNAME}
-            caption=${CONSTANTS.FEED_POST2_CAPTION}
-          ></app-post-card>
-        </section>
+      <section class="flow-column component-container">
+        <app-post-card
+          postId="1"
+          username=${CONSTANTS.FEED_POST1_USERNAME}
+          caption=${CONSTANTS.FEED_POST1_CAPTION}
+        ></app-post-card>
+        <app-post-card
+          postId="2"
+          username=${CONSTANTS.FEED_POST2_USERNAME}
+          caption=${CONSTANTS.FEED_POST2_CAPTION}
+        ></app-post-card>
+      </section>
     `;
   }
 }

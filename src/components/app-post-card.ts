@@ -20,6 +20,14 @@ export class AppPostCard extends LitElement {
         flex-direction: row;
       }
 
+      @media (max-width: 950px) {
+        .post-card {
+          flex-wrap: wrap-reverse;
+          width: 60%;
+          place-self: center;
+        }
+      }
+
       .card {
         border-radius: var(--radius-md);
         border: 1.25px solid rgba(255, 179, 71, 0.26);

@@ -7,7 +7,15 @@ import "../components/app-mini-profile";
 
 @customElement("page-conversations")
 export class PageConversations extends LitElement {
-  static styles = [unsafeCSS(componentsCSS)];
+  static styles = [
+    unsafeCSS(componentsCSS),
+    css`
+      .component-container {
+        justify-self: center;
+        width: 50%;
+      }
+    `,
+  ];
 
   private openDm(id: string) {
     navigate(`/dm/${id}`);
@@ -24,7 +32,7 @@ export class PageConversations extends LitElement {
     );
 
     return html`
-      <section class="flow-column">
+      <section class="flow-column component-container">
         <div class="card" @click=${() => this.openDm("1")}>
           <app-mini-profile
             .username=${CONSTANTS.CONVERSATIONS_MSG1_USERNAME}
