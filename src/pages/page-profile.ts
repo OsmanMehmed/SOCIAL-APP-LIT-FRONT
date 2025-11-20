@@ -57,11 +57,6 @@ export class PageProfile extends LitElement {
         width: 10em;
       }
 
-      .posts-card {
-        overflow-y: scroll;
-        height: 45em;
-      }
-
       .profile-card {
         width: 40%;
         place-self: center;
@@ -72,7 +67,11 @@ export class PageProfile extends LitElement {
       }
 
       .posts-container {
-        place-content: center;
+        overflow-y: scroll;
+        height: 45em;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8em;
       }
     `,
   ];
@@ -135,8 +134,10 @@ export class PageProfile extends LitElement {
             ${CONSTANTS.PROFILE_PUBLISHED_RECIPES}
           </div>
           <div class="posts-container">
-            <app-post-card noProfile=${true} postId="1"></app-post-card>
-            <app-post-card postId="2" noProfile=${true}></app-post-card>
+            <app-post-card noProfile=${true} noShadow=${true} postId="1"></app-post-card>
+            <app-post-card noProfile=${true} noShadow=${true} postId="2"></app-post-card>
+            <app-post-card noProfile=${true} noShadow=${true} postId="2"></app-post-card>
+            <app-post-card noProfile=${true} noShadow=${true} postId="2"></app-post-card>
           </div>
         </div>
       </section>

@@ -10,6 +10,7 @@ export class AppPostCard extends LitElement {
   @property() username = CONSTANTS.POST_CARD_DEFAULT_USERNAME;
   @property() caption = CONSTANTS.POST_CARD_DEFAULT_CAPTION;
   @property() noProfile = false;
+  @property() noShadow = false;
   @property() image = "";
 
   static styles = [
@@ -20,12 +21,12 @@ export class AppPostCard extends LitElement {
         gap: 1.5em;
         flex-direction: row;
         width: 100%;
+        place-content: center;
       }
 
       @media (max-width: 65em) {
         .post-card {
           flex-wrap: wrap-reverse;
-          place-self: center;
         }
       }
 
@@ -34,9 +35,14 @@ export class AppPostCard extends LitElement {
         border: 1.25px solid rgba(255, 179, 71, 0.26);
         box-shadow: var(--shadow-soft);
         padding-left: 0.75rem;
-        padding-block: 0.75rem;
+        padding-block: 1.2rem;
         width: 90%;
         background: var(--background);
+      }
+
+      .card-no-shadow {
+        box-shadow: none;
+        background: none;
       }
 
       .description {
@@ -90,7 +96,9 @@ export class AppPostCard extends LitElement {
   render() {
     return html`
       <div class="post-card">
-        <article class="card" @click=${this.openPost}>
+        <article class=${
+          !this.noShadow ? "card" : "card card-no-shadow"
+        } @click=${this.openPost}>
           <div class="image">
             ${
               this.image

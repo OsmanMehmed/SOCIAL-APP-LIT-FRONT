@@ -11,6 +11,14 @@ export class PagePost extends LitElement {
   static styles = [
     unsafeCSS(componentsCSS),
     css`
+      .component-container {
+        justify-self: center;
+        min-width: 28em;
+        max-width: 90em;
+        width: 60%;
+        padding-right: 1.5em;
+      }
+
       .back {
         font-size: 1rem;
         color: var(--muted-foreground);
@@ -31,13 +39,17 @@ export class PagePost extends LitElement {
   render() {
     const id = this.params?.id ?? "";
     return html`
-      <div class="back" @click=${this.goBack}>
-        ${CONSTANTS.POST_BACK_TO_FEED}
-      </div>
-      <div class="card">
-        <div class="chip-muted">${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}</div>
-        <h2>${CONSTANTS.POST_TITLE}</h2>
-        <p>${CONSTANTS.POST_BODY}</p>
+      <div class="component-container">
+        <div class="back" @click=${this.goBack}>
+          ${CONSTANTS.POST_BACK_TO_FEED}
+        </div>
+        <div class="card">
+          <div class="chip-muted">
+            ${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}
+          </div>
+          <h2>${CONSTANTS.POST_TITLE}</h2>
+          <p>${CONSTANTS.POST_BODY}</p>
+        </div>
       </div>
     `;
   }

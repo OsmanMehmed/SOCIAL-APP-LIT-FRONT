@@ -19,11 +19,17 @@ export class PageProfileSettings extends LitElement {
         display: flex;
         flex-direction: column;
         gap: 1em;
+        min-width: 15em;
         width: 35em;
       }
-      
+
       .edit-profile-input {
         width: 95%;
+      }
+
+      .component-container {
+        justify-self: center;
+        min-width: 20em;
       }
     `,
   ];
@@ -39,6 +45,7 @@ export class PageProfileSettings extends LitElement {
 
   render() {
     return html`
+    <div class="component-container">
       <form class="edit-profile-card card" @submit=${this.save}>
         <div class="chip-muted">${CONSTANTS.PROFILE_SETTINGS_TITLE}</div>
         <input class="input edit-profile-input" placeholder=${CONSTANTS.PROFILE_SETTINGS_NAME} />
@@ -60,6 +67,7 @@ export class PageProfileSettings extends LitElement {
           </button>
         </div>
       </form>
+      </div>
     `;
   }
 }
