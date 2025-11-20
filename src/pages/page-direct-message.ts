@@ -15,6 +15,7 @@ export class PageDirectMessage extends LitElement {
         justify-self: center;
         min-width: 20em;
         max-width: 40em;
+        height: 90%;
         width: 60%;
       }
 
@@ -24,7 +25,7 @@ export class PageDirectMessage extends LitElement {
         gap: 0.35rem;
         margin-block: 2rem;
         overflow-x: hidden;
-        max-height: 20.5em;
+        max-height: 80%;
         padding-inline: 1em;
       }
 
@@ -56,10 +57,6 @@ export class PageDirectMessage extends LitElement {
         flex: 1;
       }
 
-      .send-button {
-        width: 9em;
-      }
-
       .send-input {
       }
 
@@ -67,6 +64,15 @@ export class PageDirectMessage extends LitElement {
         display: flex;
         flex-direction: column;
         gap: 0.5em;
+      }
+
+      .send-button {
+        width: 9em;
+      }
+
+      .send-button-container {
+        width: 100%;
+        text-align: right;
       }
     `,
   ];
@@ -102,6 +108,58 @@ export class PageDirectMessage extends LitElement {
           <div class="msg-me">Gracias, salió increíble.</div>
           <div class="msg-me">Gracias, salió increíble.</div>
           <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
+          <div class="msg-me">Gracias, salió increíble.</div>
         </div>
         <form @submit=${this.send} class="send-message-form">
           <input
@@ -110,9 +168,11 @@ export class PageDirectMessage extends LitElement {
             .value=${this.draft}
             @input=${this.onInput}
           />
-          <button class="btn btn-sm send-button" type="submit">
-            ${CONSTANTS.DM_SEND_BUTTON}
-          </button>
+          <div class="send-button-container">
+            <button class="btn btn-sm send-button" type="submit">
+              ${CONSTANTS.DM_SEND_BUTTON}
+            </button>
+          </div>
         </form>
       </section>
     `;

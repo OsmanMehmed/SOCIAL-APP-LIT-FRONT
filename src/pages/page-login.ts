@@ -53,7 +53,7 @@ export class PageLogin extends LitElement {
       }
 
       .login-input {
-        width: 90%
+        width: 95%
       }
 
       .chip-login{

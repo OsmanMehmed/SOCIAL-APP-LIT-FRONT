@@ -12,7 +12,8 @@ export class PageConversations extends LitElement {
     css`
       .component-container {
         justify-self: center;
-        width: 50%;
+        width: 23em;
+        cursor: pointer
       }
     `,
   ];
@@ -38,6 +39,7 @@ export class PageConversations extends LitElement {
             .username=${CONSTANTS.CONVERSATIONS_MSG1_USERNAME}
             .subtitle=${CONSTANTS.CONVERSATIONS_MSG1_SUBTITLE}
             .profileId=${chefId}
+            .supressProfileRoute=${true}
           ></app-mini-profile>
           <p>${CONSTANTS.CONVERSATIONS_MSG1_TEXT}</p>
         </div>
@@ -46,6 +48,7 @@ export class PageConversations extends LitElement {
             .username=${CONSTANTS.CONVERSATIONS_MSG2_USERNAME}
             .subtitle=${CONSTANTS.CONVERSATIONS_MSG2_SUBTITLE}
             .profileId=${teamId}
+            .supressProfileRoute=${true}
           ></app-mini-profile>
           <p>${CONSTANTS.CONVERSATIONS_MSG2_TEXT}</p>
         </div>

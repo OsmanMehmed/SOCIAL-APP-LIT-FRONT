@@ -26,9 +26,10 @@ export class PageNewPost extends LitElement {
 
       .new-post-card {
         justify-self: center;
-        min-width: 20em;
+        min-width: 28em;
         max-width: 90em;
         width: 60%;
+        padding-right: 1.5em;
       }
 
       .form {
@@ -66,6 +67,7 @@ export class PageNewPost extends LitElement {
 
       .save-button {
         width: 10em;
+        margin-bottom: 0.5em;
       }
 
       .error {
@@ -133,10 +135,6 @@ export class PageNewPost extends LitElement {
         height: 2.5em;
         font-size: 0.8rem;
         white-space: nowrap;
-      }
-
-      .input {
-        width: 95%;
       }
 
       .recipe-images::file-selector-button,

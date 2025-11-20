@@ -34,8 +34,8 @@ export const CONSTANTS = {
   FEED_SIDEBAR_TEXT:
     "Busca recetas, sigue a otros chefs y guarda tus platos favoritos.",
 
-  MINI_PROFILE_USERNAME: "@chef.demo",
-  MINI_PROFILE_SUBTITLE: "Perfil culinario",
+  MINI_PROFILE_USERNAME_DEFAULT: "@default",
+  MINI_PROFILE_SUBTITLE_DEFAULT: "default",
   MINI_PROFILE_ACTION_VIEW: "Ver",
 
   POST_BACK_TO_FEED: "← Volver",
@@ -78,8 +78,8 @@ export const CONSTANTS = {
 
   CURRENT_USER_ID: "me",
 
-  POST_CARD_DEFAULT_USERNAME: "chef",
-  POST_CARD_DEFAULT_CAPTION: "Descripción de la receta",
+  POST_CARD_DEFAULT_USERNAME: "@defaultChef",
+  POST_CARD_DEFAULT_CAPTION: "default caption",
   POST_CARD_FALLBACK_IMAGE_TEXT: "Foto del plato",
   POST_CARD_LIKES_TEXT: "120",
   POST_CARD_COMMENTS_TEXT: "18",

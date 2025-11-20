@@ -6,9 +6,10 @@ import { CONSTANTS } from "../shared/constants";
 
 @customElement("app-mini-profile")
 export class AppMiniProfile extends LitElement {
-  @property({ type: String }) username = CONSTANTS.MINI_PROFILE_USERNAME;
-  @property({ type: String }) subtitle = CONSTANTS.MINI_PROFILE_SUBTITLE;
+  @property({ type: String }) username = CONSTANTS.MINI_PROFILE_USERNAME_DEFAULT;
+  @property({ type: String }) subtitle = CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
   @property({ type: String }) profileId = CONSTANTS.CURRENT_USER_ID;
+  @property({ type: Boolean }) supressProfileRoute = false;
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -37,9 +38,11 @@ export class AppMiniProfile extends LitElement {
   ];
 
   private goProfile(event: Event) {
-    event.stopPropagation();
-    const id = this.profileId || CONSTANTS.CURRENT_USER_ID;
-    navigate(`/profile/${id}`);
+    if (!this.supressProfileRoute) {
+      event.stopPropagation();
+      const id = this.profileId || CONSTANTS.CURRENT_USER_ID;
+      navigate(`/profile/${id}`);
+    }
   }
 
   render() {

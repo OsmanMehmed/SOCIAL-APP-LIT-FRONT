@@ -9,6 +9,7 @@ export class AppPostCard extends LitElement {
   @property() postId = "";
   @property() username = CONSTANTS.POST_CARD_DEFAULT_USERNAME;
   @property() caption = CONSTANTS.POST_CARD_DEFAULT_CAPTION;
+  @property() noProfile = false;
   @property() image = "";
 
   static styles = [
@@ -18,12 +19,12 @@ export class AppPostCard extends LitElement {
         display: flex;
         gap: 1.5em;
         flex-direction: row;
+        width: 100%;
       }
 
-      @media (max-width: 950px) {
+      @media (max-width: 65em) {
         .post-card {
           flex-wrap: wrap-reverse;
-          width: 60%;
           place-self: center;
         }
       }
@@ -32,7 +33,8 @@ export class AppPostCard extends LitElement {
         border-radius: var(--radius-md);
         border: 1.25px solid rgba(255, 179, 71, 0.26);
         box-shadow: var(--shadow-soft);
-        padding: 0.75rem;
+        padding-left: 0.75rem;
+        padding-block: 0.75rem;
         width: 90%;
         background: var(--background);
       }
@@ -112,13 +114,27 @@ export class AppPostCard extends LitElement {
             </div>
           </div>
         </article>
-        <aside class="sidebar">
-          <app-mini-profile></app-mini-profile>
-          <div class="card description">
-            <div class="chip-muted">${CONSTANTS.FEED_SIDEBAR_TITLE}</div>
-            <div style="margin-top:0.3rem;">${CONSTANTS.FEED_SIDEBAR_TEXT}</div>
-          </div>
-        </aside>
+        ${
+          !this.noProfile
+            ? html`
+                <aside class="sidebar">
+                  <app-mini-profile
+                    username=${this.username}
+                    subtitle=${this.caption}
+                  ></app-mini-profile>
+                  <div class="card description">
+                    <div class="chip-muted">
+                      ${CONSTANTS.FEED_SIDEBAR_TITLE}
+                    </div>
+                    <div style="margin-top:0.3rem;">
+                      ${CONSTANTS.FEED_SIDEBAR_TEXT}
+                    </div>
+                  </div>
+                </aside>
+              `
+            : ``
+        }
+        
       </div>
     `;
   }

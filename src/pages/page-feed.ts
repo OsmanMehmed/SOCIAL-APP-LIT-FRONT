@@ -12,19 +12,21 @@ export class PageFeed extends LitElement {
     css`
       .component-container {
         justify-self: center;
-        min-width: 45em;
-        width: 60%;
       }
+
+      @media (max-width: 65em) {
+        .component-container {
+          max-width: 35em;
+          min-width: 20em;
+        }
+      }
+
       .grid {
         display: grid;
         grid-template-columns: minmax(0, 2fr) minmax(275px, 0.9fr);
         gap: 0.9rem;
       }
-      @media (max-width: 1000px) {
-        .grid {
-          grid-template-columns: 1fr;
-        }
-      }
+
       .flow-column {
         display: flex;
         flex-direction: column;

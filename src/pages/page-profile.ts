@@ -16,6 +16,12 @@ export class PageProfile extends LitElement {
   static styles = [
     unsafeCSS(componentsCSS),
     css`
+      .component-container {
+        justify-self: center;
+        min-width: 25em;
+        width: 40%;
+      }
+
       .back {
         font-size: 1rem;
         color: var(--muted-foreground);
@@ -29,7 +35,6 @@ export class PageProfile extends LitElement {
         gap: 0.2rem;
         align-items: center;
         margin-bottom: 2em;
-        width: 25em;
       }
 
       .profile-name {
@@ -45,10 +50,29 @@ export class PageProfile extends LitElement {
         margin-top: 0.5rem;
         flex-wrap: wrap;
         place-content: end space-between;
+        margin-right: 0.5em;
       }
 
       .edit-profile-btn {
         width: 10em;
+      }
+
+      .posts-card {
+        overflow-y: scroll;
+        height: 45em;
+      }
+
+      .profile-card {
+        width: 40%;
+        place-self: center;
+      }
+
+      .page-profile-posts-title {
+        margin-bottom: 1.5em;
+      }
+
+      .posts-container {
+        place-content: center;
       }
     `,
   ];
@@ -69,11 +93,13 @@ export class PageProfile extends LitElement {
     const id = this.params?.id ?? "me";
     const isMe = id === "me";
     return html`
-      <section class="flow-column">
+      <section class="flow-column component-container">
         ${!isMe
-          ? html`<div class="back" @click=${this.goBack}>${CONSTANTS.POST_BACK_TO_FEED}</div>`
+          ? html`<div class="back" @click=${this.goBack}>
+              ${CONSTANTS.POST_BACK_TO_FEED}
+            </div>`
           : null}
-        <div class="card">
+        <div class="card profile-card">
           <div class="profile-info">
             <app-avatar .cursorPointer=${false} .bigAvatar=${true}></app-avatar>
             <div class="profile-name">
@@ -104,8 +130,14 @@ export class PageProfile extends LitElement {
           </div>
         </div>
 
-        <div class="card">
-          <div class="chip-muted">${CONSTANTS.PROFILE_PUBLISHED_RECIPES}</div>
+        <div class="card posts-card">
+          <div class="chip-muted page-profile-posts-title">
+            ${CONSTANTS.PROFILE_PUBLISHED_RECIPES}
+          </div>
+          <div class="posts-container">
+            <app-post-card noProfile=${true} postId="1"></app-post-card>
+            <app-post-card postId="2" noProfile=${true}></app-post-card>
+          </div>
         </div>
       </section>
     `;
