@@ -1,10 +1,26 @@
 
 .app-shell {
   display: grid;
-  grid-template-rows: var(--toolbar-height) 1fr var(--bottom-nav-height);
+  grid-template-rows: var(--toolbar-height) auto 1fr var(--bottom-nav-height);
   height: 100vh;
   background: transparent;
   overflow: hidden;
+}
+
+app-toolbar {
+  grid-row: 1;
+}
+
+app-back-link {
+  grid-row: 2;
+}
+
+.app-main {
+  grid-row: 3;
+}
+
+app-bottom-nav {
+  grid-row: 4;
 }
 
 .app-main {

@@ -64,7 +64,7 @@ export class PageLogin extends LitElement {
 
   private onLogin(e: Event) {
     e.preventDefault();
-    authStore.isAuthenticated = true;
+    authStore.login(this.username || CONSTANTS.CURRENT_USER_ID);
     navigate("/feed");
   }
 

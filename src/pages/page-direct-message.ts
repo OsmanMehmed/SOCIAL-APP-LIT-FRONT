@@ -2,7 +2,6 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property, state, query } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
-import { navigate } from "../router";
 import "../components/app-mini-profile";
 
 @customElement("page-direct-message")
@@ -20,14 +19,6 @@ export class PageDirectMessage extends LitElement {
         max-width: 40em;
         height: 90%;
         width: 60%;
-      }
-
-      .back {
-        font-size: 1rem;
-        color: var(--muted-foreground);
-        cursor: pointer;
-        margin-bottom: 0.8rem;
-        width: fit-content;
       }
 
       .thread {
@@ -111,14 +102,6 @@ export class PageDirectMessage extends LitElement {
     this.scrollToBottom();
   }
 
-  private goBack() {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      navigate("/messages");
-    }
-  }
-
   private getParticipantInfo() {
     const conversationId = this.params?.id ?? "";
     const map: Record<
@@ -164,12 +147,9 @@ export class PageDirectMessage extends LitElement {
 
     return html`
       <section class="component-container">
-        <div class="back" @click=${this.goBack}>
-          ${CONSTANTS.POST_BACK_TO_FEED}
-        </div>
         <app-mini-profile
           .username=${username}
-          .subtitle=${subtitle}
+          .noSubtitle=${true}
           .profileId=${profileId}
         ></app-mini-profile>
         <div class="thread">

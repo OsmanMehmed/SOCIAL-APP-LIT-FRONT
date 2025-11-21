@@ -28,21 +28,11 @@ export class PagePost extends LitElement {
     `,
   ];
 
-  private goBack() {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      navigate("/feed");
-    }
-  }
 
   render() {
     const id = this.params?.id ?? "";
     return html`
       <div class="component-container">
-        <div class="back" @click=${this.goBack}>
-          ${CONSTANTS.POST_BACK_TO_FEED}
-        </div>
         <div class="card">
           <div class="chip-muted">
             ${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}

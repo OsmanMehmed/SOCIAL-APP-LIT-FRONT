@@ -48,6 +48,26 @@ export class PageFeed extends LitElement {
           username=${CONSTANTS.FEED_POST2_USERNAME}
           caption=${CONSTANTS.FEED_POST2_CAPTION}
         ></app-post-card>
+        <app-post-card
+          postId="2"
+          username=${CONSTANTS.FEED_POST2_USERNAME}
+          caption=${CONSTANTS.FEED_POST2_CAPTION}
+        ></app-post-card>
+        <app-post-card
+          postId="2"
+          username=${CONSTANTS.FEED_POST2_USERNAME}
+          caption=${CONSTANTS.FEED_POST2_CAPTION}
+        ></app-post-card>
+        <app-post-card
+          postId="2"
+          username=${CONSTANTS.FEED_POST2_USERNAME}
+          caption=${CONSTANTS.FEED_POST2_CAPTION}
+        ></app-post-card>
+        <app-post-card
+          postId="2"
+          username=${CONSTANTS.FEED_POST2_USERNAME}
+          caption=${CONSTANTS.FEED_POST2_CAPTION}
+        ></app-post-card>
       </section>
     `;
   }

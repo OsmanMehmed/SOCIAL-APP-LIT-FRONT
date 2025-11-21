@@ -3,6 +3,7 @@ import layoutCSS from "../design-system/layout.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
+import { authStore } from "../state/auth-store";
 import "./app-icon-button";
 import "./app-avatar";
 
@@ -11,6 +12,8 @@ export class AppToolbar extends LitElement {
   @property() title = "";
 
   private logout() {
+    window.dispatchEvent(new CustomEvent("app:clear-scroll"));
+    authStore.logout();
     navigate("/login");
   }
 

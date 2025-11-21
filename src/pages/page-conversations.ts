@@ -13,7 +13,7 @@ export class PageConversations extends LitElement {
       .component-container {
         justify-self: center;
         width: 23em;
-        cursor: pointer
+        cursor: pointer;
       }
     `,
   ];
@@ -40,15 +40,16 @@ export class PageConversations extends LitElement {
             .subtitle=${CONSTANTS.CONVERSATIONS_MSG1_SUBTITLE}
             .profileId=${chefId}
             .supressProfileRoute=${true}
+            .noSubtitle=${true}
           ></app-mini-profile>
           <p>${CONSTANTS.CONVERSATIONS_MSG1_TEXT}</p>
         </div>
         <div class="card" @click=${() => this.openDm("2")}>
           <app-mini-profile
             .username=${CONSTANTS.CONVERSATIONS_MSG2_USERNAME}
-            .subtitle=${CONSTANTS.CONVERSATIONS_MSG2_SUBTITLE}
             .profileId=${teamId}
             .supressProfileRoute=${true}
+            .noSubtitle=${true}
           ></app-mini-profile>
           <p>${CONSTANTS.CONVERSATIONS_MSG2_TEXT}</p>
         </div>

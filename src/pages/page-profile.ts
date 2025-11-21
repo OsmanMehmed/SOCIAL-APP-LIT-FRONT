@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, query } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 import "../components/app-avatar";
@@ -8,6 +8,9 @@ import "../components/app-avatar";
 @customElement("page-profile")
 export class PageProfile extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
+  @query(".posts-card") private postsCard?: HTMLDivElement;
+  private postsScrollListener = () => this.savePostsScroll();
+  private beforeNavigateListener = () => this.savePostsScroll();
 
   private editProfile() {
     navigate("/profile-settings");
@@ -22,14 +25,6 @@ export class PageProfile extends LitElement {
         width: 50%;
         max-width: 52em;
         padding-bottom: 1rem;
-      }
-
-      .back {
-        font-size: 1rem;
-        color: var(--muted-foreground);
-        cursor: pointer;
-        margin-bottom: 0.4rem;
-        margin-left: 1.5em;
       }
 
       .profile-info {
@@ -124,12 +119,58 @@ export class PageProfile extends LitElement {
     };
   }
 
-  private goBack() {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      navigate("/feed");
+  private getScrollKey() {
+    const id = this.params?.id ?? "me";
+    return `profile:posts-scroll:${id}`;
+  }
+
+  private savePostsScroll() {
+    if (!this.postsCard) return;
+    const key = this.getScrollKey();
+    try {
+      sessionStorage.setItem(key, String(this.postsCard.scrollTop));
+    } catch {
     }
+  }
+
+  private restorePostsScroll() {
+    if (!this.postsCard) return;
+    const key = this.getScrollKey();
+    let top = 0;
+    try {
+      const stored = sessionStorage.getItem(key);
+      top = stored ? Number(stored) : 0;
+    } catch {
+      top = 0;
+    }
+    if (Number.isNaN(top)) return;
+    requestAnimationFrame(() => {
+      if (!this.postsCard) return;
+      this.postsCard.scrollTop = top;
+      requestAnimationFrame(() => {
+        if (this.postsCard) {
+          this.postsCard.scrollTop = top;
+        }
+      });
+    });
+  }
+
+  protected firstUpdated() {
+    this.restorePostsScroll();
+    this.postsCard?.addEventListener("scroll", this.postsScrollListener);
+    window.addEventListener(
+      "app:navigate-start",
+      this.beforeNavigateListener as EventListener
+    );
+  }
+
+  disconnectedCallback(): void {
+    this.postsCard?.removeEventListener("scroll", this.postsScrollListener);
+    window.removeEventListener(
+      "app:navigate-start",
+      this.beforeNavigateListener as EventListener
+    );
+    super.disconnectedCallback();
   }
 
   render() {
@@ -138,11 +179,6 @@ export class PageProfile extends LitElement {
     const isMe = id === "me";
     return html`
       <section class="flow-column component-container">
-        ${!isMe
-          ? html`<div class="back" @click=${this.goBack}>
-              ${CONSTANTS.POST_BACK_TO_FEED}
-            </div>`
-          : null}
         <div class="card profile-card">
           <div class="profile-info">
             <app-avatar .cursorPointer=${false} .bigAvatar=${true}></app-avatar>

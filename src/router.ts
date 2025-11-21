@@ -43,6 +43,9 @@ export function parseLocation(path: string): AppLocation {
 }
 
 export function navigate(path: string) {
+  window.dispatchEvent(
+    new CustomEvent('app:navigate-start', { detail: { from: location.pathname } })
+  );
   history.pushState({}, '', path);
   window.dispatchEvent(new PopStateEvent('popstate'));
 }

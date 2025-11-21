@@ -6,10 +6,13 @@ import { CONSTANTS } from "../shared/constants";
 
 @customElement("app-mini-profile")
 export class AppMiniProfile extends LitElement {
-  @property({ type: String }) username = CONSTANTS.MINI_PROFILE_USERNAME_DEFAULT;
-  @property({ type: String }) subtitle = CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
+  @property({ type: String }) username =
+    CONSTANTS.MINI_PROFILE_USERNAME_DEFAULT;
+  @property({ type: String }) subtitle =
+    CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
   @property({ type: String }) profileId = CONSTANTS.CURRENT_USER_ID;
   @property({ type: Boolean }) supressProfileRoute = false;
+  @property({ type: Boolean }) noSubtitle = false;
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -53,9 +56,11 @@ export class AppMiniProfile extends LitElement {
           <span class="username" @click=${this.goProfile}
             >${this.username}</span
           >
-          <span class="chip-muted name" @click=${this.goProfile}
-            >${this.subtitle}</span
-          >
+          ${!this.noSubtitle
+            ? html`<span class="chip-muted name" @click=${this.goProfile}
+                >${this.subtitle}</span
+              >`
+            : null}
         </div>
       </div>
     `;
