@@ -19,7 +19,8 @@ export class PageProfile extends LitElement {
       .component-container {
         justify-self: center;
         min-width: 25em;
-        width: 40%;
+        width: 50%;
+        max-width: 52em;
       }
 
       .back {
@@ -41,6 +42,13 @@ export class PageProfile extends LitElement {
         font-weight: 600;
         width: 100%;
         margin-left: 1em;
+      }
+
+      .profile-subtitle {
+        width: 100%;
+        margin-left: 1em;
+        color: var(--muted-foreground);
+        font-size: 0.9rem;
       }
 
       .buttons-2 {
@@ -67,17 +75,46 @@ export class PageProfile extends LitElement {
       }
 
       .posts-container {
-        overflow-y: scroll;
-        height: 45em;
         display: flex;
         flex-direction: column;
         gap: 0.8em;
+        overflow: visible;
       }
     `,
   ];
 
   private openDm() {
-    navigate("/dm/me");
+    const id = this.params?.id ?? "me";
+    navigate(`/dm/${id}`);
+  }
+
+  private getProfileMeta() {
+    const id = this.params?.id ?? "me";
+    const map: Record<string, { username: string; subtitle: string }> = {
+      "ana.cocina": {
+        username: `${CONSTANTS.USERNAME_PREFIX}${CONSTANTS.FEED_POST1_USERNAME.replace(
+          CONSTANTS.USERNAME_PREFIX,
+          ""
+        )}`,
+        subtitle: CONSTANTS.FEED_POST1_CAPTION,
+      },
+      "osman.chef": {
+        username: `${CONSTANTS.USERNAME_PREFIX}${CONSTANTS.FEED_POST2_USERNAME.replace(
+          CONSTANTS.USERNAME_PREFIX,
+          ""
+        )}`,
+        subtitle: CONSTANTS.FEED_POST2_CAPTION,
+      },
+    };
+
+    const baseUsername = id.startsWith(CONSTANTS.USERNAME_PREFIX)
+      ? id
+      : `${CONSTANTS.USERNAME_PREFIX}${id}`;
+
+    return map[id] ?? {
+      username: baseUsername,
+      subtitle: CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT,
+    };
   }
 
   private goBack() {
@@ -90,6 +127,7 @@ export class PageProfile extends LitElement {
 
   render() {
     const id = this.params?.id ?? "me";
+    const { username, subtitle } = this.getProfileMeta();
     const isMe = id === "me";
     return html`
       <section class="flow-column component-container">
@@ -102,8 +140,9 @@ export class PageProfile extends LitElement {
           <div class="profile-info">
             <app-avatar .cursorPointer=${false} .bigAvatar=${true}></app-avatar>
             <div class="profile-name">
-              <span>@${id}</span>
+              <span>${username}</span>
             </div>
+            <div class="profile-subtitle">${subtitle}</div>
           </div>
           <div class="buttons-2">
             ${!isMe
@@ -134,10 +173,34 @@ export class PageProfile extends LitElement {
             ${CONSTANTS.PROFILE_PUBLISHED_RECIPES}
           </div>
           <div class="posts-container">
-            <app-post-card noProfile=${true} noShadow=${true} postId="1"></app-post-card>
-            <app-post-card noProfile=${true} noShadow=${true} postId="2"></app-post-card>
-            <app-post-card noProfile=${true} noShadow=${true} postId="2"></app-post-card>
-            <app-post-card noProfile=${true} noShadow=${true} postId="2"></app-post-card>
+            <app-post-card
+              noProfile=${true}
+              noShadow=${true}
+              postId="1"
+              .username=${username}
+              .caption=${subtitle}
+            ></app-post-card>
+            <app-post-card
+              noProfile=${true}
+              noShadow=${true}
+              postId="2"
+              .username=${username}
+              .caption=${subtitle}
+            ></app-post-card>
+            <app-post-card
+              noProfile=${true}
+              noShadow=${true}
+              postId="3"
+              .username=${username}
+              .caption=${subtitle}
+            ></app-post-card>
+            <app-post-card
+              noProfile=${true}
+              noShadow=${true}
+              postId="4"
+              .username=${username}
+              .caption=${subtitle}
+            ></app-post-card>
           </div>
         </div>
       </section>

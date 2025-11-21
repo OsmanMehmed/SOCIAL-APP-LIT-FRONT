@@ -129,6 +129,10 @@ export class AppPostCard extends LitElement {
                   <app-mini-profile
                     username=${this.username}
                     subtitle=${this.caption}
+                    .profileId=${this.username.replace(
+                      CONSTANTS.USERNAME_PREFIX,
+                      ""
+                    )}
                   ></app-mini-profile>
                   <div class="card description">
                     <div class="chip-muted">
