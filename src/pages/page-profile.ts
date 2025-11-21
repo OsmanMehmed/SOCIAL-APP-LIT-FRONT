@@ -21,6 +21,7 @@ export class PageProfile extends LitElement {
         min-width: 25em;
         width: 50%;
         max-width: 52em;
+        padding-bottom: 1rem;
       }
 
       .back {
@@ -28,6 +29,7 @@ export class PageProfile extends LitElement {
         color: var(--muted-foreground);
         cursor: pointer;
         margin-bottom: 0.4rem;
+        margin-left: 1.5em;
       }
 
       .profile-info {
@@ -74,11 +76,16 @@ export class PageProfile extends LitElement {
         margin-bottom: 1.5em;
       }
 
+      .posts-card {
+        max-height: 55vh;
+        overflow-y: auto;
+      }
+
       .posts-container {
         display: flex;
         flex-direction: column;
         gap: 0.8em;
-        overflow: visible;
+        padding-right: 0.2rem;
       }
     `,
   ];
