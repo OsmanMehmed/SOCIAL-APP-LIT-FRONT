@@ -13,6 +13,7 @@ export class AppMiniProfile extends LitElement {
   @property({ type: String }) profileId = CONSTANTS.CURRENT_USER_ID;
   @property({ type: Boolean }) supressProfileRoute = false;
   @property({ type: Boolean }) noSubtitle = false;
+  @property({ type: Boolean }) hideAvatar = false;
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -51,7 +52,9 @@ export class AppMiniProfile extends LitElement {
   render() {
     return html`
       <div class="root">
-        <app-avatar @click=${this.goProfile}></app-avatar>
+        ${this.hideAvatar
+          ? null
+          : html`<app-avatar @click=${this.goProfile}></app-avatar>`}
         <div class="meta">
           <span class="username" @click=${this.goProfile}
             >${this.username}</span

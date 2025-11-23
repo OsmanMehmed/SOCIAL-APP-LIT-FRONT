@@ -1,9 +1,10 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
-import { customElement, property, query } from "lit/decorators.js";
+import { customElement, property, query, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 import "../components/app-avatar";
+import { authStore } from "../state/auth-store";
 
 @customElement("page-profile")
 export class PageProfile extends LitElement {
@@ -11,9 +12,23 @@ export class PageProfile extends LitElement {
   @query(".posts-card") private postsCard?: HTMLDivElement;
   private postsScrollListener = () => this.savePostsScroll();
   private beforeNavigateListener = () => this.savePostsScroll();
+  @state() private isFriend = false;
+  @state() private isBanned = false;
+  private currentProfileId = "";
+  private vetUser() {
+    this.isBanned = !this.isBanned;
+  }
 
   private editProfile() {
     navigate("/profile-settings");
+  }
+
+  private connect() {
+    this.isFriend = true;
+  }
+
+  private unfriend() {
+    this.isFriend = false;
   }
 
   static styles = [
@@ -50,16 +65,58 @@ export class PageProfile extends LitElement {
 
       .buttons-2 {
         display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
+        flex-direction: row;
+        gap: 0.6rem;
         margin-top: 0.5rem;
         flex-wrap: wrap;
-        place-content: end space-between;
-        margin-right: 0.5em;
+        justify-content: center;
+      }
+
+      .friend-btn,
+      .connect-btn {
+        width: 6em;
+      }
+
+      .friend-btn {
+        background: transparent;
+        border: 1px solid;
+        transition: color 0.15s ease, border-color 0.15s ease;
+        width: 6em;
+      }
+
+      .friend-btn .label-hover {
+        display: none;
+      }
+
+      .friend-btn:hover .label-default {
+        display: none;
+      }
+
+      .friend-btn:hover .label-hover {
+        display: inline;
       }
 
       .edit-profile-btn {
         width: 10em;
+      }
+
+      .vet-btn {
+        background: transparent;
+        border: 1px solid;
+        transition: color 0.15s ease, border-color 0.15s ease;
+        width: 6em;
+      }
+
+      .vet-btn .label-hover {
+        display: none;
+      }
+
+      .vet-btn:hover .label-default {
+        display: none;
+      }
+
+      .vet-btn:hover .label-hover {
+        display: inline;
       }
 
       .profile-card {
@@ -119,6 +176,13 @@ export class PageProfile extends LitElement {
     };
   }
 
+  private getDefaultFriendState(id: string) {
+    const defaults: Record<string, boolean> = {
+      "ana.cocina": true,
+    };
+    return defaults[id] ?? false;
+  }
+
   private getScrollKey() {
     const id = this.params?.id ?? "me";
     return `profile:posts-scroll:${id}`;
@@ -155,6 +219,14 @@ export class PageProfile extends LitElement {
     });
   }
 
+  protected willUpdate(_changed: Map<string, unknown>) {
+    const id = this.params?.id ?? "me";
+    if (id !== this.currentProfileId) {
+      this.currentProfileId = id;
+      this.isFriend = this.getDefaultFriendState(id);
+    }
+  }
+
   protected firstUpdated() {
     this.restorePostsScroll();
     this.postsCard?.addEventListener("scroll", this.postsScrollListener);
@@ -177,6 +249,8 @@ export class PageProfile extends LitElement {
     const id = this.params?.id ?? "me";
     const { username, subtitle } = this.getProfileMeta();
     const isMe = id === "me";
+    const isAdmin = authStore.currentUserId === "admin";
+    const canVet = true; // TODO: hook to admin roles when available
     return html`
       <section class="flow-column component-container">
         <div class="card profile-card">
@@ -190,6 +264,48 @@ export class PageProfile extends LitElement {
           <div class="buttons-2">
             ${!isMe
               ? html`
+                  ${
+                    !isAdmin && this.isFriend
+                      ? html`
+                          <button
+                            class="btn-no-fill btn-pill btn-sm friend-btn"
+                            @click=${this.unfriend}
+                            aria-label=${CONSTANTS.PROFILE_UNFRIEND_ALT}
+                          >
+                            <span class="label-default">
+                              ${CONSTANTS.PROFILE_FRIEND_BUTTON}
+                            </span>
+                            <span class="label-hover">
+                              ${CONSTANTS.PROFILE_UNFRIEND_SYMBOL}
+                            </span>
+                          </button>
+                        `
+                      : null
+                  }
+                  ${
+                    !this.isFriend
+                      ? html`
+                          <button
+                            class="btn btn-pill btn-sm connect-btn"
+                            @click=${this.connect}
+                          >
+                            ${CONSTANTS.PROFILE_CONNECT_BUTTON}
+                          </button>
+                        `
+                      : null
+                  }
+                  ${canVet
+                    ? html`
+                        <button
+                          class=${`btn btn-pill btn-sm connect-btn ${
+                            this.isBanned ? "btn-no-fill btn-pill btn-sm vet-btn" : ""
+                          }`}
+                          @click=${this.vetUser}
+                        >
+                          ${this.isBanned ? "Vetado" : "Vetar"}
+                        </button>
+                      `
+                    : null}
                   <button
                     class="btn-no-fill btn-pill btn-sm"
                     @click=${this.openDm}
@@ -198,7 +314,7 @@ export class PageProfile extends LitElement {
                   </button>
                 `
               : null}
-            ${isMe
+            ${isMe || isAdmin
               ? html`
                   <button
                     class="btn btn-pill btn-sm edit-profile-btn"

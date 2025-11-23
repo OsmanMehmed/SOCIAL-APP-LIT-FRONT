@@ -1,8 +1,10 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
+import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
+import { postStore } from "../state/post-store";
 
 @customElement("app-post-card")
 export class AppPostCard extends LitElement {
@@ -12,9 +14,11 @@ export class AppPostCard extends LitElement {
   @property() noProfile = false;
   @property() noShadow = false;
   @property() image = "";
+  @property({ type: Boolean }) showEdit = true;
 
   static styles = [
     unsafeCSS(layoutCSS),
+    unsafeCSS(componentsCSS),
     css`
       .post-card {
         display: flex;
@@ -74,9 +78,22 @@ export class AppPostCard extends LitElement {
         display: flex;
         flex-direction: row;
         gap: 0.6rem;
-        margin-top: 0.5rem;
         font-size: 0.8rem;
         color: var(--muted-foreground);
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+        gap: 0.6rem;
+      }
+
+      .edit-btn {
+        width: 7em;
+        margin-right: 2em;
+        margin-bottom: 1em;
       }
 
       .sidebar {
@@ -90,7 +107,17 @@ export class AppPostCard extends LitElement {
   ];
 
   private openPost() {
+    postStore.setCurrent({
+      id: this.postId,
+      title: this.caption,
+      username: this.username,
+    });
     navigate(`/post/${this.postId}`);
+  }
+
+  private editPost(event: Event) {
+    event.stopPropagation();
+    navigate("/new-post");
   }
 
   render() {
@@ -107,19 +134,33 @@ export class AppPostCard extends LitElement {
             }
           </div>
           <div class="caption">${this.caption}</div>
-          <div class="stats">
-            <div>
-              <sl-icon name="hand-thumbs-up"></sl-icon>
-              <span>${CONSTANTS.POST_CARD_LIKES_TEXT}</span>
+          <div class="footer">
+            <div class="stats">
+              <div>
+                <sl-icon name="hand-thumbs-up"></sl-icon>
+                <span>${CONSTANTS.POST_CARD_LIKES_TEXT}</span>
+              </div>
+              <div>
+                <sl-icon name="chat-dots""></sl-icon>
+                <span>${CONSTANTS.POST_CARD_COMMENTS_TEXT}</span>
+              </div>
+              <div>
+                <sl-icon name="bookmark""></sl-icon>
+                <span>${CONSTANTS.POST_CARD_SAVE_TEXT}</span>
+              </div>
             </div>
-            <div>
-              <sl-icon name="chat-dots""></sl-icon>
-              <span>${CONSTANTS.POST_CARD_COMMENTS_TEXT}</span>
-            </div>
-            <div>
-              <sl-icon name="bookmark""></sl-icon>
-              <span>${CONSTANTS.POST_CARD_SAVE_TEXT}</span>
-            </div>
+            ${
+              this.showEdit
+                ? html`
+                    <button
+                      class="btn btn-pill btn-sm edit-btn"
+                      @click=${this.editPost}
+                    >
+                      Editar
+                    </button>
+                  `
+                : null
+            }
           </div>
         </article>
         ${
