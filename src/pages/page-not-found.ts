@@ -2,9 +2,7 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
-import {
-  CONSTANTS
-} from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 
 @customElement("page-not-found")
 export class PageNotFound extends LitElement {

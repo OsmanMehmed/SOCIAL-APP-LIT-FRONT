@@ -1,14 +1,14 @@
 export type Route =
-  | 'login'
-  | 'feed'
-  | 'post'
-  | 'new-post'
-  | 'search'
-  | 'conversations'
-  | 'dm'
-  | 'profile'
-  | 'profile-settings'
-  | 'not-found';
+  | "login"
+  | "feed"
+  | "post"
+  | "new-post"
+  | "search"
+  | "conversations"
+  | "dm"
+  | "profile"
+  | "profile-settings"
+  | "not-found";
 
 export interface AppLocation {
   route: Route;
@@ -16,36 +16,38 @@ export interface AppLocation {
 }
 
 export function parseLocation(path: string): AppLocation {
-  const [_, raw, id] = path.split('/');
+  const [_, raw, id] = path.split("/");
   switch (raw) {
-    case '':
-    case 'feed':
-      return { route: 'feed' };
-    case 'login':
-      return { route: 'login' };
-    case 'post':
-      return { route: 'post', params: { id: id ?? '' } };
-    case 'new-post':
-      return { route: 'new-post'};
-    case 'search':
-      return { route: 'search' };
-    case 'messages':
-      return { route: 'conversations' };
-    case 'dm':
-      return { route: 'dm', params: { id: id ?? '' } };
-    case 'profile':
-      return { route: 'profile', params: { id: id ?? 'me' } };
-    case 'profile-settings':
-      return { route: 'profile-settings' };
+    case "":
+    case "feed":
+      return { route: "feed" };
+    case "login":
+      return { route: "login" };
+    case "post":
+      return { route: "post", params: { id: id ?? "" } };
+    case "new-post":
+      return { route: "new-post" };
+    case "search":
+      return { route: "search" };
+    case "messages":
+      return { route: "conversations" };
+    case "dm":
+      return { route: "dm", params: { id: id ?? "" } };
+    case "profile":
+      return { route: "profile", params: { id: id ?? "me" } };
+    case "profile-settings":
+      return { route: "profile-settings" };
     default:
-      return { route: 'not-found' };
+      return { route: "not-found" };
   }
 }
 
 export function navigate(path: string) {
   window.dispatchEvent(
-    new CustomEvent('app:navigate-start', { detail: { from: location.pathname } })
+    new CustomEvent("app:navigate-start", {
+      detail: { from: location.pathname },
+    }),
   );
-  history.pushState({}, '', path);
-  window.dispatchEvent(new PopStateEvent('popstate'));
+  history.pushState({}, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
 }

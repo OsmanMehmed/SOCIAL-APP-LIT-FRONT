@@ -2,9 +2,7 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { authStore } from "../state/auth-store";
-import {
-  CONSTANTS
-} from "../shared/constants";
+import { CONSTANTS } from "../shared/constants";
 import { navigate } from "../router";
 
 @customElement("page-login")
@@ -17,7 +15,9 @@ export class PageLogin extends LitElement {
     const withoutPrefix = input.value.replace(/^@+/, "");
     this.username = withoutPrefix;
 
-    const displayValue = this.username ? CONSTANTS.USERNAME_PREFIX + this.username : "";
+    const displayValue = this.username
+      ? CONSTANTS.USERNAME_PREFIX + this.username
+      : "";
 
     if (input.value !== displayValue) {
       input.value = displayValue;
@@ -53,10 +53,10 @@ export class PageLogin extends LitElement {
       }
 
       .login-input {
-        width: 95%
+        width: 95%;
       }
 
-      .chip-login{
+      .chip-login {
         margin-top: 0.75em;
       }
     `,
@@ -69,7 +69,9 @@ export class PageLogin extends LitElement {
   }
 
   render() {
-    const displayValue = this.username ? CONSTANTS.USERNAME_PREFIX + this.username : "";
+    const displayValue = this.username
+      ? CONSTANTS.USERNAME_PREFIX + this.username
+      : "";
 
     return html`
       <div class="wrap">
@@ -91,7 +93,9 @@ export class PageLogin extends LitElement {
             placeholder="${CONSTANTS.LOGIN_INPUT_PASSWORD_PLACEHOLDER}"
             required
           />
-          <button class="btn" type="submit">${CONSTANTS.LOGIN_BUTTON_TEXT}</button>
+          <button class="btn" type="submit">
+            ${CONSTANTS.LOGIN_BUTTON_TEXT}
+          </button>
           <div class="chip-muted chip-login">
             <span>${CONSTANTS.LOGIN_HELP_TEXT}</span>
           </div>

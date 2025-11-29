@@ -20,7 +20,7 @@ export class AppAvatar extends LitElement {
         width: 3em;
         height: 3em;
       }
-      
+
       .big-avatar {
         width: 5em;
         height: 5em;
@@ -42,8 +42,8 @@ export class AppAvatar extends LitElement {
   render() {
     return html`
       <div class="avatar ${this.cursorPointer ? "pointer" : ""} ${
-      this.bigAvatar ? "big-avatar" : ""
-    }">
+        this.bigAvatar ? "big-avatar" : ""
+      }">
           ${this.src ? html`<img src=${this.src} />` : html`<span></span>`}
         </div>
       </div>

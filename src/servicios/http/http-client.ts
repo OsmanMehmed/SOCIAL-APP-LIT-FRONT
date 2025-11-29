@@ -1,9 +1,16 @@
 const API_BASE = "/api";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
-type RequestOptions = { method?: Method; body?: unknown; headers?: Record<string, string> };
+type RequestOptions = {
+  method?: Method;
+  body?: unknown;
+  headers?: Record<string, string>;
+};
 
-export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+export async function request<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<T> {
   const { method = "GET", body, headers = {} } = options;
   const response = await fetch(`${API_BASE}${path}`, {
     method,

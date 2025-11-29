@@ -16,7 +16,12 @@ export const friendService = {
       return await friendHttp.sendRequest(from, to);
     } catch (err) {
       console.warn("Send request fallback", err);
-      return { id: `local-${Date.now()}`, fromUserId: from, toUserId: to, status: "PENDING" };
+      return {
+        id: `local-${Date.now()}`,
+        fromUserId: from,
+        toUserId: to,
+        status: "PENDING",
+      };
     }
   },
   async respond(requestId: string, status: string): Promise<FriendRequest> {

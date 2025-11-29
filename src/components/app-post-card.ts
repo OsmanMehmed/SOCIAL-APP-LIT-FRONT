@@ -111,7 +111,9 @@ export class AppPostCard extends LitElement {
       .vet-btn-vetted {
         background: transparent;
         border: 1px solid;
-        transition: color 0.15s ease, border-color 0.15s ease;
+        transition:
+          color 0.15s ease,
+          border-color 0.15s ease;
       }
 
       .sidebar {
@@ -205,7 +207,7 @@ export class AppPostCard extends LitElement {
                     subtitle=${this.caption}
                     .profileId=${this.username.replace(
                       CONSTANTS.USERNAME_PREFIX,
-                      ""
+                      "",
                     )}
                   ></app-mini-profile>
                   <div class="card description">

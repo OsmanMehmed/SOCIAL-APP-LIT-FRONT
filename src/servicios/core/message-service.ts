@@ -50,10 +50,14 @@ export const messageService = {
     conversationId: string,
     fromUserId: string,
     toUserId: string,
-    text: string
+    text: string,
   ): Promise<DirectMessage> {
     try {
-      return await messagesHttp.sendMessage(conversationId, { fromUserId, toUserId, text });
+      return await messagesHttp.sendMessage(conversationId, {
+        fromUserId,
+        toUserId,
+        text,
+      });
     } catch (err) {
       console.warn("Send message fallback", err);
       return {

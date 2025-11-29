@@ -171,7 +171,7 @@ export class PageSearch extends LitElement {
     if (!q) return this.mockRecipes;
 
     return this.mockRecipes.filter((recipe) =>
-      recipe.title.toLowerCase().includes(q)
+      recipe.title.toLowerCase().includes(q),
     );
   }
 
@@ -220,7 +220,7 @@ export class PageSearch extends LitElement {
                           <span class="name">${profile.name}</span>
                         </div>
                       </div>
-                    `
+                    `,
                   )
                 : html`<p class="empty">No se han encontrado chefs.</p>`}
             </div>
@@ -247,11 +247,11 @@ export class PageSearch extends LitElement {
                           ${recipe.tags.map(
                             (tag) => html`
                               <span class="recipe-tag">${tag}</span>
-                            `
+                            `,
                           )}
                         </div>
                       </div>
-                    `
+                    `,
                   )
                 : html`<p class="empty">No se han encontrado recetas.</p>`}
             </div>

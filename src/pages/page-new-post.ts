@@ -147,7 +147,9 @@ export class PageNewPost extends LitElement {
         background: transparent;
         color: var(--foreground);
         cursor: pointer;
-        transition: background-color 0.16s ease, border-color 0.16s ease,
+        transition:
+          background-color 0.16s ease,
+          border-color 0.16s ease,
           color 0.16s ease;
       }
 
@@ -302,7 +304,7 @@ export class PageNewPost extends LitElement {
         (f) =>
           f.name === file.name &&
           f.size === file.size &&
-          f.lastModified === file.lastModified
+          f.lastModified === file.lastModified,
       );
       if (!exists) current.push(file);
     }
@@ -387,7 +389,7 @@ export class PageNewPost extends LitElement {
         detail: payload,
         bubbles: true,
         composed: true,
-      })
+      }),
     );
   }
 
@@ -486,7 +488,7 @@ export class PageNewPost extends LitElement {
                             Eliminar
                           </button>
                         </li>
-                      `
+                      `,
                     )}
                   </ul>
                 `
@@ -529,7 +531,7 @@ export class PageNewPost extends LitElement {
                   #${t}
                   <button @click=${() => this.removeTag(t)}>×</button>
                 </span>
-              `
+              `,
             )}
           </div>
 

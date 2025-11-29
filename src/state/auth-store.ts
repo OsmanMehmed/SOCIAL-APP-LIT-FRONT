@@ -14,15 +14,13 @@ function readFromStorage(key: string): string | null {
 function writeToStorage(key: string, value: string) {
   try {
     sessionStorage.setItem(key, value);
-  } catch {
-  }
+  } catch {}
 }
 
 function removeFromStorage(key: string) {
   try {
     sessionStorage.removeItem(key);
-  } catch {
-  }
+  } catch {}
 }
 
 function restoreAuth() {

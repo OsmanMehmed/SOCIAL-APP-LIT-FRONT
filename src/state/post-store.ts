@@ -18,15 +18,13 @@ function readFromStorage(): PostViewData | null {
 function writeToStorage(data: PostViewData) {
   try {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {
-  }
+  } catch {}
 }
 
 function clearStorage() {
   try {
     sessionStorage.removeItem(STORAGE_KEY);
-  } catch {
-  }
+  } catch {}
 }
 
 let currentPost: PostViewData | null = readFromStorage();

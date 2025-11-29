@@ -31,11 +31,11 @@ export class AppRoot extends LitElement {
     window.addEventListener("popstate", this.onPopState);
     window.addEventListener(
       "app:navigate-start",
-      this.onNavigateStart as EventListener
+      this.onNavigateStart as EventListener,
     );
     window.addEventListener(
       "app:clear-scroll",
-      this.onClearScroll as EventListener
+      this.onClearScroll as EventListener,
     );
   }
 
@@ -43,11 +43,11 @@ export class AppRoot extends LitElement {
     window.removeEventListener("popstate", this.onPopState);
     window.removeEventListener(
       "app:navigate-start",
-      this.onNavigateStart as EventListener
+      this.onNavigateStart as EventListener,
     );
     window.removeEventListener(
       "app:clear-scroll",
-      this.onClearScroll as EventListener
+      this.onClearScroll as EventListener,
     );
     super.disconnectedCallback();
   }
@@ -148,7 +148,7 @@ export class AppRoot extends LitElement {
       pathsToKeep
         .map((p) => (p.startsWith("/profile/") ? p.split("/")[2] : null))
         .filter((id): id is string => Boolean(id))
-        .map((id) => `profile:posts-scroll:${id}`)
+        .map((id) => `profile:posts-scroll:${id}`),
     );
 
     try {

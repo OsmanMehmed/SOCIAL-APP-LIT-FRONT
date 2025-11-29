@@ -40,8 +40,7 @@ export class AppIconButton extends LitElement {
   ];
 
   render() {
-    return html`
-    <button ?selected=${this.selected} title=${this.label}>
+    return html` <button ?selected=${this.selected} title=${this.label}>
       <slot></slot>
     </button>`;
   }

@@ -151,7 +151,7 @@ export class PageDirectMessage extends LitElement {
       conversationId,
       CONSTANTS.CURRENT_USER_ID,
       profileId || conversationId,
-      text
+      text,
     );
     this.thread = [...this.thread, message];
     this.draft = "";
@@ -193,7 +193,7 @@ export class PageDirectMessage extends LitElement {
         subtitle: CONSTANTS.CONVERSATIONS_MSG1_SUBTITLE,
         profileId: CONSTANTS.CONVERSATIONS_MSG1_USERNAME.replace(
           CONSTANTS.USERNAME_PREFIX,
-          ""
+          "",
         ),
       },
       "2": {
@@ -201,7 +201,7 @@ export class PageDirectMessage extends LitElement {
         subtitle: CONSTANTS.CONVERSATIONS_MSG2_SUBTITLE,
         profileId: CONSTANTS.CONVERSATIONS_MSG2_USERNAME.replace(
           CONSTANTS.USERNAME_PREFIX,
-          ""
+          "",
         ),
       },
     };
@@ -232,7 +232,7 @@ export class PageDirectMessage extends LitElement {
           .noSubtitle=${true}
           .profileId=${profileId}
         ></app-mini-profile>
-                <div class="thread">
+        <div class="thread">
           ${this.thread.map((message) => {
             const isMe = message.fromUserId === CONSTANTS.CURRENT_USER_ID;
             const className = isMe ? "msg-me" : "msg-other";
@@ -256,4 +256,3 @@ export class PageDirectMessage extends LitElement {
     `;
   }
 }
-

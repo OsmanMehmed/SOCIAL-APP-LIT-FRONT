@@ -82,7 +82,7 @@
   padding: 0.14rem 0.7rem;
   font-size: 0.7rem;
   border-radius: var(--radius-full);
-  background: rgba(255, 75, 75, 0.10);
+  background: rgba(255, 75, 75, 0.1);
   color: var(--muted-foreground);
   display: inline-flex;
   align-self: center;
@@ -94,6 +94,6 @@
   padding: 0.16rem 0.6rem;
   border-radius: var(--radius-full);
   font-size: 0.7rem;
-  background: rgba(255, 75, 75, 0.10);
+  background: rgba(255, 75, 75, 0.1);
   color: var(--red-dark);
 }

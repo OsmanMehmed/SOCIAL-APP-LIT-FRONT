@@ -25,11 +25,11 @@ export class PageConversations extends LitElement {
   render() {
     const chefId = CONSTANTS.CONVERSATIONS_MSG1_USERNAME.replace(
       CONSTANTS.USERNAME_PREFIX,
-      ""
+      "",
     );
     const teamId = CONSTANTS.CONVERSATIONS_MSG2_USERNAME.replace(
       CONSTANTS.USERNAME_PREFIX,
-      ""
+      "",
     );
 
     return html`

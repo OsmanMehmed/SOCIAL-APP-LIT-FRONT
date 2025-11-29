@@ -14,19 +14,22 @@ export class PagePost extends LitElement {
   @state() private liked = false;
   @state() private isBanned = false;
   @state() private postTitle = CONSTANTS.POST_TITLE;
-  @state() private commentItems: { username: string; text: string; profileId: string }[] =
-    [
-      {
-        username: "@foodie.lu",
-        text: "Se ve brutal, me encanta el contraste de colores.",
-        profileId: "foodie.lu",
-      },
-      {
-        username: "@osman.chef",
-        text: "Tip: agrega un toque de miel en el topping para mas brillo.",
-        profileId: "osman.chef",
-      },
-    ];
+  @state() private commentItems: {
+    username: string;
+    text: string;
+    profileId: string;
+  }[] = [
+    {
+      username: "@foodie.lu",
+      text: "Se ve brutal, me encanta el contraste de colores.",
+      profileId: "foodie.lu",
+    },
+    {
+      username: "@osman.chef",
+      text: "Tip: agrega un toque de miel en el topping para mas brillo.",
+      profileId: "osman.chef",
+    },
+  ];
   private currentPostId = "";
 
   static styles = [
@@ -64,7 +67,7 @@ export class PagePost extends LitElement {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
-        width: 8em;;
+        width: 8em;
       }
 
       .like-btn--active {
@@ -124,14 +127,16 @@ export class PagePost extends LitElement {
       }
 
       .vet-btn {
-        width: 8em; 
+        width: 8em;
         margin-right: 1em;
       }
 
       .vet-btn-vetted {
         background: transparent;
         border: 1px solid;
-        transition: color 0.15s ease, border-color 0.15s ease;
+        transition:
+          color 0.15s ease,
+          border-color 0.15s ease;
       }
 
       .vet-btn-vetted .label-hover {
@@ -246,7 +251,10 @@ export class PagePost extends LitElement {
           <h2>${title}</h2>
           <p>${CONSTANTS.POST_BODY}</p>
           <div class="post-edit-container">
-            <button class="btn btn-pill btn-sm edit-btn" @click=${() => navigate("/new-post")}>
+            <button
+              class="btn btn-pill btn-sm edit-btn"
+              @click=${() => navigate("/new-post")}
+            >
               Editar
             </button>
           </div>
@@ -279,7 +287,7 @@ export class PagePost extends LitElement {
                   ></app-mini-profile>
                   <p class="comment-text">${comment.text}</p>
                 </div>
-              `
+              `,
             )}
           </div>
         </section>

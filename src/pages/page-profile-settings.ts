@@ -45,28 +45,34 @@ export class PageProfileSettings extends LitElement {
 
   render() {
     return html`
-    <div class="component-container">
-      <form class="edit-profile-card card" @submit=${this.save}>
-        <div class="chip-muted">${CONSTANTS.PROFILE_SETTINGS_TITLE}</div>
-        <input class="input edit-profile-input" placeholder=${CONSTANTS.PROFILE_SETTINGS_NAME} />
-        <input
-          class="input edit-profile-input"
-          placeholder=${CONSTANTS.PROFILE_SETTINGS_SPECIALITY}
-        />
-        <input class="input edit-profile-input" placeholder=${CONSTANTS.PROFILE_SETTINGS_URL} />
-        <div class="buttons">
-          <button class="btn btn-sm" type="submit">
-            ${CONSTANTS.PROFILE_SETTINGS_SAVE}
-          </button>
-          <button
-            class="btn-no-fill btn-sm"
-            type="button"
-            @click=${this.cancel}
-          >
-            ${CONSTANTS.PROFILE_SETTINGS_CANCEL}
-          </button>
-        </div>
-      </form>
+      <div class="component-container">
+        <form class="edit-profile-card card" @submit=${this.save}>
+          <div class="chip-muted">${CONSTANTS.PROFILE_SETTINGS_TITLE}</div>
+          <input
+            class="input edit-profile-input"
+            placeholder=${CONSTANTS.PROFILE_SETTINGS_NAME}
+          />
+          <input
+            class="input edit-profile-input"
+            placeholder=${CONSTANTS.PROFILE_SETTINGS_SPECIALITY}
+          />
+          <input
+            class="input edit-profile-input"
+            placeholder=${CONSTANTS.PROFILE_SETTINGS_URL}
+          />
+          <div class="buttons">
+            <button class="btn btn-sm" type="submit">
+              ${CONSTANTS.PROFILE_SETTINGS_SAVE}
+            </button>
+            <button
+              class="btn-no-fill btn-sm"
+              type="button"
+              @click=${this.cancel}
+            >
+              ${CONSTANTS.PROFILE_SETTINGS_CANCEL}
+            </button>
+          </div>
+        </form>
       </div>
     `;
   }

@@ -7,8 +7,8 @@
   --background-soft: var(--red-light);
   --foreground: #1f1414;
 
-  --color-bg-1: #FAF4EF;
-  --color-bg-2: #F6E7D8;
+  --color-bg-1: #faf4ef;
+  --color-bg-2: #f6e7d8;
 
   --muted: #f4d6d8;
   --muted-foreground: #8a4a4f;
@@ -17,7 +17,7 @@
   --accent-soft: rgba(255, 75, 75, 0.16);
   --accent-alt: #ff9a8a;
 
-  --border-subtle: rgba(183, 32, 46, 0.20);
+  --border-subtle: rgba(183, 32, 46, 0.2);
 
   --radius-sm: 0.4rem;
   --radius-md: 0.9rem;
@@ -37,31 +37,29 @@
   --color-quaternary: #d7bde2;
   --color-quinary: #aed6f1;
 
-
-  .primary-color{
+  .primary-color {
     color: var(--color-primary);
   }
 
-  .secondary-color{
+  .secondary-color {
     color: var(--color-secondary);
   }
 
-  .tertiary-color{
+  .tertiary-color {
     color: var(--color-tertiary);
   }
 
-  .quaternary-color{
+  .quaternary-color {
     color: var(--color-quaternary);
   }
 
-  .quinary-color{
+  .quinary-color {
     color: var(--color-quinary);
   }
 
   .text-color {
     color: var(--color-text-color);
   }
-
 
   html {
     font-size: 125%;
@@ -84,8 +82,9 @@ body {
   font-family: var(--font-sans);
   color: var(--color-text-color);
   background-color: var(--background);
-  background: radial-gradient(circle at top left, var(--color-bg-2), var(--color-bg-1)),
-              radial-gradient(circle at bottom right, #fbe0c8, transparent 60%);
+  background:
+    radial-gradient(circle at top left, var(--color-bg-2), var(--color-bg-1)),
+    radial-gradient(circle at bottom right, #fbe0c8, transparent 60%);
   background-blend-mode: soft-light;
   position: relative;
   min-height: 100vh;

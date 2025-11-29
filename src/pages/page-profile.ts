@@ -95,7 +95,9 @@ export class PageProfile extends LitElement {
       .friend-btn {
         background: transparent;
         border: 1px solid;
-        transition: color 0.15s ease, border-color 0.15s ease;
+        transition:
+          color 0.15s ease,
+          border-color 0.15s ease;
         width: 6em;
       }
 
@@ -118,7 +120,9 @@ export class PageProfile extends LitElement {
       .vet-btn {
         background: transparent;
         border: 1px solid;
-        transition: color 0.15s ease, border-color 0.15s ease;
+        transition:
+          color 0.15s ease,
+          border-color 0.15s ease;
         width: 6em;
       }
 
@@ -173,8 +177,7 @@ export class PageProfile extends LitElement {
     const key = this.getScrollKey();
     try {
       sessionStorage.setItem(key, String(this.postsCard.scrollTop));
-    } catch {
-    }
+    } catch {}
   }
 
   private restorePostsScroll() {
@@ -212,7 +215,7 @@ export class PageProfile extends LitElement {
     this.postsCard?.addEventListener("scroll", this.postsScrollListener);
     window.addEventListener(
       "app:navigate-start",
-      this.beforeNavigateListener as EventListener
+      this.beforeNavigateListener as EventListener,
     );
   }
 
@@ -220,7 +223,7 @@ export class PageProfile extends LitElement {
     this.postsCard?.removeEventListener("scroll", this.postsScrollListener);
     window.removeEventListener(
       "app:navigate-start",
-      this.beforeNavigateListener as EventListener
+      this.beforeNavigateListener as EventListener,
     );
     super.disconnectedCallback();
   }
@@ -237,7 +240,7 @@ export class PageProfile extends LitElement {
     const isMe = resolvedId === "me";
     const isAdmin = authStore.currentUserId === "admin";
     const canVet = true; // TODO: hook to admin roles when available
-    
+
     return html`
       <section class="flow-column component-container">
         <div class="card profile-card">
@@ -251,41 +254,39 @@ export class PageProfile extends LitElement {
           <div class="buttons-2">
             ${!isMe
               ? html`
-                  ${
-                    !isAdmin && this.isFriend
-                      ? html`
-                          <button
-                            class="btn-no-fill btn-pill btn-sm friend-btn"
-                            @click=${this.unfriend}
-                            aria-label=${CONSTANTS.PROFILE_UNFRIEND_ALT}
-                          >
-                            <span class="label-default">
-                              ${CONSTANTS.PROFILE_FRIEND_BUTTON}
-                            </span>
-                            <span class="label-hover">
-                              ${CONSTANTS.PROFILE_UNFRIEND_SYMBOL}
-                            </span>
-                          </button>
-                        `
-                      : null
-                  }
-                  ${
-                    !this.isFriend
-                      ? html`
-                          <button
-                            class="btn btn-pill btn-sm connect-btn"
-                            @click=${this.connect}
-                          >
-                            ${CONSTANTS.PROFILE_CONNECT_BUTTON}
-                          </button>
-                        `
-                      : null
-                  }
+                  ${!isAdmin && this.isFriend
+                    ? html`
+                        <button
+                          class="btn-no-fill btn-pill btn-sm friend-btn"
+                          @click=${this.unfriend}
+                          aria-label=${CONSTANTS.PROFILE_UNFRIEND_ALT}
+                        >
+                          <span class="label-default">
+                            ${CONSTANTS.PROFILE_FRIEND_BUTTON}
+                          </span>
+                          <span class="label-hover">
+                            ${CONSTANTS.PROFILE_UNFRIEND_SYMBOL}
+                          </span>
+                        </button>
+                      `
+                    : null}
+                  ${!this.isFriend
+                    ? html`
+                        <button
+                          class="btn btn-pill btn-sm connect-btn"
+                          @click=${this.connect}
+                        >
+                          ${CONSTANTS.PROFILE_CONNECT_BUTTON}
+                        </button>
+                      `
+                    : null}
                   ${canVet
                     ? html`
                         <button
                           class=${`btn btn-pill btn-sm connect-btn ${
-                            this.isBanned ? "btn-no-fill btn-pill btn-sm vet-btn" : ""
+                            this.isBanned
+                              ? "btn-no-fill btn-pill btn-sm vet-btn"
+                              : ""
                           }`}
                           @click=${this.vetUser}
                         >
