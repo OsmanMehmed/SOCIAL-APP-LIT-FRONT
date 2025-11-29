@@ -6,6 +6,7 @@ import { postStore } from "../state/post-store";
 import "../components/app-mini-profile";
 import { postService } from "../servicios/core/post-service";
 import type { Comment } from "../modelos/comment";
+import { navigate } from "../router";
 
 @customElement("page-post")
 export class PagePost extends LitElement {
@@ -144,6 +145,17 @@ export class PagePost extends LitElement {
       .vet-btn-vetted:hover .label-hover {
         display: inline;
       }
+
+      .post-edit-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.5rem;
+        margin-right: 1rem;
+      }
+
+      .edit-btn {
+        width: 7em;
+      }
     `,
   ];
 
@@ -233,6 +245,11 @@ export class PagePost extends LitElement {
           </div>
           <h2>${title}</h2>
           <p>${CONSTANTS.POST_BODY}</p>
+          <div class="post-edit-container">
+            <button class="btn btn-pill btn-sm edit-btn" @click=${() => navigate("/new-post")}>
+              Editar
+            </button>
+          </div>
         </div>
 
         <section class="card comments-section">

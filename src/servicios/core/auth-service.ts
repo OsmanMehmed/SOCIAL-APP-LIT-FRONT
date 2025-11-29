@@ -11,9 +11,9 @@ export const authService = {
       return {
         token: "dev-token",
         profile: {
-          id: CONSTANTS.CURRENT_USER_ID,
-          username: payload.username,
-          subtitle: CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT,
+          id: "dato-mockeado",
+          username: `${payload.username}-dato-mockeado`,
+          subtitle: "dato-mockeado",
           friend: false,
           banned: false,
           avatarUrl: null,
@@ -29,9 +29,9 @@ export const authService = {
       return {
         token: "dev-token-new",
         profile: {
-          id: payload.username.replace(CONSTANTS.USERNAME_PREFIX, ""),
-          username: payload.username,
-          subtitle: CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT,
+          id: "dato-mockeado",
+          username: `${payload.username}-dato-mockeado`,
+          subtitle: "dato-mockeado",
           friend: false,
           banned: false,
           avatarUrl: null,
@@ -52,11 +52,11 @@ export const authService = {
     } catch (err) {
       console.warn("Auth refresh fallback", err);
       return {
-        token,
+        token: "token-dato-mockeado",
         profile: {
-          id: CONSTANTS.CURRENT_USER_ID,
-          username: `${CONSTANTS.USERNAME_PREFIX}${CONSTANTS.CURRENT_USER_ID}`,
-          subtitle: CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT,
+          id: "dato-mockeado",
+          username: `${CONSTANTS.USERNAME_PREFIX}${CONSTANTS.CURRENT_USER_ID}-dato-mockeado`,
+          subtitle: "dato-mockeado",
           friend: false,
           banned: false,
           avatarUrl: null,

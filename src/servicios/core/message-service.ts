@@ -5,7 +5,7 @@ import { conversationsHttp, messagesHttp } from "../http/messages-http";
 const fallbackConversation = (userId: string): Conversation => ({
   id: "conv-local",
   participantA: userId,
-  participantB: "ana.cocina",
+  participantB: "ana.cocina-dato-mockeado",
   updatedAt: new Date().toISOString(),
 });
 
@@ -37,9 +37,9 @@ export const messageService = {
         {
           id: "m1",
           conversationId,
-          fromUserId: "ana.cocina",
+          fromUserId: "ana.cocina-dato-mockeado",
           toUserId: "me",
-          text: "Tip anterior sobre la receta.",
+          text: "dato-mockeado: Tip anterior sobre la receta.",
           sentAt: new Date().toISOString(),
         },
       ];

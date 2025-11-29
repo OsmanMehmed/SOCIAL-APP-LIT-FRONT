@@ -7,7 +7,7 @@ const buildFallbackProfile = (id: string): UserProfile => ({
   username: id.startsWith(CONSTANTS.USERNAME_PREFIX)
     ? id
     : `${CONSTANTS.USERNAME_PREFIX}${id}`,
-  subtitle: CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT,
+  subtitle: "dato-mockeado",
   friend: id === "ana.cocina",
   banned: false,
   avatarUrl: null,

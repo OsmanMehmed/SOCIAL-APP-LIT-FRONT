@@ -7,8 +7,8 @@ const fallbackPost = (id: string): Post => {
   if (id === "1") {
     return {
       id,
-      caption: CONSTANTS.FEED_POST1_CAPTION,
-      authorId: CONSTANTS.FEED_POST1_USERNAME,
+      caption: `${CONSTANTS.FEED_POST1_CAPTION} (dato-mockeado)`,
+      authorId: `${CONSTANTS.FEED_POST1_USERNAME}-dato-mockeado`,
       likes: Number(CONSTANTS.POST_CARD_LIKES_TEXT),
       comments: Number(CONSTANTS.POST_CARD_COMMENTS_TEXT),
       saves: Number(CONSTANTS.POST_CARD_SAVE_TEXT),
@@ -16,8 +16,8 @@ const fallbackPost = (id: string): Post => {
   }
   return {
     id,
-    caption: CONSTANTS.FEED_POST2_CAPTION,
-    authorId: CONSTANTS.FEED_POST2_USERNAME,
+    caption: `${CONSTANTS.FEED_POST2_CAPTION} (dato-mockeado)`,
+    authorId: `${CONSTANTS.FEED_POST2_USERNAME}-dato-mockeado`,
     likes: Number(CONSTANTS.POST_CARD_LIKES_TEXT),
     comments: Number(CONSTANTS.POST_CARD_COMMENTS_TEXT),
     saves: Number(CONSTANTS.POST_CARD_SAVE_TEXT),
@@ -28,8 +28,8 @@ const fallbackComments = (postId: string): Comment[] => [
   {
     id: "c1",
     postId,
-    authorId: "osman.chef",
-    text: "Tip anterior sobre la receta.",
+    authorId: "osman.chef-dato-mockeado",
+    text: "dato-mockeado: Tip anterior sobre la receta.",
     createdAt: new Date().toISOString(),
   },
 ];
