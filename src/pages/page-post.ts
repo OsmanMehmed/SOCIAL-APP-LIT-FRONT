@@ -4,25 +4,29 @@ import { customElement, property, state } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
 import { postStore } from "../state/post-store";
 import "../components/app-mini-profile";
+import { postService } from "../servicios/core/post-service";
+import type { Comment } from "../modelos/comment";
 
 @customElement("page-post")
 export class PagePost extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
   @state() private liked = false;
   @state() private isBanned = false;
-
-  private comments = [
-    {
-      username: "@foodie.lu",
-      text: "Se ve brutal, me encanta el contraste de colores.",
-      profileId: "foodie.lu",
-    },
-    {
-      username: "@osman.chef",
-      text: "Tip: agrega un toque de miel en el topping para mas brillo.",
-      profileId: "osman.chef",
-    },
-  ];
+  @state() private postTitle = CONSTANTS.POST_TITLE;
+  @state() private commentItems: { username: string; text: string; profileId: string }[] =
+    [
+      {
+        username: "@foodie.lu",
+        text: "Se ve brutal, me encanta el contraste de colores.",
+        profileId: "foodie.lu",
+      },
+      {
+        username: "@osman.chef",
+        text: "Tip: agrega un toque de miel en el topping para mas brillo.",
+        profileId: "osman.chef",
+      },
+    ];
+  private currentPostId = "";
 
   static styles = [
     unsafeCSS(componentsCSS),
@@ -157,6 +161,30 @@ export class PagePost extends LitElement {
     return titles[id] ?? CONSTANTS.POST_TITLE;
   }
 
+  private async loadPost(id: string) {
+    if (!id) return;
+    this.currentPostId = id;
+    const data = await postService.fetchPostWithComments(id);
+    this.postTitle = data.caption ?? this.getPostTitle(id);
+    this.commentItems = data.commentsList.map((comment: Comment) => {
+      const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
+        ? comment.authorId
+        : `${CONSTANTS.USERNAME_PREFIX}${comment.authorId}`;
+      return {
+        username,
+        text: comment.text,
+        profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
+      };
+    });
+  }
+
+  protected willUpdate(_changed: Map<string, unknown>) {
+    const id = this.params?.id ?? "";
+    if (id && id !== this.currentPostId) {
+      this.loadPost(id);
+    }
+  }
+
   private toggleLike() {
     this.liked = !this.liked;
   }
@@ -171,7 +199,7 @@ export class PagePost extends LitElement {
 
   render() {
     const id = this.params?.id ?? "";
-    const title = this.getPostTitle(id);
+    const title = this.postTitle || this.getPostTitle(id);
     return html`
       <div class="component-container">
         <div class="card">
@@ -223,7 +251,7 @@ export class PagePost extends LitElement {
             </button>
           </form>
           <div class="comments-list">
-            ${this.comments.map(
+            ${this.commentItems.map(
               (comment) => html`
                 <div class="comment-card">
                   <app-mini-profile

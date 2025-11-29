@@ -3,12 +3,16 @@ import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property, state, query } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
 import "../components/app-mini-profile";
+import { messageService } from "../servicios/core/message-service";
+import type { DirectMessage } from "../modelos/direct-message";
 
 @customElement("page-direct-message")
 export class PageDirectMessage extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
   @state() draft = "";
+  @state() private thread: DirectMessage[] = [];
   @query(".thread") private threadEl?: HTMLDivElement;
+  private currentConversationId = "";
 
   static styles = [
     unsafeCSS(componentsCSS),
@@ -131,8 +135,25 @@ export class PageDirectMessage extends LitElement {
     `,
   ];
 
-  private send(e: Event) {
+  private async loadThread(conversationId: string) {
+    if (!conversationId) return;
+    this.currentConversationId = conversationId;
+    this.thread = await messageService.fetchThread(conversationId);
+  }
+
+  private async send(e: Event) {
     e.preventDefault();
+    const text = this.draft.trim();
+    if (!text) return;
+    const conversationId = this.params?.id ?? CONSTANTS.CURRENT_USER_ID;
+    const { profileId } = this.getParticipantInfo();
+    const message = await messageService.sendMessage(
+      conversationId,
+      CONSTANTS.CURRENT_USER_ID,
+      profileId || conversationId,
+      text
+    );
+    this.thread = [...this.thread, message];
     this.draft = "";
   }
 
@@ -143,6 +164,13 @@ export class PageDirectMessage extends LitElement {
   private scrollToBottom() {
     if (this.threadEl) {
       this.threadEl.scrollTop = this.threadEl.scrollHeight;
+    }
+  }
+
+  protected willUpdate(_changed: Map<string, unknown>) {
+    const id = this.params?.id ?? CONSTANTS.CURRENT_USER_ID;
+    if (id !== this.currentConversationId) {
+      this.loadThread(id);
     }
   }
 
@@ -204,75 +232,12 @@ export class PageDirectMessage extends LitElement {
           .noSubtitle=${true}
           .profileId=${profileId}
         ></app-mini-profile>
-        <div class="thread">
-          <div class="msg-other">Tip anterior sobre la receta.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-other">Tip anterior sobre la receta.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
-          <div class="msg-me">Gracias, salió increíble.</div>
+                <div class="thread">
+          ${this.thread.map((message) => {
+            const isMe = message.fromUserId === CONSTANTS.CURRENT_USER_ID;
+            const className = isMe ? "msg-me" : "msg-other";
+            return html`<div class=${className}>${message.text}</div>`;
+          })}
         </div>
         <form @submit=${this.send} class="send-message-form">
           <input
@@ -291,3 +256,4 @@ export class PageDirectMessage extends LitElement {
     `;
   }
 }
+

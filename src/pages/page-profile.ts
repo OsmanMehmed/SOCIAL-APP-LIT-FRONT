@@ -5,6 +5,8 @@ import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 import "../components/app-avatar";
 import { authStore } from "../state/auth-store";
+import { profileService } from "../servicios/core/profile-service";
+import type { UserProfile } from "../modelos/user-profile";
 
 @customElement("page-profile")
 export class PageProfile extends LitElement {
@@ -12,11 +14,16 @@ export class PageProfile extends LitElement {
   @query(".posts-card") private postsCard?: HTMLDivElement;
   private postsScrollListener = () => this.savePostsScroll();
   private beforeNavigateListener = () => this.savePostsScroll();
+  @state() private profile?: UserProfile;
   @state() private isFriend = false;
   @state() private isBanned = false;
   private currentProfileId = "";
-  private vetUser() {
-    this.isBanned = !this.isBanned;
+
+  private async vetUser() {
+    const id = this.params?.id ?? "me";
+    const next = !this.isBanned;
+    this.isBanned = next;
+    await profileService.vetProfile(id, next);
   }
 
   private editProfile() {
@@ -25,6 +32,13 @@ export class PageProfile extends LitElement {
 
   private connect() {
     this.isFriend = true;
+  }
+
+  private async loadProfile(id: string) {
+    const profile = await profileService.fetchProfile(id);
+    this.profile = profile;
+    this.isFriend = profile.friend;
+    this.isBanned = profile.banned;
   }
 
   private unfriend() {
@@ -145,44 +159,8 @@ export class PageProfile extends LitElement {
   ];
 
   private openDm() {
-    const id = this.params?.id ?? "me";
+    const id = this.profile?.id ?? this.params?.id ?? "me";
     navigate(`/dm/${id}`);
-  }
-
-  private getProfileMeta() {
-    const id = this.params?.id ?? "me";
-    const map: Record<string, { username: string; subtitle: string }> = {
-      "ana.cocina": {
-        username: `${CONSTANTS.USERNAME_PREFIX}${CONSTANTS.FEED_POST1_USERNAME.replace(
-          CONSTANTS.USERNAME_PREFIX,
-          ""
-        )}`,
-        subtitle: CONSTANTS.FEED_POST1_CAPTION,
-      },
-      "osman.chef": {
-        username: `${CONSTANTS.USERNAME_PREFIX}${CONSTANTS.FEED_POST2_USERNAME.replace(
-          CONSTANTS.USERNAME_PREFIX,
-          ""
-        )}`,
-        subtitle: CONSTANTS.FEED_POST2_CAPTION,
-      },
-    };
-
-    const baseUsername = id.startsWith(CONSTANTS.USERNAME_PREFIX)
-      ? id
-      : `${CONSTANTS.USERNAME_PREFIX}${id}`;
-
-    return map[id] ?? {
-      username: baseUsername,
-      subtitle: CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT,
-    };
-  }
-
-  private getDefaultFriendState(id: string) {
-    const defaults: Record<string, boolean> = {
-      "ana.cocina": true,
-    };
-    return defaults[id] ?? false;
   }
 
   private getScrollKey() {
@@ -225,7 +203,7 @@ export class PageProfile extends LitElement {
     const id = this.params?.id ?? "me";
     if (id !== this.currentProfileId) {
       this.currentProfileId = id;
-      this.isFriend = this.getDefaultFriendState(id);
+      this.loadProfile(id);
     }
   }
 
@@ -248,9 +226,15 @@ export class PageProfile extends LitElement {
   }
 
   render() {
-    const id = this.params?.id ?? "me";
-    const { username, subtitle } = this.getProfileMeta();
-    const isMe = id === "me";
+    const resolvedId = this.profile?.id ?? this.params?.id ?? "me";
+    const username =
+      this.profile?.username ??
+      (resolvedId.startsWith(CONSTANTS.USERNAME_PREFIX)
+        ? resolvedId
+        : `${CONSTANTS.USERNAME_PREFIX}${resolvedId}`);
+    const subtitle =
+      this.profile?.subtitle ?? CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
+    const isMe = resolvedId === "me";
     const isAdmin = authStore.currentUserId === "admin";
     const canVet = true; // TODO: hook to admin roles when available
     
