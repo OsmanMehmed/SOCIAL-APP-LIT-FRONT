@@ -39,7 +39,8 @@ export class PageProfile extends LitElement {
         min-width: 25em;
         width: 50%;
         max-width: 52em;
-        padding-bottom: 1rem;
+        padding-bottom: 0.8rem;
+        height: 50em;
       }
 
       .profile-info {
@@ -122,6 +123,7 @@ export class PageProfile extends LitElement {
       .profile-card {
         width: 40%;
         place-self: center;
+        min-width: 18em;
       }
 
       .page-profile-posts-title {
@@ -251,6 +253,7 @@ export class PageProfile extends LitElement {
     const isMe = id === "me";
     const isAdmin = authStore.currentUserId === "admin";
     const canVet = true; // TODO: hook to admin roles when available
+    
     return html`
       <section class="flow-column component-container">
         <div class="card profile-card">

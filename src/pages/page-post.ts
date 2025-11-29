@@ -9,6 +9,7 @@ import "../components/app-mini-profile";
 export class PagePost extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
   @state() private liked = false;
+  @state() private isBanned = false;
 
   private comments = [
     {
@@ -48,16 +49,28 @@ export class PagePost extends LitElement {
         gap: 1rem;
       }
 
+      .post-actions {
+        display: inline-flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
       .like-btn {
         display: inline-flex;
         align-items: center;
         gap: 0.35rem;
+        width: 8em;;
       }
 
       .like-btn--active {
         background: transparent;
         border: 1px solid;
         box-shadow: none;
+      }
+
+      .btn-send-comment {
+        width: 8em;
+        margin-right: 2em;
       }
 
       .comments-section {
@@ -71,6 +84,12 @@ export class PagePost extends LitElement {
         display: flex;
         flex-direction: row;
         gap: 0.5rem;
+        height: 1.5em;
+        margin-left: 0.5em;
+      }
+
+      .comments-title {
+        width: 100%;
       }
 
       .comment-input .input {
@@ -91,11 +110,35 @@ export class PagePost extends LitElement {
         border-radius: var(--radius-md);
         border: 1px solid rgba(255, 179, 71, 0.26);
         background: var(--background);
+        margin-right: 1em;
       }
 
       .comment-text {
         margin: 0;
         color: var(--muted-foreground);
+      }
+
+      .vet-btn {
+        width: 8em; 
+        margin-right: 1em;
+      }
+
+      .vet-btn-vetted {
+        background: transparent;
+        border: 1px solid;
+        transition: color 0.15s ease, border-color 0.15s ease;
+      }
+
+      .vet-btn-vetted .label-hover {
+        display: none;
+      }
+
+      .vet-btn-vetted:hover .label-default {
+        display: none;
+      }
+
+      .vet-btn-vetted:hover .label-hover {
+        display: inline;
       }
     `,
   ];
@@ -118,6 +161,10 @@ export class PagePost extends LitElement {
     this.liked = !this.liked;
   }
 
+  private vetUser() {
+    this.isBanned = !this.isBanned;
+  }
+
   private onSubmitComment(event: Event) {
     event.preventDefault();
   }
@@ -132,32 +179,46 @@ export class PagePost extends LitElement {
             <div class="chip-muted">
               ${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}
             </div>
-            <button
-              class=${`btn-pill btn-sm like-btn ${
-                this.liked ? "btn-no-fill like-btn--active" : "btn"
-              }`}
-              @click=${this.toggleLike}
-            >
-              <sl-icon name="hand-thumbs-up"></sl-icon>
-              <span
-                >${this.liked
-                  ? CONSTANTS.POST_LIKE_ACTIVE
-                  : CONSTANTS.POST_LIKE_BUTTON}</span
+            <div class="post-actions">
+              <button
+                class=${`btn-pill btn-sm like-btn ${
+                  this.liked ? "btn-no-fill like-btn--active" : "btn"
+                }`}
+                @click=${this.toggleLike}
               >
-            </button>
+                <sl-icon name="hand-thumbs-up"></sl-icon>
+                <span
+                  >${this.liked
+                    ? CONSTANTS.POST_LIKE_ACTIVE
+                    : CONSTANTS.POST_LIKE_BUTTON}</span
+                >
+              </button>
+              <button
+                class=${`btn btn-pill btn-sm vet-btn ${
+                  this.isBanned ? "btn-no-fill vet-btn vet-btn-vetted" : ""
+                }`}
+                @click=${this.vetUser}
+              >
+                ${this.isBanned ? "Vetado" : "Vetar"}
+              </button>
+            </div>
           </div>
           <h2>${title}</h2>
           <p>${CONSTANTS.POST_BODY}</p>
         </div>
 
         <section class="card comments-section">
-          <div class="chip-muted">${CONSTANTS.POST_COMMENTS_TITLE}</div>
+          <div>
+            <div class="chip-muted chip-comments">
+              ${CONSTANTS.POST_COMMENTS_TITLE}
+            </div>
+          </div>
           <form class="comment-input" @submit=${this.onSubmitComment}>
             <input
               class="input"
               placeholder=${CONSTANTS.POST_COMMENT_PLACEHOLDER}
             />
-            <button class="btn btn-sm" type="submit">
+            <button class="btn btn-sm btn-send-comment" type="submit">
               ${CONSTANTS.POST_COMMENT_SEND}
             </button>
           </form>

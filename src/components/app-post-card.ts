@@ -1,7 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
 import componentsCSS from "../design-system/components.css?inline";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 import { postStore } from "../state/post-store";
@@ -15,6 +15,7 @@ export class AppPostCard extends LitElement {
   @property() noShadow = false;
   @property() image = "";
   @property({ type: Boolean }) showEdit = true;
+  @state() private isBanned = false;
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -90,10 +91,27 @@ export class AppPostCard extends LitElement {
         gap: 0.6rem;
       }
 
+      .footer-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
       .edit-btn {
-        width: 7em;
-        margin-right: 2em;
+        width: 8em;
         margin-bottom: 1em;
+      }
+
+      .vet-btn {
+        width: 8em;
+        margin-right: 1em;
+        margin-bottom: 1em;
+      }
+
+      .vet-btn-vetted {
+        background: transparent;
+        border: 1px solid;
+        transition: color 0.15s ease, border-color 0.15s ease;
       }
 
       .sidebar {
@@ -120,6 +138,11 @@ export class AppPostCard extends LitElement {
     navigate("/new-post");
   }
 
+  private toggleVet(event: Event) {
+    event.stopPropagation();
+    this.isBanned = !this.isBanned;
+  }
+
   render() {
     return html`
       <div class="post-card">
@@ -141,7 +164,7 @@ export class AppPostCard extends LitElement {
                 <span>${CONSTANTS.POST_CARD_LIKES_TEXT}</span>
               </div>
               <div>
-                <sl-icon name="chat-dots""></sl-icon>
+                <sl-icon name="chat-dots"></sl-icon>
                 <span>${CONSTANTS.POST_CARD_COMMENTS_TEXT}</span>
               </div>
               <div>
@@ -149,18 +172,28 @@ export class AppPostCard extends LitElement {
                 <span>${CONSTANTS.POST_CARD_SAVE_TEXT}</span>
               </div>
             </div>
-            ${
-              this.showEdit
-                ? html`
-                    <button
-                      class="btn btn-pill btn-sm edit-btn"
-                      @click=${this.editPost}
-                    >
-                      Editar
-                    </button>
-                  `
-                : null
-            }
+            <div class="footer-actions">
+              ${
+                this.showEdit
+                  ? html`
+                      <button
+                        class="btn btn-pill btn-sm edit-btn"
+                        @click=${this.editPost}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        class=${`btn btn-pill btn-sm vet-btn ${
+                          this.isBanned ? "btn-no-fill vet-btn-vetted" : ""
+                        }`}
+                        @click=${this.toggleVet}
+                      >
+                        ${this.isBanned ? "Vetado" : "Vetar"}
+                      </button>
+                    `
+                  : null
+              }
+            </div>
           </div>
         </article>
         ${
