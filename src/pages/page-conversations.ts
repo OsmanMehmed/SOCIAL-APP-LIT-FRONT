@@ -1,5 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
+import pageConversationsCSS from "./page-conversations.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { ScrollPage } from "../shared/scroll-page";
@@ -15,21 +16,7 @@ export class PageConversations extends ScrollPage {
   @state() private isLoading = false;
   @state() private loadError = false;
 
-  static styles = [
-    unsafeCSS(componentsCSS),
-    css`
-      .component-container {
-        justify-self: center;
-        width: 23em;
-        cursor: pointer;
-      }
-
-      .no-results {
-        text-align: center;
-        color: var(--muted-foreground);
-      }
-    `,
-  ];
+  static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageConversationsCSS)];
 
   private openDm(id: string) {
     navigate(`/dm/${id}`);

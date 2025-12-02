@@ -1,5 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
+import pageProfileCSS from "./page-profile.css?inline";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
@@ -92,133 +93,7 @@ export class PageProfile extends ScrollPage {
     this.isFriend = false;
   }
 
-  static styles = [
-    unsafeCSS(componentsCSS),
-    css`
-      .component-container {
-        justify-self: center;
-        min-width: 25em;
-        width: 50%;
-        max-width: 52em;
-        padding-bottom: 0.8rem;
-        height: 50em;
-      }
-
-      @media (max-width: 65em) {
-        .component-container {
-          width: 90%;
-        }
-      }
-
-      .profile-info {
-        display: flex;
-        flex-direction: column;
-        gap: 0.2rem;
-        align-items: center;
-        margin-bottom: 2em;
-      }
-
-      .profile-name {
-        font-weight: 600;
-        width: 100%;
-        margin-left: 1em;
-      }
-
-      .profile-subtitle {
-        width: 100%;
-        margin-left: 1em;
-        color: var(--muted-foreground);
-        font-size: 0.9rem;
-      }
-
-      .buttons-2 {
-        display: flex;
-        flex-direction: row;
-        gap: 0.6rem;
-        margin-top: 0.5rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .friend-btn,
-      .connect-btn {
-        width: 6em;
-      }
-
-      .friend-btn {
-        background: transparent;
-        border: 1px solid;
-        transition:
-          color 0.15s ease,
-          border-color 0.15s ease;
-        width: 6em;
-      }
-
-      .friend-btn .label-hover {
-        display: none;
-      }
-
-      .friend-btn:hover .label-default {
-        display: none;
-      }
-
-      .friend-btn:hover .label-hover {
-        display: inline;
-      }
-
-      .edit-profile-btn {
-        width: 10em;
-      }
-
-      .vet-btn {
-        background: transparent;
-        border: 1px solid;
-        transition:
-          color 0.15s ease,
-          border-color 0.15s ease;
-        width: 6em;
-      }
-
-      .vet-btn .label-hover {
-        display: none;
-      }
-
-      .vet-btn:hover .label-default {
-        display: none;
-      }
-
-      .vet-btn:hover .label-hover {
-        display: inline;
-      }
-
-      .profile-card {
-        width: 40%;
-        place-self: center;
-        min-width: 18em;
-      }
-
-      .page-profile-posts-title {
-        margin-bottom: 1.5em;
-      }
-
-      .posts-card {
-        max-height: 55vh;
-        overflow-y: auto;
-      }
-
-      .posts-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.8em;
-        padding-right: 0.2rem;
-      }
-
-      .no-results {
-        text-align: center;
-        color: var(--muted-foreground);
-      }
-    `,
-  ];
+  static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageProfileCSS)];
 
   private openDm() {
     const id = this.profile?.id ?? this.resolveProfileId();
