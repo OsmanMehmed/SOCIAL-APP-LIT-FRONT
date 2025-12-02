@@ -107,6 +107,8 @@
 .posts-card {
   max-height: 55vh;
   overflow-y: auto;
+  background: none;
+  border: none;
 }
 
 .posts-container {
