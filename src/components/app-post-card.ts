@@ -194,7 +194,7 @@ export class AppPostCard extends LitElement {
                 <span>${this.comments}</span>
               </div>
               <div>
-                <sl-icon name="bookmark""></sl-icon>
+                <sl-icon name="bookmark"></sl-icon>
                 <span>${this.saves}</span>
               </div>
             </div>

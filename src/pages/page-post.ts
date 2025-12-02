@@ -202,6 +202,7 @@ export class PagePost extends LitElement {
       const data = await postService.fetchPostWithComments(id);
       this.postTitle = data.caption ?? this.getPostTitle(id);
       this.isBanned = Boolean(data.banned);
+      this.liked = Boolean(data.liked);
       const comments = data.commentsList ?? [];
       this.likesCount = data.likes ?? 0;
       this.commentsCount = data.comments ?? comments.length;
@@ -247,6 +248,7 @@ export class PagePost extends LitElement {
     try {
       const updated = await postService.like(postId, next);
       this.likesCount = updated.likes ?? this.likesCount;
+      this.liked = updated.liked ?? next;
     } catch (err) {
       console.warn("Like post error", err);
       this.likesCount = Math.max(0, this.likesCount + (next ? -1 : 1));
