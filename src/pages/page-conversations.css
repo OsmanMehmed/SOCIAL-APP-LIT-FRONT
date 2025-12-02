@@ -1,0 +1,10 @@
+.component-container {
+  justify-self: center;
+  width: 23em;
+  cursor: pointer;
+}
+
+.no-results {
+  text-align: center;
+  color: var(--muted-foreground);
+}
