@@ -6,6 +6,7 @@ import { postStore } from "../state/post-store";
 import "../components/app-mini-profile";
 import { postService } from "../servicios/core/post-service";
 import type { Comment } from "../modelos/comment";
+import { authStore } from "../state/auth-store";
 import { navigate } from "../router";
 
 @customElement("page-post")
@@ -13,6 +14,7 @@ export class PagePost extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
   @state() private liked = false;
   @state() private isBanned = false;
+  @state() private isBanning = false;
   @state() private postTitle = CONSTANTS.POST_TITLE;
   @state() private commentItems: {
     username: string;
@@ -31,6 +33,7 @@ export class PagePost extends LitElement {
     },
   ];
   private currentPostId = "";
+  @state() private newComment = "";
 
   static styles = [
     unsafeCSS(componentsCSS),
@@ -86,6 +89,9 @@ export class PagePost extends LitElement {
         display: flex;
         flex-direction: column;
         gap: 0.9rem;
+        max-height: 24rem;
+        overflow-y: auto;
+        padding-right: 0.5rem;
       }
 
       .comment-input {
@@ -118,7 +124,7 @@ export class PagePost extends LitElement {
         border-radius: var(--radius-md);
         border: 1px solid rgba(255, 179, 71, 0.26);
         background: var(--background);
-        margin-right: 1em;
+        margin-right: 0.5em;
       }
 
       .comment-text {
@@ -183,6 +189,7 @@ export class PagePost extends LitElement {
     this.currentPostId = id;
     const data = await postService.fetchPostWithComments(id);
     this.postTitle = data.caption ?? this.getPostTitle(id);
+    this.isBanned = Boolean(data.banned);
     this.commentItems = data.commentsList.map((comment: Comment) => {
       const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
         ? comment.authorId
@@ -206,12 +213,58 @@ export class PagePost extends LitElement {
     this.liked = !this.liked;
   }
 
-  private vetUser() {
-    this.isBanned = !this.isBanned;
+  private async vetUser() {
+    if (this.isBanning) return;
+    const postId = this.params?.id ?? "";
+    if (!postId) return;
+
+    const next = !this.isBanned;
+    this.isBanning = true;
+    this.isBanned = next;
+    try {
+      const updated = await postService.ban(postId, next);
+      this.isBanned = Boolean(updated.banned);
+    } catch (err) {
+      console.warn("Ban/unban post error", err);
+      this.isBanned = !next;
+    } finally {
+      this.isBanning = false;
+    }
   }
 
-  private onSubmitComment(event: Event) {
+  private onCommentInput(e: Event) {
+    this.newComment = (e.target as HTMLInputElement).value;
+  }
+
+  private async onSubmitComment(event: Event) {
     event.preventDefault();
+    const text = this.newComment.trim();
+    if (!text) return;
+    const postId = this.params?.id ?? "";
+    const authorId = authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
+    try {
+      const created = await postService.addComment({
+        id: "",
+        postId,
+        authorId,
+        text,
+        createdAt: new Date().toISOString(),
+      });
+      const username = created.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
+        ? created.authorId
+        : `${CONSTANTS.USERNAME_PREFIX}${created.authorId}`;
+      this.commentItems = [
+        ...this.commentItems,
+        {
+          username,
+          text: created.text,
+          profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
+        },
+      ];
+      this.newComment = "";
+    } catch (err) {
+      console.warn("Add comment fallback", err);
+    }
   }
 
   render() {
@@ -242,6 +295,7 @@ export class PagePost extends LitElement {
                 class=${`btn btn-pill btn-sm vet-btn ${
                   this.isBanned ? "btn-no-fill vet-btn vet-btn-vetted" : ""
                 }`}
+                ?disabled=${this.isBanning}
                 @click=${this.vetUser}
               >
                 ${this.isBanned ? "Vetado" : "Vetar"}
@@ -270,6 +324,8 @@ export class PagePost extends LitElement {
             <input
               class="input"
               placeholder=${CONSTANTS.POST_COMMENT_PLACEHOLDER}
+              .value=${this.newComment}
+              @input=${this.onCommentInput}
             />
             <button class="btn btn-sm btn-send-comment" type="submit">
               ${CONSTANTS.POST_COMMENT_SEND}

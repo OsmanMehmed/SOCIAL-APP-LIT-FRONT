@@ -5,6 +5,7 @@ import { CONSTANTS } from "../shared/constants";
 import "../components/app-mini-profile";
 import { messageService } from "../servicios/core/message-service";
 import type { DirectMessage } from "../modelos/direct-message";
+import { authStore } from "../state/auth-store";
 
 @customElement("page-direct-message")
 export class PageDirectMessage extends LitElement {
@@ -55,6 +56,7 @@ export class PageDirectMessage extends LitElement {
         mask-size: 100% 100%;
         -webkit-mask-repeat: no-repeat;
         -webkit-mask-size: 100% 100%;
+        height: 100%;
       }
 
       .thread::before,
@@ -149,9 +151,9 @@ export class PageDirectMessage extends LitElement {
     const { profileId } = this.getParticipantInfo();
     const message = await messageService.sendMessage(
       conversationId,
-      CONSTANTS.CURRENT_USER_ID,
+      authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
       profileId || conversationId,
-      text,
+      text
     );
     this.thread = [...this.thread, message];
     this.draft = "";
@@ -234,7 +236,7 @@ export class PageDirectMessage extends LitElement {
         ></app-mini-profile>
         <div class="thread">
           ${this.thread.map((message) => {
-            const isMe = message.fromUserId === CONSTANTS.CURRENT_USER_ID;
+            const isMe = message.fromUserId === (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID);
             const className = isMe ? "msg-me" : "msg-other";
             return html`<div class=${className}>${message.text}</div>`;
           })}

@@ -12,6 +12,7 @@ const fallbackPost = (id: string): Post => {
       likes: Number(CONSTANTS.POST_CARD_LIKES_TEXT),
       comments: Number(CONSTANTS.POST_CARD_COMMENTS_TEXT),
       saves: Number(CONSTANTS.POST_CARD_SAVE_TEXT),
+      banned: false,
     };
   }
   return {
@@ -21,6 +22,7 @@ const fallbackPost = (id: string): Post => {
     likes: Number(CONSTANTS.POST_CARD_LIKES_TEXT),
     comments: Number(CONSTANTS.POST_CARD_COMMENTS_TEXT),
     saves: Number(CONSTANTS.POST_CARD_SAVE_TEXT),
+    banned: false,
   };
 };
 
@@ -33,6 +35,11 @@ const fallbackComments = (postId: string): Comment[] => [
     createdAt: new Date().toISOString(),
   },
 ];
+
+const normalizePostId = (id: string): string => {
+  if (!id) return id;
+  return id.startsWith("post-") ? id : `post-${id}`;
+};
 
 export const postService = {
   async fetchPostWithComments(id: string): Promise<PostWithComments> {
@@ -52,26 +59,34 @@ export const postService = {
       comments = fallbackComments(id);
     }
 
-    return { ...post, commentsList: comments };
+    return { ...post, banned: post.banned ?? false, commentsList: comments };
   },
 
   async create(post: Post): Promise<PostWithComments> {
     try {
-      const created = await postHttp.createPost(post);
-      return { ...created, commentsList: [] };
+      const created = await postHttp.createPost({
+        ...post,
+        id: normalizePostId(post.id || ""),
+      });
+      return { ...created, banned: created.banned ?? false, commentsList: [] };
     } catch (err) {
       console.warn("Create post fallback", err);
-      return { ...post, id: `local-${Date.now()}`, commentsList: [] };
+      return {
+        ...post,
+        id: `local-${Date.now()}`,
+        banned: post.banned ?? false,
+        commentsList: [],
+      };
     }
   },
 
   async update(post: Post): Promise<PostWithComments> {
     try {
       const updated = await postHttp.updatePost(post);
-      return { ...updated, commentsList: [] };
+      return { ...updated, banned: updated.banned ?? false, commentsList: [] };
     } catch (err) {
       console.warn("Update post fallback", err);
-      return { ...post, commentsList: [] };
+      return { ...post, banned: post.banned ?? false, commentsList: [] };
     }
   },
 
@@ -85,7 +100,11 @@ export const postService = {
 
   async addComment(comment: Comment): Promise<Comment> {
     try {
-      return await postHttp.addComment(comment.postId, comment);
+      const backendPostId = normalizePostId(comment.postId);
+      return await postHttp.addComment(backendPostId, {
+        ...comment,
+        postId: backendPostId,
+      });
     } catch (err) {
       console.warn("Add comment fallback", err);
       return { ...comment, id: `local-${Date.now()}` };
@@ -117,6 +136,16 @@ export const postService = {
       console.warn("Save fallback", err);
       const base = fallbackPost(postId);
       return { ...base, saves: save ? base.saves + 1 : base.saves - 1 };
+    }
+  },
+
+  async ban(postId: string, banned = true): Promise<Post> {
+    try {
+      return await postHttp.ban(postId, banned);
+    } catch (err) {
+      console.warn("Ban post fallback", err);
+      const base = fallbackPost(postId);
+      return { ...base, banned };
     }
   },
 };

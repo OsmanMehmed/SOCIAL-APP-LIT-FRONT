@@ -2,6 +2,9 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
+import { postService } from "../servicios/core/post-service";
+import { authStore } from "../state/auth-store";
+import { navigate } from "../router";
 
 @customElement("page-new-post")
 export class PageNewPost extends LitElement {
@@ -365,7 +368,7 @@ export class PageNewPost extends LitElement {
     this.draggingIndex = null;
   }
 
-  private handleSubmit(e: Event) {
+  private async handleSubmit(e: Event) {
     e.preventDefault();
 
     const trimmedTitle = this.title.trim();
@@ -376,21 +379,23 @@ export class PageNewPost extends LitElement {
       return;
     }
 
-    const payload = {
-      title: trimmedTitle,
-      body: trimmedBody,
-      images: this.images, // File[] en el orden establecido
-    };
-
     this.errorMessage = null;
 
-    this.dispatchEvent(
-      new CustomEvent("recipe-submit", {
-        detail: payload,
-        bubbles: true,
-        composed: true,
-      }),
-    );
+    try {
+      const created = await postService.create({
+        id: "",
+        caption: `${trimmedTitle} - ${trimmedBody}`,
+        authorId: authStore.currentUserId || CONSTANTS.CURRENT_USER_ID,
+        likes: 0,
+        comments: 0,
+        saves: 0,
+      });
+      const newId = created.id || `local-${Date.now()}`;
+      navigate(`/post/${newId}`);
+    } catch (err) {
+      console.warn("Create post fallback", err);
+      navigate("/post/1");
+    }
   }
 
   private formatSize(size: number): string {

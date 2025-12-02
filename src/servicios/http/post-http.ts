@@ -22,4 +22,6 @@ export const postHttp = {
     request<Post>(`/posts/${postId}/like?like=${like}`, { method: "POST" }),
   save: (postId: string, save = true) =>
     request<Post>(`/posts/${postId}/save?save=${save}`, { method: "POST" }),
+  ban: (postId: string, banned = true) =>
+    request<Post>(`/posts/${postId}/ban?banned=${banned}`, { method: "POST" }),
 };

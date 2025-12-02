@@ -5,6 +5,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 import { postStore } from "../state/post-store";
+import { postService } from "../servicios/core/post-service";
 
 @customElement("app-post-card")
 export class AppPostCard extends LitElement {
@@ -15,7 +16,9 @@ export class AppPostCard extends LitElement {
   @property() noShadow = false;
   @property() image = "";
   @property({ type: Boolean }) showEdit = true;
+  @property({ type: Boolean }) banned = false;
   @state() private isBanned = false;
+  @state() private isBanning = false;
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -140,9 +143,27 @@ export class AppPostCard extends LitElement {
     navigate("/new-post");
   }
 
-  private toggleVet(event: Event) {
+  private async toggleVet(event: Event) {
     event.stopPropagation();
-    this.isBanned = !this.isBanned;
+    if (this.isBanning || !this.postId) return;
+    const next = !this.isBanned;
+    this.isBanning = true;
+    this.isBanned = next;
+    try {
+      const updated = await postService.ban(this.postId, next);
+      this.isBanned = Boolean(updated.banned);
+    } catch (err) {
+      console.warn("Ban/unban post error", err);
+      this.isBanned = !next;
+    } finally {
+      this.isBanning = false;
+    }
+  }
+
+  protected updated(changed: Map<string, unknown>) {
+    if (changed.has("banned")) {
+      this.isBanned = this.banned;
+    }
   }
 
   render() {
@@ -188,6 +209,7 @@ export class AppPostCard extends LitElement {
                         class=${`btn btn-pill btn-sm vet-btn ${
                           this.isBanned ? "btn-no-fill vet-btn-vetted" : ""
                         }`}
+                        ?disabled=${this.isBanning}
                         @click=${this.toggleVet}
                       >
                         ${this.isBanned ? "Vetado" : "Vetar"}

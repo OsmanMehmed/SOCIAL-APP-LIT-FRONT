@@ -1,4 +1,5 @@
 import { CONSTANTS } from "../shared/constants";
+import type { AuthResponse } from "../modelos/auth";
 
 const TOKEN_KEY = "auth:token";
 const USER_KEY = "auth:user";
@@ -41,6 +42,12 @@ export const authStore = {
     this.isAuthenticated = true;
     this.currentUserId = userId || CONSTANTS.CURRENT_USER_ID;
     writeToStorage(TOKEN_KEY, "session");
+    writeToStorage(USER_KEY, this.currentUserId);
+  },
+  loginWithAuth(auth: AuthResponse) {
+    this.isAuthenticated = true;
+    this.currentUserId = auth.profile.id;
+    writeToStorage(TOKEN_KEY, auth.token || "session");
     writeToStorage(USER_KEY, this.currentUserId);
   },
   logout() {
