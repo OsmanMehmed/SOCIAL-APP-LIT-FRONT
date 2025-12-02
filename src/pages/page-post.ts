@@ -86,7 +86,6 @@ export class PagePost extends ScrollPage {
         gap: 0.9rem;
         max-height: 24rem;
         overflow-y: auto;
-        padding-right: 0.5rem;
       }
 
       .comment-input {
