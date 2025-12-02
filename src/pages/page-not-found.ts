@@ -1,4 +1,4 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";

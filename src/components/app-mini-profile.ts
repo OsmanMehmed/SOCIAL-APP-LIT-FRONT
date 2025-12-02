@@ -1,5 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
+import miniProfileCSS from "../styles/components/app-mini-profile.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
@@ -15,31 +16,7 @@ export class AppMiniProfile extends LitElement {
   @property({ type: Boolean }) noSubtitle = false;
   @property({ type: Boolean }) hideAvatar = false;
 
-  static styles = [
-    unsafeCSS(layoutCSS),
-    css`
-      .root {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .meta {
-        display: flex;
-        flex-direction: column;
-        font-size: 0.75rem;
-      }
-
-      .username {
-        font-weight: 600;
-        cursor: pointer;
-      }
-
-      .name {
-        cursor: pointer;
-      }
-    `,
-  ];
+  static styles = [unsafeCSS(layoutCSS), unsafeCSS(miniProfileCSS)];
 
   private goProfile(event: Event) {
     if (!this.supressProfileRoute) {

@@ -1,5 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
+import profileSettingsCSS from "../styles/pages/page-profile-settings.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
@@ -7,33 +8,7 @@ import { authStore } from "../state/auth-store";
 
 @customElement("page-profile-settings")
 export class PageProfileSettings extends LitElement {
-  static styles = [
-    unsafeCSS(componentsCSS),
-    css`
-      .buttons {
-        display: flex;
-        flex-direction: row;
-        gap: 0.5rem;
-      }
-
-      .edit-profile-card {
-        display: flex;
-        flex-direction: column;
-        gap: 1em;
-        min-width: 15em;
-        width: 35em;
-      }
-
-      .edit-profile-input {
-        width: 95%;
-      }
-
-      .component-container {
-        justify-self: center;
-        min-width: 20em;
-      }
-    `,
-  ];
+  static styles = [unsafeCSS(componentsCSS), unsafeCSS(profileSettingsCSS)];
 
   private save(e: Event) {
     e.preventDefault();

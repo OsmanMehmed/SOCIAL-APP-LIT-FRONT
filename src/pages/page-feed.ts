@@ -1,5 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
+import pageFeedCSS from "../styles/pages/page-feed.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import "../components/app-mini-profile";
 import "../components/app-post-card";
@@ -14,37 +15,7 @@ export class PageFeed extends ScrollPage {
   @state() private isLoading = false;
   @state() private loadError = false;
 
-  static styles = [
-    unsafeCSS(componentsCSS),
-    css`
-      .component-container {
-        justify-self: center;
-      }
-
-      @media (max-width: 65em) {
-        .component-container {
-          max-width: 35em;
-          min-width: 20em;
-        }
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: minmax(0, 2fr) minmax(275px, 0.9fr);
-        gap: 0.9rem;
-      }
-
-      .flow-column {
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
-      }
-
-      .no-results {
-        text-align: center;
-      }
-    `,
-  ];
+  static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageFeedCSS)];
 
   private async loadPosts() {
     this.isLoading = true;

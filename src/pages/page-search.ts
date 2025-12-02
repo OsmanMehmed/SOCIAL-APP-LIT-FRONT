@@ -1,5 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
+import pageSearchCSS from "../styles/pages/page-search.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
@@ -28,89 +29,7 @@ export class PageSearch extends ScrollPage {
   @state() private isLoadingPosts = false;
   @state() private postsError = false;
 
-  static styles = [
-    unsafeCSS(componentsCSS),
-    css`
-      .component-container {
-        justify-self: center;
-        min-width: 20em;
-        max-width: 40em;
-        width: 60%;
-      }
-
-      .results {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .section-title {
-        margin-bottom: 0.2rem;
-      }
-
-      .results-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.35rem;
-        margin-top: 0.4rem;
-      }
-
-      .profile-row,
-      .recipe-row {
-        display: flex;
-        align-items: center;
-        gap: 0.7rem;
-        padding-block: 0.35rem;
-        cursor: pointer;
-      }
-
-      .recipe-row {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .profile-meta {
-        display: flex;
-        flex-direction: column;
-        gap: 0.1rem;
-      }
-
-      .username {
-        font-weight: 600;
-        font-size: 0.9rem;
-      }
-
-      .name {
-        font-size: 0.82rem;
-        color: var(--muted-foreground);
-      }
-
-      .recipe-title {
-        font-weight: 600;
-        font-size: 0.95rem;
-      }
-
-      .recipe-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        font-size: 0.8rem;
-        color: var(--muted-foreground);
-      }
-
-      .recipe-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.3rem;
-      }
-
-      .empty {
-        font-size: 0.82rem;
-        color: var(--muted-foreground);
-        margin-top: 0.3rem;
-      }
-    `,
-  ];
+  static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageSearchCSS)];
 
   private onSearchInput(event: Event) {
     const target = event.target as HTMLInputElement;

@@ -1,6 +1,7 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
 import componentsCSS from "../design-system/components.css?inline";
+import postCardCSS from "../styles/components/app-post-card.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
@@ -31,123 +32,7 @@ export class AppPostCard extends LitElement {
   static styles = [
     unsafeCSS(layoutCSS),
     unsafeCSS(componentsCSS),
-    css`
-      .post-card {
-        display: flex;
-        gap: 1.5em;
-        flex-direction: row;
-        width: 100%;
-        place-content: center;
-      }
-
-      @media (max-width: 65em) {
-        .post-card {
-          flex-wrap: wrap-reverse;
-        }
-      }
-
-      .card {
-        border-radius: var(--radius-md);
-        border: 1.25px solid rgba(255, 179, 71, 0.26);
-        box-shadow: var(--shadow-soft);
-        padding-left: 0.75rem;
-        padding-block: 1.2rem;
-        width: 90%;
-        background: var(--background);
-      }
-
-      .card-no-shadow {
-        box-shadow: none;
-        background: none;
-      }
-
-      .description {
-        cursor: default;
-      }
-
-      .username {
-        font-size: 0.85rem;
-        font-weight: 600;
-      }
-
-      .image {
-        margin: 0.4rem 0;
-        border-radius: var(--radius-md);
-        height: 275px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75rem;
-        color: rgba(255, 204, 196, 0.85);
-        cursor: pointer;
-      }
-
-      .caption {
-        cursor: pointer;
-      }
-
-      .stats {
-        display: flex;
-        flex-direction: row;
-        gap: 0.6rem;
-        font-size: 0.8rem;
-        color: var(--muted-foreground);
-      }
-
-      .footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 0.5rem;
-        gap: 0.6rem;
-      }
-
-      .footer-actions {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 1em;
-        margin-top: 1em;
-      }
-
-      .edit-btn {
-        width: 8em;
-      }
-
-      .vet-btn {
-        width: 8em;
-        margin-right: 1em;
-      }
-
-      .vet-btn-vetted {
-        background: transparent;
-        border: 1px solid;
-        transition:
-          color 0.15s ease,
-          border-color 0.15s ease;
-      }
-
-      .sidebar {
-        margin-top: 1em;
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-        width: 30em;
-      }
-
-      .like-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        width: 8em;
-      }
-
-      .like-btn--active {
-        background: transparent;
-        border: 1px solid;
-        box-shadow: none;
-      }
-    `,
+    unsafeCSS(postCardCSS),
   ];
 
   private openPost() {
