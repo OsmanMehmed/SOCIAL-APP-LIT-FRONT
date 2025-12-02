@@ -200,13 +200,13 @@ export class PagePost extends LitElement {
     this.loadError = false;
     try {
       const data = await postService.fetchPostWithComments(id);
-      this.postTitle = data.caption ?? this.getPostTitle(id);
+      this.postTitle = data.caption;
       this.isBanned = Boolean(data.banned);
       this.liked = Boolean(data.liked);
-      const comments = data.commentsList ?? [];
-      this.likesCount = data.likes ?? 0;
-      this.commentsCount = data.comments ?? comments.length;
-      this.savesCount = data.saves ?? 0;
+      const comments = data.commentsList;
+      this.likesCount = data.likes;
+      this.commentsCount = data.comments;
+      this.savesCount = data.saves;
       this.commentItems = comments.map((comment: Comment) => {
         const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
           ? comment.authorId
@@ -247,8 +247,8 @@ export class PagePost extends LitElement {
     this.likesCount = nextLikes;
     try {
       const updated = await postService.like(postId, next);
-      this.likesCount = updated.likes ?? this.likesCount;
-      this.liked = updated.liked ?? next;
+      this.likesCount = updated.likes;
+      this.liked = Boolean(updated.liked);
     } catch (err) {
       console.warn("Like post error", err);
       this.likesCount = Math.max(0, this.likesCount + (next ? -1 : 1));
