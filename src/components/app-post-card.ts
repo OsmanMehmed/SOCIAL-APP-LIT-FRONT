@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
 import componentsCSS from "../design-system/components.css?inline";
+import postCSS from "../design-system/post.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
@@ -31,6 +32,7 @@ export class AppPostCard extends LitElement {
   static styles = [
     unsafeCSS(layoutCSS),
     unsafeCSS(componentsCSS),
+    unsafeCSS(postCSS),
     css`
       .post-card {
         display: flex;
@@ -133,19 +135,6 @@ export class AppPostCard extends LitElement {
         flex-direction: column;
         gap: 0.6rem;
         width: 30em;
-      }
-
-      .like-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-        width: 8em;
-      }
-
-      .like-btn--active {
-        background: transparent;
-        border: 1px solid;
-        box-shadow: none;
       }
     `,
   ];

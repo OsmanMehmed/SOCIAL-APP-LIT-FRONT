@@ -1,0 +1,12 @@
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 8em;
+}
+
+.like-btn--active {
+  background: transparent;
+  border: 1px solid;
+  box-shadow: none;
+}
