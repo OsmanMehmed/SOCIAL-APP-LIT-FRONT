@@ -26,6 +26,9 @@ export class PagePost extends ScrollPage {
   @state() private newComment = "";
   @state() private isLoading = false;
   @state() private loadError = false;
+  @state() private likesCount = 0;
+  @state() private commentsCount = 0;
+  @state() private savesCount = 0;
 
   static styles = [
     unsafeCSS(componentsCSS),
@@ -164,6 +167,20 @@ export class PagePost extends ScrollPage {
         text-align: center;
         color: var(--muted-foreground);
       }
+
+      .post-stats {
+        display: flex;
+        gap: 0.9rem;
+        align-items: center;
+        margin: 0.6rem 0 0.2rem 0;
+        color: var(--muted-foreground);
+      }
+
+      .post-stats div {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
     `,
   ];
 
@@ -185,6 +202,9 @@ export class PagePost extends ScrollPage {
       this.postTitle = data.caption ?? this.getPostTitle(id);
       this.isBanned = Boolean(data.banned);
       this.liked = Boolean(data.liked);
+      this.likesCount = data.likes ?? 0;
+      this.commentsCount = data.comments ?? (data.commentsList?.length ?? 0);
+      this.savesCount = data.saves ?? 0;
       const comments = data.commentsList ?? [];
       this.commentItems = comments.map((comment: Comment) => {
         const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
@@ -223,6 +243,9 @@ export class PagePost extends ScrollPage {
     try {
       const updated = await postService.like(postId, next);
       this.liked = Boolean(updated.liked ?? next);
+      this.likesCount = updated.likes ?? this.likesCount;
+      this.commentsCount = updated.comments ?? this.commentsCount;
+      this.savesCount = updated.saves ?? this.savesCount;
     } catch (err) {
       console.warn("Like post error", err);
       this.liked = !next;
@@ -277,6 +300,7 @@ export class PagePost extends ScrollPage {
           profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
         },
       ];
+      this.commentsCount += 1;
       this.newComment = "";
     } catch (err) {
       console.warn("Add comment error", err);
@@ -326,6 +350,20 @@ export class PagePost extends ScrollPage {
                 </div>
                 <h2>${title}</h2>
                 <p>${CONSTANTS.POST_BODY}</p>
+                <div class="post-stats">
+                  <div>
+                    <sl-icon name="hand-thumbs-up"></sl-icon>
+                    <span>${this.likesCount}</span>
+                  </div>
+                  <div>
+                    <sl-icon name="chat-dots"></sl-icon>
+                    <span>${this.commentsCount}</span>
+                  </div>
+                  <div>
+                    <sl-icon name="bookmark"></sl-icon>
+                    <span>${this.savesCount}</span>
+                  </div>
+                </div>
                 <div class="post-edit-container">
                   <button
                     class="btn btn-pill btn-sm edit-btn"

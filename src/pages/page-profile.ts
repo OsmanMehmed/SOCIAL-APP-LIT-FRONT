@@ -27,6 +27,15 @@ export class PageProfile extends ScrollPage {
   @state() private posts: Post[] = [];
   @state() private postsLoading = false;
 
+  private resolveProfileId(): string {
+    const paramId = this.params?.id;
+    const sessionId = authStore.currentUserId;
+    if (!paramId || paramId === "me") {
+      return sessionId ?? "user-1";
+    }
+    return paramId;
+  }
+
   private async vetUser() {
     const id = this.params?.id ?? this.profile?.id;
     if (!id) return;
@@ -209,13 +218,13 @@ export class PageProfile extends ScrollPage {
   ];
 
   private openDm() {
-    const id = this.profile?.id ?? this.params?.id;
+    const id = this.profile?.id ?? this.resolveProfileId();
     if (!id) return;
     navigate(`/dm/${id}`);
   }
 
   private getScrollKey() {
-    const id = this.params?.id ?? this.profile?.id;
+    const id = this.profile?.id ?? this.resolveProfileId();
     return `profile:posts-scroll:${id}`;
   }
 
@@ -250,8 +259,7 @@ export class PageProfile extends ScrollPage {
   }
 
   protected willUpdate(_changed: Map<string, unknown>) {
-    const id = this.params?.id;
-    const targetId = id ?? authStore.currentUserId ?? "";
+    const targetId = this.resolveProfileId();
     if (targetId !== this.currentProfileId) {
       this.currentProfileId = targetId;
       this.loadProfile(targetId);
@@ -278,7 +286,7 @@ export class PageProfile extends ScrollPage {
   }
 
   render() {
-    const resolvedId = this.profile?.id ?? this.params?.id ?? authStore.currentUserId;
+    const resolvedId = this.profile?.id ?? this.resolveProfileId();
     const username =
       this.profile?.username ??
       (resolvedId.startsWith(CONSTANTS.USERNAME_PREFIX)
