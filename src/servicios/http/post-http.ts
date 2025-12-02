@@ -14,6 +14,8 @@ export const postHttp = {
     request<Post>(`/posts/${post.id}`, { method: "PUT", body: post }),
   deletePost: (id: string) =>
     request<void>(`/posts/${id}`, { method: "DELETE" }),
+  listByAuthor: (authorId: string, headers?: Record<string, string>) =>
+    request<Post[]>(`/posts/author/${authorId}`, { headers }),
   addComment: (postId: string, comment: Comment) =>
     request<Comment>(`/posts/${postId}/comments`, {
       method: "POST",

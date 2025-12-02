@@ -5,9 +5,12 @@ import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 import { ScrollPage } from "../shared/scroll-page";
 import "../components/app-avatar";
+import "../components/app-post-card";
 import { authStore } from "../state/auth-store";
 import { profileService } from "../servicios/core/profile-service";
+import { postService } from "../servicios/core/post-service";
 import type { UserProfile } from "../modelos/user-profile";
+import type { Post } from "../modelos/post";
 
 @customElement("page-profile")
 export class PageProfile extends ScrollPage {
@@ -21,6 +24,8 @@ export class PageProfile extends ScrollPage {
   @state() private isLoading = false;
   @state() private loadError = false;
   private currentProfileId = "";
+  @state() private posts: Post[] = [];
+  @state() private postsLoading = false;
 
   private async vetUser() {
     const id = this.params?.id ?? this.profile?.id;
@@ -59,6 +64,21 @@ export class PageProfile extends ScrollPage {
       this.loadError = true;
     } finally {
       this.isLoading = false;
+    }
+  }
+
+  private async loadPosts(id: string) {
+    if (!id) return;
+    this.postsLoading = true;
+    try {
+      this.posts = await postService.listByAuthor(id);
+      // Una vez cargados los posts, intentamos restaurar el scroll del contenedor
+      this.restorePostsScroll();
+    } catch (err) {
+      console.warn("Profile posts fetch error", err);
+      this.posts = [];
+    } finally {
+      this.postsLoading = false;
     }
   }
 
@@ -231,9 +251,11 @@ export class PageProfile extends ScrollPage {
 
   protected willUpdate(_changed: Map<string, unknown>) {
     const id = this.params?.id;
-    if (id !== this.currentProfileId) {
-      this.currentProfileId = id ?? "";
-      this.loadProfile(id ?? "");
+    const targetId = id ?? authStore.currentUserId ?? "";
+    if (targetId !== this.currentProfileId) {
+      this.currentProfileId = targetId;
+      this.loadProfile(targetId);
+      this.loadPosts(targetId);
     }
   }
 
@@ -360,11 +382,29 @@ export class PageProfile extends ScrollPage {
             ${CONSTANTS.PROFILE_PUBLISHED_RECIPES}
           </div>
           <div class="posts-container">
-            ${this.isLoading
+            ${this.postsLoading
               ? html`<div class="no-results">Cargando...</div>`
-              : html`<div class="no-results">
-                  ${CONSTANTS.NO_RESULTS_TEXT}
-                </div>`}
+              : this.posts.length === 0
+                  ? html`<div class="no-results">
+                      ${CONSTANTS.NO_RESULTS_TEXT}
+                    </div>`
+                  : html`${this.posts.map((post) => {
+                      const username = post.authorId?.startsWith(
+                        CONSTANTS.USERNAME_PREFIX,
+                      )
+                        ? post.authorId
+                        : `${CONSTANTS.USERNAME_PREFIX}${post.authorId}`;
+                      return html`<app-post-card
+                        .postId=${post.id}
+                        .username=${username}
+                        .caption=${post.caption}
+                        .banned=${Boolean(post.banned)}
+                        .liked=${Boolean(post.liked)}
+                        .likes=${post.likes}
+                        .comments=${post.comments}
+                        .saves=${post.saves}
+                      ></app-post-card>`;
+                    })}`}
           </div>
         </div>
       </section>

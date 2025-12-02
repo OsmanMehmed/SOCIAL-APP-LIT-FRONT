@@ -14,6 +14,10 @@ export const postService = {
     return postHttp.list(userHeaders());
   },
 
+  async listByAuthor(authorId: string): Promise<Post[]> {
+    return postHttp.listByAuthor(authorId, userHeaders());
+  },
+
   async search(query: string): Promise<Post[]> {
     return postHttp.search(query, userHeaders());
   },
