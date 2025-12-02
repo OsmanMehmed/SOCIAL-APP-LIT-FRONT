@@ -19,6 +19,9 @@ export class AppPostCard extends LitElement {
   @property({ type: Boolean }) banned = false;
   @state() private isBanned = false;
   @state() private isBanning = false;
+  @property({ type: Number }) likes = 0;
+  @property({ type: Number }) comments = 0;
+  @property({ type: Number }) saves = 0;
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -184,15 +187,15 @@ export class AppPostCard extends LitElement {
             <div class="stats">
               <div>
                 <sl-icon name="hand-thumbs-up"></sl-icon>
-                <span>${CONSTANTS.POST_CARD_LIKES_TEXT}</span>
+                <span>${this.likes}</span>
               </div>
               <div>
                 <sl-icon name="chat-dots"></sl-icon>
-                <span>${CONSTANTS.POST_CARD_COMMENTS_TEXT}</span>
+                <span>${this.comments}</span>
               </div>
               <div>
                 <sl-icon name="bookmark""></sl-icon>
-                <span>${CONSTANTS.POST_CARD_SAVE_TEXT}</span>
+                <span>${this.saves}</span>
               </div>
             </div>
             <div class="footer-actions">

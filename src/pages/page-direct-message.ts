@@ -14,6 +14,8 @@ export class PageDirectMessage extends LitElement {
   @state() private thread: DirectMessage[] = [];
   @query(".thread") private threadEl?: HTMLDivElement;
   private currentConversationId = "";
+  @state() private isLoading = false;
+  @state() private loadError = false;
 
   static styles = [
     unsafeCSS(componentsCSS),
@@ -134,13 +136,28 @@ export class PageDirectMessage extends LitElement {
         width: 100%;
         text-align: right;
       }
+
+      .no-results {
+        text-align: center;
+        color: var(--muted-foreground);
+      }
     `,
   ];
 
   private async loadThread(conversationId: string) {
     if (!conversationId) return;
     this.currentConversationId = conversationId;
-    this.thread = await messageService.fetchThread(conversationId);
+    this.isLoading = true;
+    this.loadError = false;
+    try {
+      this.thread = await messageService.fetchThread(conversationId);
+    } catch (err) {
+      console.warn("Thread fetch error", err);
+      this.thread = [];
+      this.loadError = true;
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   private async send(e: Event) {
@@ -149,14 +166,20 @@ export class PageDirectMessage extends LitElement {
     if (!text) return;
     const conversationId = this.params?.id ?? CONSTANTS.CURRENT_USER_ID;
     const { profileId } = this.getParticipantInfo();
-    const message = await messageService.sendMessage(
-      conversationId,
-      authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
-      profileId || conversationId,
-      text
-    );
-    this.thread = [...this.thread, message];
-    this.draft = "";
+    try {
+      const message = await messageService.sendMessage(
+        conversationId,
+        authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
+        profileId || conversationId,
+        text
+      );
+      this.thread = [...this.thread, message];
+      this.draft = "";
+      this.loadError = false;
+    } catch (err) {
+      console.warn("Send message error", err);
+      this.loadError = true;
+    }
   }
 
   private onInput(e: Event) {
@@ -186,32 +209,6 @@ export class PageDirectMessage extends LitElement {
 
   private getParticipantInfo() {
     const conversationId = this.params?.id ?? "";
-    const map: Record<
-      string,
-      { username: string; subtitle: string; profileId: string }
-    > = {
-      "1": {
-        username: CONSTANTS.CONVERSATIONS_MSG1_USERNAME,
-        subtitle: CONSTANTS.CONVERSATIONS_MSG1_SUBTITLE,
-        profileId: CONSTANTS.CONVERSATIONS_MSG1_USERNAME.replace(
-          CONSTANTS.USERNAME_PREFIX,
-          "",
-        ),
-      },
-      "2": {
-        username: CONSTANTS.CONVERSATIONS_MSG2_USERNAME,
-        subtitle: CONSTANTS.CONVERSATIONS_MSG2_SUBTITLE,
-        profileId: CONSTANTS.CONVERSATIONS_MSG2_USERNAME.replace(
-          CONSTANTS.USERNAME_PREFIX,
-          "",
-        ),
-      },
-    };
-
-    if (conversationId in map) {
-      return map[conversationId];
-    }
-
     const profileId = conversationId || CONSTANTS.CURRENT_USER_ID;
     const username = profileId.startsWith(CONSTANTS.USERNAME_PREFIX)
       ? profileId
@@ -219,7 +216,7 @@ export class PageDirectMessage extends LitElement {
 
     return {
       username,
-      subtitle: CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT,
+      subtitle: "",
       profileId,
     };
   }
@@ -235,11 +232,22 @@ export class PageDirectMessage extends LitElement {
           .profileId=${profileId}
         ></app-mini-profile>
         <div class="thread">
-          ${this.thread.map((message) => {
-            const isMe = message.fromUserId === (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID);
-            const className = isMe ? "msg-me" : "msg-other";
-            return html`<div class=${className}>${message.text}</div>`;
-          })}
+          ${this.isLoading
+            ? html`<div class="no-results">Cargando...</div>`
+            : null}
+          ${!this.isLoading &&
+          (this.loadError || this.thread.length === 0)
+            ? html`<div class="no-results">${CONSTANTS.NO_RESULTS_TEXT}</div>`
+            : null}
+          ${!this.isLoading && this.thread.length > 0
+            ? this.thread.map((message) => {
+                const isMe =
+                  message.fromUserId ===
+                  (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID);
+                const className = isMe ? "msg-me" : "msg-other";
+                return html`<div class=${className}>${message.text}</div>`;
+              })
+            : null}
         </div>
         <form @submit=${this.send} class="send-message-form">
           <input

@@ -93,4 +93,6 @@ export const CONSTANTS = {
   POST_CARD_LIKES_TEXT: "120",
   POST_CARD_COMMENTS_TEXT: "18",
   POST_CARD_SAVE_TEXT: "15",
+
+  NO_RESULTS_TEXT: "No hay resultados.",
 };

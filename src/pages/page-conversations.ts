@@ -1,12 +1,19 @@
-import { CONSTANTS } from "./../shared/constants";
 import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import "../components/app-mini-profile";
+import { messageService } from "../servicios/core/message-service";
+import type { Conversation } from "../modelos/conversation";
+import { authStore } from "../state/auth-store";
+import { CONSTANTS } from "./../shared/constants";
 
 @customElement("page-conversations")
 export class PageConversations extends LitElement {
+  @state() private conversations: Conversation[] = [];
+  @state() private isLoading = false;
+  @state() private loadError = false;
+
   static styles = [
     unsafeCSS(componentsCSS),
     css`
@@ -15,6 +22,11 @@ export class PageConversations extends LitElement {
         width: 23em;
         cursor: pointer;
       }
+
+      .no-results {
+        text-align: center;
+        color: var(--muted-foreground);
+      }
     `,
   ];
 
@@ -22,37 +34,67 @@ export class PageConversations extends LitElement {
     navigate(`/dm/${id}`);
   }
 
+  private async loadConversations() {
+    this.isLoading = true;
+    this.loadError = false;
+    const userId = authStore.currentUserId || "me";
+    try {
+      this.conversations = await messageService.listConversations(userId);
+    } catch (err) {
+      console.warn("Conversations load error", err);
+      this.conversations = [];
+      this.loadError = true;
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  protected firstUpdated(): void {
+    this.loadConversations();
+  }
+
   render() {
-    const chefId = CONSTANTS.CONVERSATIONS_MSG1_USERNAME.replace(
-      CONSTANTS.USERNAME_PREFIX,
-      "",
-    );
-    const teamId = CONSTANTS.CONVERSATIONS_MSG2_USERNAME.replace(
-      CONSTANTS.USERNAME_PREFIX,
-      "",
-    );
+    const currentUser = authStore.currentUserId || CONSTANTS.CURRENT_USER_ID;
+    const showNoResults =
+      !this.isLoading &&
+      (this.loadError || this.conversations.length === 0);
 
     return html`
       <section class="flow-column component-container">
-        <div class="card" @click=${() => this.openDm("1")}>
-          <app-mini-profile
-            .username=${CONSTANTS.CONVERSATIONS_MSG1_USERNAME}
-            .subtitle=${CONSTANTS.CONVERSATIONS_MSG1_SUBTITLE}
-            .profileId=${chefId}
-            .supressProfileRoute=${true}
-            .noSubtitle=${true}
-          ></app-mini-profile>
-          <p>${CONSTANTS.CONVERSATIONS_MSG1_TEXT}</p>
-        </div>
-        <div class="card" @click=${() => this.openDm("2")}>
-          <app-mini-profile
-            .username=${CONSTANTS.CONVERSATIONS_MSG2_USERNAME}
-            .profileId=${teamId}
-            .supressProfileRoute=${true}
-            .noSubtitle=${true}
-          ></app-mini-profile>
-          <p>${CONSTANTS.CONVERSATIONS_MSG2_TEXT}</p>
-        </div>
+        ${this.isLoading
+          ? html`<div class="card no-results">Cargando...</div>`
+          : null}
+        ${showNoResults
+          ? html`<div class="card no-results">
+              ${CONSTANTS.NO_RESULTS_TEXT}
+            </div>`
+          : null}
+        ${this.conversations.map(
+          (conversation) => {
+            const otherUserRaw =
+              conversation.participantA === currentUser
+                ? conversation.participantB
+                : conversation.participantA;
+            const otherUser = otherUserRaw || CONSTANTS.CURRENT_USER_ID;
+            const username = otherUser.startsWith(CONSTANTS.USERNAME_PREFIX)
+              ? otherUser
+              : `${CONSTANTS.USERNAME_PREFIX}${otherUser}`;
+            return html`
+              <div
+                class="card"
+                @click=${() => this.openDm(conversation.id)}
+              >
+                <app-mini-profile
+                  .username=${username}
+                  .profileId=${otherUser}
+                  .supressProfileRoute=${true}
+                  .noSubtitle=${true}
+                ></app-mini-profile>
+                <p class="chip-muted">${conversation.updatedAt}</p>
+              </div>
+            `;
+          },
+        )}
       </section>
     `;
   }

@@ -20,20 +20,11 @@ export class PagePost extends LitElement {
     username: string;
     text: string;
     profileId: string;
-  }[] = [
-    {
-      username: "@foodie.lu",
-      text: "Se ve brutal, me encanta el contraste de colores.",
-      profileId: "foodie.lu",
-    },
-    {
-      username: "@osman.chef",
-      text: "Tip: agrega un toque de miel en el topping para mas brillo.",
-      profileId: "osman.chef",
-    },
-  ];
+  }[] = [];
   private currentPostId = "";
   @state() private newComment = "";
+  @state() private isLoading = false;
+  @state() private loadError = false;
 
   static styles = [
     unsafeCSS(componentsCSS),
@@ -167,6 +158,11 @@ export class PagePost extends LitElement {
       .edit-btn {
         width: 7em;
       }
+
+      .no-results {
+        text-align: center;
+        color: var(--muted-foreground);
+      }
     `,
   ];
 
@@ -175,31 +171,38 @@ export class PagePost extends LitElement {
     if (stored && stored.id === id && stored.title) {
       return stored.title;
     }
-
-    const titles: Record<string, string> = {
-      "1": CONSTANTS.FEED_POST1_CAPTION,
-      "2": CONSTANTS.FEED_POST2_CAPTION,
-    };
-
-    return titles[id] ?? CONSTANTS.POST_TITLE;
+    return CONSTANTS.NO_RESULTS_TEXT;
   }
 
   private async loadPost(id: string) {
     if (!id) return;
     this.currentPostId = id;
-    const data = await postService.fetchPostWithComments(id);
-    this.postTitle = data.caption ?? this.getPostTitle(id);
-    this.isBanned = Boolean(data.banned);
-    this.commentItems = data.commentsList.map((comment: Comment) => {
-      const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
-        ? comment.authorId
-        : `${CONSTANTS.USERNAME_PREFIX}${comment.authorId}`;
-      return {
-        username,
-        text: comment.text,
-        profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
-      };
-    });
+    this.isLoading = true;
+    this.loadError = false;
+    try {
+      const data = await postService.fetchPostWithComments(id);
+      this.postTitle = data.caption ?? this.getPostTitle(id);
+      this.isBanned = Boolean(data.banned);
+      const comments = data.commentsList ?? [];
+      this.commentItems = comments.map((comment: Comment) => {
+        const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
+          ? comment.authorId
+          : `${CONSTANTS.USERNAME_PREFIX}${comment.authorId}`;
+        return {
+          username,
+          text: comment.text,
+          profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
+        };
+      });
+    } catch (err) {
+      console.warn("Post fetch error", err);
+      this.loadError = true;
+      this.postTitle = CONSTANTS.NO_RESULTS_TEXT;
+      this.isBanned = false;
+      this.commentItems = [];
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   protected willUpdate(_changed: Map<string, unknown>) {
@@ -209,8 +212,17 @@ export class PagePost extends LitElement {
     }
   }
 
-  private toggleLike() {
-    this.liked = !this.liked;
+  private async toggleLike() {
+    const postId = this.params?.id ?? "";
+    if (!postId) return;
+    const next = !this.liked;
+    this.liked = next;
+    try {
+      await postService.like(postId, next);
+    } catch (err) {
+      console.warn("Like post error", err);
+      this.liked = !next;
+    }
   }
 
   private async vetUser() {
@@ -263,7 +275,7 @@ export class PagePost extends LitElement {
       ];
       this.newComment = "";
     } catch (err) {
-      console.warn("Add comment fallback", err);
+      console.warn("Add comment error", err);
     }
   }
 
@@ -273,45 +285,52 @@ export class PagePost extends LitElement {
     return html`
       <div class="component-container">
         <div class="card">
-          <div class="post-header">
-            <div class="chip-muted">
-              ${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}
-            </div>
-            <div class="post-actions">
-              <button
-                class=${`btn-pill btn-sm like-btn ${
-                  this.liked ? "btn-no-fill like-btn--active" : "btn"
-                }`}
-                @click=${this.toggleLike}
-              >
-                <sl-icon name="hand-thumbs-up"></sl-icon>
-                <span
-                  >${this.liked
-                    ? CONSTANTS.POST_LIKE_ACTIVE
-                    : CONSTANTS.POST_LIKE_BUTTON}</span
-                >
-              </button>
-              <button
-                class=${`btn btn-pill btn-sm vet-btn ${
-                  this.isBanned ? "btn-no-fill vet-btn vet-btn-vetted" : ""
-                }`}
-                ?disabled=${this.isBanning}
-                @click=${this.vetUser}
-              >
-                ${this.isBanned ? "Vetado" : "Vetar"}
-              </button>
-            </div>
-          </div>
-          <h2>${title}</h2>
-          <p>${CONSTANTS.POST_BODY}</p>
-          <div class="post-edit-container">
-            <button
-              class="btn btn-pill btn-sm edit-btn"
-              @click=${() => navigate("/new-post")}
-            >
-              Editar
-            </button>
-          </div>
+          ${this.isLoading
+            ? html`<div class="no-results">Cargando...</div>`
+            : null}
+          ${this.loadError
+            ? html`<div class="no-results">${CONSTANTS.NO_RESULTS_TEXT}</div>`
+            : html`
+                <div class="post-header">
+                  <div class="chip-muted">
+                    ${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}
+                  </div>
+                  <div class="post-actions">
+                    <button
+                      class=${`btn-pill btn-sm like-btn ${
+                        this.liked ? "btn-no-fill like-btn--active" : "btn"
+                      }`}
+                      @click=${this.toggleLike}
+                    >
+                      <sl-icon name="hand-thumbs-up"></sl-icon>
+                      <span
+                        >${this.liked
+                          ? CONSTANTS.POST_LIKE_ACTIVE
+                          : CONSTANTS.POST_LIKE_BUTTON}</span
+                      >
+                    </button>
+                    <button
+                      class=${`btn btn-pill btn-sm vet-btn ${
+                        this.isBanned ? "btn-no-fill vet-btn vet-btn-vetted" : ""
+                      }`}
+                      ?disabled=${this.isBanning}
+                      @click=${this.vetUser}
+                    >
+                      ${this.isBanned ? "Vetado" : "Vetar"}
+                    </button>
+                  </div>
+                </div>
+                <h2>${title}</h2>
+                <p>${CONSTANTS.POST_BODY}</p>
+                <div class="post-edit-container">
+                  <button
+                    class="btn btn-pill btn-sm edit-btn"
+                    @click=${() => navigate("/new-post")}
+                  >
+                    Editar
+                  </button>
+                </div>
+              `}
         </div>
 
         <section class="card comments-section">
@@ -331,21 +350,31 @@ export class PagePost extends LitElement {
               ${CONSTANTS.POST_COMMENT_SEND}
             </button>
           </form>
-          <div class="comments-list">
-            ${this.commentItems.map(
-              (comment) => html`
-                <div class="comment-card">
-                  <app-mini-profile
-                    .username=${comment.username}
-                    .profileId=${comment.profileId}
-                    .noSubtitle=${true}
-                    .hideAvatar=${true}
-                  ></app-mini-profile>
-                  <p class="comment-text">${comment.text}</p>
+          ${this.isLoading
+            ? html`<div class="no-results">Cargando...</div>`
+            : null}
+          ${!this.isLoading && this.commentItems.length === 0
+            ? html`<div class="no-results">${CONSTANTS.NO_RESULTS_TEXT}</div>`
+            : null}
+          ${!this.isLoading && this.commentItems.length > 0
+            ? html`
+                <div class="comments-list">
+                  ${this.commentItems.map(
+                    (comment) => html`
+                      <div class="comment-card">
+                        <app-mini-profile
+                          .username=${comment.username}
+                          .profileId=${comment.profileId}
+                          .noSubtitle=${true}
+                          .hideAvatar=${true}
+                        ></app-mini-profile>
+                        <p class="comment-text">${comment.text}</p>
+                      </div>
+                    `,
+                  )}
                 </div>
-              `,
-            )}
-          </div>
+              `
+            : null}
         </section>
       </div>
     `;

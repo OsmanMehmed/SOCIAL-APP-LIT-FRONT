@@ -45,8 +45,12 @@ export const authStore = {
     writeToStorage(USER_KEY, this.currentUserId);
   },
   loginWithAuth(auth: AuthResponse) {
+    const profile = auth.profile ?? auth.userProfile;
+    if (!profile?.id) {
+      throw new Error(CONSTANTS.NO_RESULTS_TEXT);
+    }
     this.isAuthenticated = true;
-    this.currentUserId = auth.profile.id;
+    this.currentUserId = profile.id;
     writeToStorage(TOKEN_KEY, auth.token || "session");
     writeToStorage(USER_KEY, this.currentUserId);
   },

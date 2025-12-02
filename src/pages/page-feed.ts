@@ -1,12 +1,18 @@
 import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import "../components/app-mini-profile";
 import "../components/app-post-card";
 import { CONSTANTS } from "../shared/constants";
+import { postService } from "../servicios/core/post-service";
+import type { Post } from "../modelos/post";
 
 @customElement("page-feed")
 export class PageFeed extends LitElement {
+  @state() private posts: Post[] = [];
+  @state() private isLoading = false;
+  @state() private loadError = false;
+
   static styles = [
     unsafeCSS(componentsCSS),
     css`
@@ -32,42 +38,63 @@ export class PageFeed extends LitElement {
         flex-direction: column;
         gap: 0.8rem;
       }
+
+      .no-results {
+        text-align: center;
+      }
     `,
   ];
 
+  private async loadPosts() {
+    this.isLoading = true;
+    this.loadError = false;
+    try {
+      this.posts = await postService.list();
+    } catch (err) {
+      console.warn("Feed load error", err);
+      this.posts = [];
+      this.loadError = true;
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  protected firstUpdated() {
+    this.loadPosts();
+  }
+
   render() {
+    const showNoResults =
+      !this.isLoading && (this.loadError || this.posts.length === 0);
+
     return html`
       <section class="flow-column component-container">
-        <app-post-card
-          postId="1"
-          username=${CONSTANTS.FEED_POST1_USERNAME}
-          caption=${CONSTANTS.FEED_POST1_CAPTION}
-        ></app-post-card>
-        <app-post-card
-          postId="2"
-          username=${CONSTANTS.FEED_POST2_USERNAME}
-          caption=${CONSTANTS.FEED_POST2_CAPTION}
-        ></app-post-card>
-        <app-post-card
-          postId="2"
-          username=${CONSTANTS.FEED_POST2_USERNAME}
-          caption=${CONSTANTS.FEED_POST2_CAPTION}
-        ></app-post-card>
-        <app-post-card
-          postId="2"
-          username=${CONSTANTS.FEED_POST2_USERNAME}
-          caption=${CONSTANTS.FEED_POST2_CAPTION}
-        ></app-post-card>
-        <app-post-card
-          postId="2"
-          username=${CONSTANTS.FEED_POST2_USERNAME}
-          caption=${CONSTANTS.FEED_POST2_CAPTION}
-        ></app-post-card>
-        <app-post-card
-          postId="2"
-          username=${CONSTANTS.FEED_POST2_USERNAME}
-          caption=${CONSTANTS.FEED_POST2_CAPTION}
-        ></app-post-card>
+        ${this.isLoading
+          ? html`<div class="card no-results">Cargando...</div>`
+          : null}
+
+        ${showNoResults
+          ? html`<div class="card no-results">
+              ${CONSTANTS.NO_RESULTS_TEXT}
+            </div>`
+          : null}
+
+        ${this.posts.map((post) => {
+          const username = post.authorId?.startsWith(CONSTANTS.USERNAME_PREFIX)
+            ? post.authorId
+            : `${CONSTANTS.USERNAME_PREFIX}${post.authorId}`;
+          return html`
+            <app-post-card
+              .postId=${post.id}
+              .username=${username}
+              .caption=${post.caption}
+              .banned=${Boolean(post.banned)}
+              .likes=${post.likes}
+              .comments=${post.comments}
+              .saves=${post.saves}
+            ></app-post-card>
+          `;
+        })}
       </section>
     `;
   }

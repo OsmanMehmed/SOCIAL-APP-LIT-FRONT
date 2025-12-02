@@ -4,11 +4,8 @@ import { customElement, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 import "../components/app-avatar";
-
-interface SearchProfile {
-  id: string;
-  name: string;
-}
+import { friendService } from "../servicios/core/friend-service";
+import type { UserProfile } from "../modelos/user-profile";
 
 interface SearchRecipe {
   id: string;
@@ -21,37 +18,10 @@ interface SearchRecipe {
 @customElement("page-search")
 export class PageSearch extends LitElement {
   @state() private query = "";
-
-  // Mocks de resultados
-  private readonly mockProfiles: SearchProfile[] = [
-    { id: "ana.cocina", name: "Cocina casera y panes" },
-    { id: "osman.chef", name: "Meal prep saludable" },
-    { id: "veggie.vibes", name: "Recetas plant based" },
-  ];
-
-  private readonly mockRecipes: SearchRecipe[] = [
-    {
-      id: "1",
-      title: "Pizza napolitana casera",
-      authorId: "ana.cocina",
-      tags: ["italiana", "masa madre"],
-      time: "45 min",
-    },
-    {
-      id: "2",
-      title: "Ramen casero de pollo",
-      authorId: "osman.chef",
-      tags: ["asiática", "comfort food"],
-      time: "30 min",
-    },
-    {
-      id: "3",
-      title: "Tiramisú clásico",
-      authorId: "veggie.vibes",
-      tags: ["postre", "sin horno"],
-      time: "20 min",
-    },
-  ];
+  @state() private profiles: UserProfile[] = [];
+  @state() private recipes: SearchRecipe[] = [];
+  @state() private isLoadingProfiles = false;
+  @state() private profilesError = false;
 
   static styles = [
     unsafeCSS(componentsCSS),
@@ -140,39 +110,36 @@ export class PageSearch extends LitElement {
   private onSearchInput(event: Event) {
     const target = event.target as HTMLInputElement;
     this.query = target.value;
+    this.runSearch();
   }
 
   private get normalizedQuery(): string {
     return this.query.trim().toLowerCase();
   }
 
-  // Perfiles: búsqueda por @usuario o por nombre visible
-  private get filteredProfiles(): SearchProfile[] {
+  private async runSearch() {
     const q = this.normalizedQuery;
-    if (!q) return this.mockProfiles;
+    if (!q) {
+      this.profiles = [];
+      this.recipes = [];
+      this.profilesError = false;
+      this.isLoadingProfiles = false;
+      return;
+    }
 
-    const withoutPrefix = q.startsWith(CONSTANTS.USERNAME_PREFIX)
-      ? q.slice(CONSTANTS.USERNAME_PREFIX.length)
-      : q;
-
-    return this.mockProfiles.filter((profile) => {
-      const username =
-        `${CONSTANTS.USERNAME_PREFIX}${profile.id}`.toLowerCase();
-      return (
-        username.includes(q) ||
-        profile.name.toLowerCase().includes(withoutPrefix)
-      );
-    });
-  }
-
-  // Recetas: búsqueda por título
-  private get filteredRecipes(): SearchRecipe[] {
-    const q = this.normalizedQuery;
-    if (!q) return this.mockRecipes;
-
-    return this.mockRecipes.filter((recipe) =>
-      recipe.title.toLowerCase().includes(q),
-    );
+    this.isLoadingProfiles = true;
+    this.profilesError = false;
+    try {
+      this.profiles = await friendService.search(q);
+      this.recipes = [];
+    } catch (err) {
+      console.warn("Search profiles error", err);
+      this.profiles = [];
+      this.recipes = [];
+      this.profilesError = true;
+    } finally {
+      this.isLoadingProfiles = false;
+    }
   }
 
   private openProfile(id: string) {
@@ -184,8 +151,13 @@ export class PageSearch extends LitElement {
   }
 
   render() {
-    const profiles = this.filteredProfiles;
-    const recipes = this.filteredRecipes;
+    const profiles = this.profiles;
+    const recipes = this.recipes;
+    const showProfilesNoResults =
+      !this.isLoadingProfiles &&
+      (this.profilesError || profiles.length === 0);
+    const showRecipesNoResults =
+      !this.isLoadingProfiles && recipes.length === 0;
 
     return html`
       <section class="flow-column component-container">
@@ -205,55 +177,59 @@ export class PageSearch extends LitElement {
           <div class="card">
             <div class="chip-muted section-title">Chefs</div>
             <div class="results-list">
-              ${profiles.length
-                ? profiles.map(
-                    (profile) => html`
-                      <div
-                        class="profile-row"
-                        @click=${() => this.openProfile(profile.id)}
+              ${this.isLoadingProfiles
+                ? html`<p class="empty">Cargando...</p>`
+                : null}
+              ${showProfilesNoResults
+                ? html`<p class="empty">${CONSTANTS.NO_RESULTS_TEXT}</p>`
+                : null}
+              ${profiles.map(
+                (profile) => html`
+                  <div
+                    class="profile-row"
+                    @click=${() => this.openProfile(profile.id)}
+                  >
+                    <app-avatar></app-avatar>
+                    <div class="profile-meta">
+                      <span class="username"
+                        >${profile.username ||
+                        `${CONSTANTS.USERNAME_PREFIX}${profile.id}`}</span
                       >
-                        <app-avatar></app-avatar>
-                        <div class="profile-meta">
-                          <span class="username"
-                            >${CONSTANTS.USERNAME_PREFIX}${profile.id}</span
-                          >
-                          <span class="name">${profile.name}</span>
-                        </div>
-                      </div>
-                    `,
-                  )
-                : html`<p class="empty">No se han encontrado chefs.</p>`}
+                      <span class="name">${profile.subtitle || ""}</span>
+                    </div>
+                  </div>
+                `,
+              )}
             </div>
           </div>
 
           <div class="card">
             <div class="chip-muted section-title">Recetas</div>
             <div class="results-list">
-              ${recipes.length
-                ? recipes.map(
-                    (recipe) => html`
-                      <div
-                        class="recipe-row"
-                        @click=${() => this.openRecipe(recipe.id)}
+              ${showRecipesNoResults
+                ? html`<p class="empty">${CONSTANTS.NO_RESULTS_TEXT}</p>`
+                : null}
+              ${recipes.map(
+                (recipe) => html`
+                  <div
+                    class="recipe-row"
+                    @click=${() => this.openRecipe(recipe.id)}
+                  >
+                    <div class="recipe-title">${recipe.title}</div>
+                    <div class="recipe-meta">
+                      <span
+                        >${CONSTANTS.USERNAME_PREFIX}${recipe.authorId}</span
                       >
-                        <div class="recipe-title">${recipe.title}</div>
-                        <div class="recipe-meta">
-                          <span
-                            >${CONSTANTS.USERNAME_PREFIX}${recipe.authorId}</span
-                          >
-                          <span>${recipe.time}</span>
-                        </div>
-                        <div class="recipe-tags">
-                          ${recipe.tags.map(
-                            (tag) => html`
-                              <span class="recipe-tag">${tag}</span>
-                            `,
-                          )}
-                        </div>
-                      </div>
-                    `,
-                  )
-                : html`<p class="empty">No se han encontrado recetas.</p>`}
+                      <span>${recipe.time}</span>
+                    </div>
+                    <div class="recipe-tags">
+                      ${recipe.tags.map(
+                        (tag) => html` <span class="recipe-tag">${tag}</span> `,
+                      )}
+                    </div>
+                  </div>
+                `,
+              )}
             </div>
           </div>
         </div>

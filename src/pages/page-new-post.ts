@@ -390,11 +390,14 @@ export class PageNewPost extends LitElement {
         comments: 0,
         saves: 0,
       });
-      const newId = created.id || `local-${Date.now()}`;
-      navigate(`/post/${newId}`);
+      if (created.id) {
+        navigate(`/post/${created.id}`);
+      } else {
+        this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
+      }
     } catch (err) {
-      console.warn("Create post fallback", err);
-      navigate("/post/1");
+      console.warn("Create post error", err);
+      this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
     }
   }
 

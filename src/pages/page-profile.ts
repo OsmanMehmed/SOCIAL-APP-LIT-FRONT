@@ -17,13 +17,20 @@ export class PageProfile extends LitElement {
   @state() private profile?: UserProfile;
   @state() private isFriend = false;
   @state() private isBanned = false;
+  @state() private isLoading = false;
+  @state() private loadError = false;
   private currentProfileId = "";
 
   private async vetUser() {
     const id = this.params?.id ?? "me";
     const next = !this.isBanned;
     this.isBanned = next;
-    await profileService.vetProfile(id, next);
+    try {
+      await profileService.vetProfile(id, next);
+    } catch (err) {
+      console.warn("Vet profile error", err);
+      this.isBanned = !next;
+    }
   }
 
   private editProfile() {
@@ -35,10 +42,22 @@ export class PageProfile extends LitElement {
   }
 
   private async loadProfile(id: string) {
-    const profile = await profileService.fetchProfile(id);
-    this.profile = profile;
-    this.isFriend = profile.friend;
-    this.isBanned = profile.banned;
+    this.isLoading = true;
+    this.loadError = false;
+    try {
+      const profile = await profileService.fetchProfile(id);
+      this.profile = profile;
+      this.isFriend = profile.friend;
+      this.isBanned = profile.banned;
+    } catch (err) {
+      console.warn("Profile fetch error", err);
+      this.profile = undefined;
+      this.isFriend = false;
+      this.isBanned = false;
+      this.loadError = true;
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   private unfriend() {
@@ -159,6 +178,11 @@ export class PageProfile extends LitElement {
         gap: 0.8em;
         padding-right: 0.2rem;
       }
+
+      .no-results {
+        text-align: center;
+        color: var(--muted-foreground);
+      }
     `,
   ];
 
@@ -240,79 +264,92 @@ export class PageProfile extends LitElement {
     const isMe = resolvedId === "me";
     const isAdmin = authStore.currentUserId === "admin";
     const canVet = true; // TODO: hook to admin roles when available
+    const showNoProfile = !this.isLoading && (this.loadError || !this.profile);
 
     return html`
       <section class="flow-column component-container">
         <div class="card profile-card">
-          <div class="profile-info">
-            <app-avatar .cursorPointer=${false} .bigAvatar=${true}></app-avatar>
-            <div class="profile-name">
-              <span>${username}</span>
-            </div>
-            <div class="profile-subtitle">${subtitle}</div>
-          </div>
-          <div class="buttons-2">
-            ${!isMe
-              ? html`
-                  ${!isAdmin && this.isFriend
+          ${this.isLoading
+            ? html`<div class="no-results">Cargando...</div>`
+            : null}
+          ${showNoProfile
+            ? html`<div class="no-results">
+                ${CONSTANTS.NO_RESULTS_TEXT}
+              </div>`
+            : html`
+                <div class="profile-info">
+                  <app-avatar
+                    .cursorPointer=${false}
+                    .bigAvatar=${true}
+                  ></app-avatar>
+                  <div class="profile-name">
+                    <span>${username}</span>
+                  </div>
+                  <div class="profile-subtitle">${subtitle}</div>
+                </div>
+                <div class="buttons-2">
+                  ${!isMe
                     ? html`
+                        ${!isAdmin && this.isFriend
+                          ? html`
+                              <button
+                                class="btn-no-fill btn-pill btn-sm friend-btn"
+                                @click=${this.unfriend}
+                                aria-label=${CONSTANTS.PROFILE_UNFRIEND_ALT}
+                              >
+                                <span class="label-default">
+                                  ${CONSTANTS.PROFILE_FRIEND_BUTTON}
+                                </span>
+                                <span class="label-hover">
+                                  ${CONSTANTS.PROFILE_UNFRIEND_SYMBOL}
+                                </span>
+                              </button>
+                            `
+                          : null}
+                        ${!this.isFriend
+                          ? html`
+                              <button
+                                class="btn btn-pill btn-sm connect-btn"
+                                @click=${this.connect}
+                              >
+                                ${CONSTANTS.PROFILE_CONNECT_BUTTON}
+                              </button>
+                            `
+                          : null}
+                        ${canVet
+                          ? html`
+                              <button
+                                class=${`btn btn-pill btn-sm connect-btn ${
+                                  this.isBanned
+                                    ? "btn-no-fill btn-pill btn-sm vet-btn"
+                                    : ""
+                                }`}
+                                @click=${this.vetUser}
+                              >
+                                ${this.isBanned ? "Vetado" : "Vetar"}
+                              </button>
+                            `
+                          : null}
                         <button
-                          class="btn-no-fill btn-pill btn-sm friend-btn"
-                          @click=${this.unfriend}
-                          aria-label=${CONSTANTS.PROFILE_UNFRIEND_ALT}
+                          class="btn-no-fill btn-pill btn-sm"
+                          @click=${this.openDm}
                         >
-                          <span class="label-default">
-                            ${CONSTANTS.PROFILE_FRIEND_BUTTON}
-                          </span>
-                          <span class="label-hover">
-                            ${CONSTANTS.PROFILE_UNFRIEND_SYMBOL}
-                          </span>
+                          Mensaje
                         </button>
                       `
                     : null}
-                  ${!this.isFriend
+                  ${isMe || isAdmin
                     ? html`
                         <button
-                          class="btn btn-pill btn-sm connect-btn"
-                          @click=${this.connect}
+                          class="btn btn-pill btn-sm edit-profile-btn"
+                          @click=${this.editProfile}
                         >
-                          ${CONSTANTS.PROFILE_CONNECT_BUTTON}
+                          ${CONSTANTS.PROFILE_EDIT_BUTTON}
                         </button>
                       `
                     : null}
-                  ${canVet
-                    ? html`
-                        <button
-                          class=${`btn btn-pill btn-sm connect-btn ${
-                            this.isBanned
-                              ? "btn-no-fill btn-pill btn-sm vet-btn"
-                              : ""
-                          }`}
-                          @click=${this.vetUser}
-                        >
-                          ${this.isBanned ? "Vetado" : "Vetar"}
-                        </button>
-                      `
-                    : null}
-                  <button
-                    class="btn-no-fill btn-pill btn-sm"
-                    @click=${this.openDm}
-                  >
-                    Mensaje
-                  </button>
-                `
-              : null}
-            ${isMe || isAdmin
-              ? html`
-                  <button
-                    class="btn btn-pill btn-sm edit-profile-btn"
-                    @click=${this.editProfile}
-                  >
-                    ${CONSTANTS.PROFILE_EDIT_BUTTON}
-                  </button>
-                `
-              : null}
-          </div>
+                </div>
+              `}
         </div>
 
         <div class="card posts-card">
@@ -320,34 +357,11 @@ export class PageProfile extends LitElement {
             ${CONSTANTS.PROFILE_PUBLISHED_RECIPES}
           </div>
           <div class="posts-container">
-            <app-post-card
-              noProfile=${true}
-              noShadow=${true}
-              postId="1"
-              .username=${username}
-              .caption=${subtitle}
-            ></app-post-card>
-            <app-post-card
-              noProfile=${true}
-              noShadow=${true}
-              postId="2"
-              .username=${username}
-              .caption=${subtitle}
-            ></app-post-card>
-            <app-post-card
-              noProfile=${true}
-              noShadow=${true}
-              postId="3"
-              .username=${username}
-              .caption=${subtitle}
-            ></app-post-card>
-            <app-post-card
-              noProfile=${true}
-              noShadow=${true}
-              postId="4"
-              .username=${username}
-              .caption=${subtitle}
-            ></app-post-card>
+            ${this.isLoading
+              ? html`<div class="no-results">Cargando...</div>`
+              : html`<div class="no-results">
+                  ${CONSTANTS.NO_RESULTS_TEXT}
+                </div>`}
           </div>
         </div>
       </section>

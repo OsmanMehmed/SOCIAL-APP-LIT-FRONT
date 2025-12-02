@@ -3,6 +3,7 @@ import type { Comment } from "../../modelos/comment";
 import { request } from "./http-client";
 
 export const postHttp = {
+  list: () => request<Post[]>(`/posts`),
   getPost: (id: string) => request<Post>(`/posts/${id}`),
   getComments: (id: string) => request<Comment[]>(`/posts/${id}/comments`),
   createPost: (post: Post) =>
