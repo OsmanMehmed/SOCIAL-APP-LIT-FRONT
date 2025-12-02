@@ -51,8 +51,7 @@ export class PageFeed extends ScrollPage {
     this.loadError = false;
     try {
       this.posts = await postService.list();
-    } catch (err) {
-      console.warn("Feed load error", err);
+    } catch {
       this.posts = [];
       this.loadError = true;
     } finally {
@@ -61,7 +60,6 @@ export class PageFeed extends ScrollPage {
   }
 
   protected firstUpdated() {
-    console.log(`[page-feed] firstUpdated called`);
     this.loadPosts();
     // Restaura scroll si estamos volviendo (pop/back)
     this.restoreScrollIfNeeded("/feed");
@@ -70,7 +68,6 @@ export class PageFeed extends ScrollPage {
   protected updated(changed: Map<string, unknown>) {
     // Si los posts terminaron de cargar, restaura scroll nuevamente
     if (changed.has("isLoading") && !this.isLoading && this.posts.length > 0) {
-      console.log(`[page-feed] Posts loaded, attempting scroll restore`);
       this.restoreScrollIfNeeded("/feed");
     }
   }

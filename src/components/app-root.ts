@@ -71,7 +71,6 @@ export class AppRoot extends LitElement {
     this.navType = "pop";
     this.location = parseLocation(location.pathname);
     this.currentPath = location.pathname;
-    console.log(`[app-root] onPopState detected, navType=pop, path=${this.currentPath}`);
   };
 
   private getTitle(): string {
@@ -108,7 +107,6 @@ export class AppRoot extends LitElement {
     this.scrollPositions.set(path, top);
     try {
       sessionStorage.setItem(`scroll:${path}`, String(top));
-      console.log(`[app-root] Saved scroll for ${path}: ${top}`);
     } catch {}
   }
 
@@ -189,14 +187,11 @@ export class AppRoot extends LitElement {
       const previousPath = this.currentPath;
       const keepSet = new Set<string>([previousPath]);
 
-      console.log(`[app-root] updated: navType=${this.navType}, previousPath=${previousPath}, newPath=${location.pathname}`);
-
       if (this.navType === "pop") {
         // Para pop (back), marca en sessionStorage que debe restaurar scroll
         // La página lo hará en su firstUpdated()
         try {
           sessionStorage.setItem("restore-scroll-on-next-page", "true");
-          console.log(`[app-root] Set restore-scroll-on-next-page flag`);
         } catch {}
       } else {
         this.clearScrollStorageExcept([previousPath]);

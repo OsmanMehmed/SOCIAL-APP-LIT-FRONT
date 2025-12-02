@@ -151,8 +151,7 @@ export class PageDirectMessage extends LitElement {
     this.loadError = false;
     try {
       this.thread = await messageService.fetchThread(conversationId);
-    } catch (err) {
-      console.warn("Thread fetch error", err);
+    } catch {
       this.thread = [];
       this.loadError = true;
     } finally {
@@ -176,8 +175,7 @@ export class PageDirectMessage extends LitElement {
       this.thread = [...this.thread, message];
       this.draft = "";
       this.loadError = false;
-    } catch (err) {
-      console.warn("Send message error", err);
+    } catch {
       this.loadError = true;
     }
   }

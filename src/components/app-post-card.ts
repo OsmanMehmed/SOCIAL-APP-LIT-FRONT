@@ -103,7 +103,9 @@ export class AppPostCard extends LitElement {
       }
 
       .footer-actions {
-        display: inline-flex;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
         align-items: center;
         gap: 0.5rem;
         margin-bottom: 1em;
@@ -175,8 +177,7 @@ export class AppPostCard extends LitElement {
       this.likesCount = updated.likes ?? this.likesCount;
       this.commentsCount = updated.comments ?? this.commentsCount;
       this.savesCount = updated.saves ?? this.savesCount;
-    } catch (err) {
-      console.warn("Like post error", err);
+    } catch {
     } finally {
       this.isLiking = false;
     }
@@ -191,8 +192,7 @@ export class AppPostCard extends LitElement {
     try {
       const updated = await postService.ban(this.postId, next);
       this.isBanned = Boolean(updated.banned);
-    } catch (err) {
-      console.warn("Ban/unban post error", err);
+    } catch {
       this.isBanned = !next;
     } finally {
       this.isBanning = false;

@@ -140,8 +140,7 @@ export class PageSearch extends ScrollPage {
     this.postsError = false;
     try {
       this.profiles = await friendService.search(q);
-    } catch (err) {
-      console.warn("Search profiles error", err);
+    } catch {
       this.profiles = [];
       this.profilesError = true;
     } finally {
@@ -157,8 +156,7 @@ export class PageSearch extends ScrollPage {
         tags: [],
         time: "",
       }));
-    } catch (err) {
-      console.warn("Search posts error", err);
+    } catch {
       this.recipes = [];
       this.postsError = true;
     } finally {

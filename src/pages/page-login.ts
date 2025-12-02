@@ -115,7 +115,6 @@ export class PageLogin extends LitElement {
       const message =
         err instanceof Error ? err.message : "No se pudo iniciar sesión.";
       this.errorMessage = message || "Usuario o contraseña incorrectos.";
-      console.warn("Login error", err);
     } finally {
       this.isSubmitting = false;
     }

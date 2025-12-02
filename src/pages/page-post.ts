@@ -203,7 +203,7 @@ export class PagePost extends ScrollPage {
       this.isBanned = Boolean(data.banned);
       this.liked = Boolean(data.liked);
       this.likesCount = data.likes ?? 0;
-      this.commentsCount = data.comments ?? (data.commentsList?.length ?? 0);
+      this.commentsCount = data.comments ?? data.commentsList?.length ?? 0;
       this.savesCount = data.saves ?? 0;
       const comments = data.commentsList ?? [];
       this.commentItems = comments.map((comment: Comment) => {
@@ -216,8 +216,7 @@ export class PagePost extends ScrollPage {
           profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
         };
       });
-    } catch (err) {
-      console.warn("Post fetch error", err);
+    } catch {
       this.loadError = true;
       this.postTitle = CONSTANTS.NO_RESULTS_TEXT;
       this.isBanned = false;
@@ -246,8 +245,7 @@ export class PagePost extends ScrollPage {
       this.likesCount = updated.likes ?? this.likesCount;
       this.commentsCount = updated.comments ?? this.commentsCount;
       this.savesCount = updated.saves ?? this.savesCount;
-    } catch (err) {
-      console.warn("Like post error", err);
+    } catch {
       this.liked = !next;
     }
   }
@@ -263,8 +261,7 @@ export class PagePost extends ScrollPage {
     try {
       const updated = await postService.ban(postId, next);
       this.isBanned = Boolean(updated.banned);
-    } catch (err) {
-      console.warn("Ban/unban post error", err);
+    } catch {
       this.isBanned = !next;
     } finally {
       this.isBanning = false;
@@ -281,30 +278,27 @@ export class PagePost extends ScrollPage {
     if (!text) return;
     const postId = this.params?.id ?? "";
     const authorId = authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
-    try {
-      const created = await postService.addComment({
-        id: "",
-        postId,
-        authorId,
-        text,
-        createdAt: new Date().toISOString(),
-      });
-      const username = created.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
-        ? created.authorId
-        : `${CONSTANTS.USERNAME_PREFIX}${created.authorId}`;
-      this.commentItems = [
-        ...this.commentItems,
-        {
-          username,
-          text: created.text,
-          profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
-        },
-      ];
-      this.commentsCount += 1;
-      this.newComment = "";
-    } catch (err) {
-      console.warn("Add comment error", err);
-    }
+
+    const created = await postService.addComment({
+      id: "",
+      postId,
+      authorId,
+      text,
+      createdAt: new Date().toISOString(),
+    });
+    const username = created.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
+      ? created.authorId
+      : `${CONSTANTS.USERNAME_PREFIX}${created.authorId}`;
+    this.commentItems = [
+      ...this.commentItems,
+      {
+        username,
+        text: created.text,
+        profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
+      },
+    ];
+    this.commentsCount += 1;
+    this.newComment = "";
   }
 
   render() {
@@ -321,7 +315,7 @@ export class PagePost extends ScrollPage {
             : html`
                 <div class="post-header">
                   <div class="chip-muted">
-                    ${CONSTANTS.POST_CHIP_LABEL_PREFIX} ${id}
+                    ${CONSTANTS.POST_CHIP_LABEL_PREFIX}
                   </div>
                   <div class="post-actions">
                     <button
@@ -339,7 +333,9 @@ export class PagePost extends ScrollPage {
                     </button>
                     <button
                       class=${`btn btn-pill btn-sm vet-btn ${
-                        this.isBanned ? "btn-no-fill vet-btn vet-btn-vetted" : ""
+                        this.isBanned
+                          ? "btn-no-fill vet-btn vet-btn-vetted"
+                          : ""
                       }`}
                       ?disabled=${this.isBanning}
                       @click=${this.vetUser}
@@ -412,7 +408,7 @@ export class PagePost extends ScrollPage {
                         ></app-mini-profile>
                         <p class="comment-text">${comment.text}</p>
                       </div>
-                    `,
+                    `
                   )}
                 </div>
               `

@@ -43,8 +43,7 @@ export class PageProfile extends ScrollPage {
     this.isBanned = next;
     try {
       await profileService.vetProfile(id, next);
-    } catch (err) {
-      console.warn("Vet profile error", err);
+    } catch {
       this.isBanned = !next;
     }
   }
@@ -65,8 +64,7 @@ export class PageProfile extends ScrollPage {
       this.profile = profile;
       this.isFriend = profile.friend;
       this.isBanned = profile.banned;
-    } catch (err) {
-      console.warn("Profile fetch error", err);
+    } catch {
       this.profile = undefined;
       this.isFriend = false;
       this.isBanned = false;
@@ -83,8 +81,7 @@ export class PageProfile extends ScrollPage {
       this.posts = await postService.listByAuthor(id);
       // Una vez cargados los posts, intentamos restaurar el scroll del contenedor
       this.restorePostsScroll();
-    } catch (err) {
-      console.warn("Profile posts fetch error", err);
+    } catch {
       this.posts = [];
     } finally {
       this.postsLoading = false;
@@ -105,6 +102,12 @@ export class PageProfile extends ScrollPage {
         max-width: 52em;
         padding-bottom: 0.8rem;
         height: 50em;
+      }
+
+      @media (max-width: 65em) {
+        .component-container {
+          width: 90%;
+        }
       }
 
       .profile-info {
@@ -406,6 +409,7 @@ export class PageProfile extends ScrollPage {
                         .postId=${post.id}
                         .username=${username}
                         .caption=${post.caption}
+                        .noProfile=${true}
                         .banned=${Boolean(post.banned)}
                         .liked=${Boolean(post.liked)}
                         .likes=${post.likes}

@@ -174,7 +174,7 @@ export class PageNewPost extends LitElement {
         pointer-events: none;
       }
 
-      @media (max-width: 950px) {
+      @media (max-width: 65em) {
         .file-input-display {
           flex-wrap: wrap;
           width: 10em;
@@ -395,8 +395,7 @@ export class PageNewPost extends LitElement {
       } else {
         this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
       }
-    } catch (err) {
-      console.warn("Create post error", err);
+    } catch {
       this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
     }
   }

@@ -41,8 +41,7 @@ export class PageConversations extends ScrollPage {
     const userId = authStore.currentUserId || "me";
     try {
       this.conversations = await messageService.listConversations(userId);
-    } catch (err) {
-      console.warn("Conversations load error", err);
+    } catch {
       this.conversations = [];
       this.loadError = true;
     } finally {

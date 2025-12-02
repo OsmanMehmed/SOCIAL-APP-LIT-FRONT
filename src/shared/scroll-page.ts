@@ -26,37 +26,24 @@ export class ScrollPage extends LitElement {
     const key = pathKey || location.pathname;
     const shouldRestore = this.checkShouldRestore();
 
-    console.log(
-      `[ScrollPage] restoreScrollIfNeeded called. key=${key}, shouldRestore=${shouldRestore}`,
-    );
-
     if (!shouldRestore) {
-      console.log(`[ScrollPage] No restore flag set, skipping`);
       return;
     }
 
     // Small delay to ensure content is laid out
     requestAnimationFrame(() => {
       const container = this.getScrollContainer();
-      console.log(
-        `[ScrollPage] RAF: container=${container ? "found" : "NOT FOUND"}`,
-      );
       if (!container) return;
 
       try {
         const saved = sessionStorage.getItem(`scroll:${key}`);
-        console.log(`[ScrollPage] Saved scroll value for ${key}: ${saved}`);
         if (saved) {
           const top = Number(saved);
           if (!Number.isNaN(top)) {
-            console.log(`[ScrollPage] Restoring scroll to ${top}`);
             container.scrollTop = top;
             // Verify on the next frame that scroll was applied; if not, keep the flag
             requestAnimationFrame(() => {
               const applied = Math.abs(container.scrollTop - top) < 1;
-              console.log(
-                `[ScrollPage] verify applied=${applied}, current=${container.scrollTop}, target=${top}, height=${container.scrollHeight}`,
-              );
               if (applied) {
                 this.clearRestoreFlag();
               }
@@ -65,7 +52,6 @@ export class ScrollPage extends LitElement {
         }
       } catch {
         // Ignore sessionStorage errors
-        console.warn(`[ScrollPage] Error accessing sessionStorage`);
       }
     });
   }
