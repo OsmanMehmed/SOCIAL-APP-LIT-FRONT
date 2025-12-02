@@ -42,11 +42,7 @@ export class PageProfile extends ScrollPage {
     if (!id) return;
     const next = !this.isBanned;
     this.isBanned = next;
-    try {
-      await profileService.vetProfile(id, next);
-    } catch {
-      this.isBanned = !next;
-    }
+    await profileService.vetProfile(id, next);
   }
 
   private editProfile() {
@@ -60,33 +56,26 @@ export class PageProfile extends ScrollPage {
   private async loadProfile(id: string) {
     this.isLoading = true;
     this.loadError = false;
-    try {
-      const profile = await profileService.fetchProfile(id);
-      this.profile = profile;
-      this.isFriend = profile.friend;
-      this.isBanned = profile.banned;
-    } catch {
-      this.profile = undefined;
-      this.isFriend = false;
-      this.isBanned = false;
-      this.loadError = true;
-    } finally {
-      this.isLoading = false;
-    }
+    const profile = await profileService
+      .fetchProfile(id)
+      .finally(() => {
+        this.isLoading = false;
+      });
+    this.profile = profile;
+    this.isFriend = profile.friend;
+    this.isBanned = profile.banned;
   }
 
   private async loadPosts(id: string) {
     if (!id) return;
     this.postsLoading = true;
-    try {
-      this.posts = await postService.listByAuthor(id);
-      // Una vez cargados los posts, intentamos restaurar el scroll del contenedor
-      this.restorePostsScroll();
-    } catch {
-      this.posts = [];
-    } finally {
-      this.postsLoading = false;
-    }
+    this.posts = await postService
+      .listByAuthor(id)
+      .finally(() => {
+        this.postsLoading = false;
+      });
+    // Una vez cargados los posts, intentamos restaurar el scroll del contenedor
+    this.restorePostsScroll();
   }
 
   private unfriend() {
@@ -109,21 +98,15 @@ export class PageProfile extends ScrollPage {
   private savePostsScroll() {
     if (!this.postsCard) return;
     const key = this.getScrollKey();
-    try {
-      sessionStorage.setItem(key, String(this.postsCard.scrollTop));
-    } catch {}
+    sessionStorage.setItem(key, String(this.postsCard.scrollTop));
   }
 
   private restorePostsScroll() {
     if (!this.postsCard) return;
     const key = this.getScrollKey();
     let top = 0;
-    try {
-      const stored = sessionStorage.getItem(key);
-      top = stored ? Number(stored) : 0;
-    } catch {
-      top = 0;
-    }
+    const stored = sessionStorage.getItem(key);
+    top = stored ? Number(stored) : 0;
     if (Number.isNaN(top)) return;
     requestAnimationFrame(() => {
       if (!this.postsCard) return;

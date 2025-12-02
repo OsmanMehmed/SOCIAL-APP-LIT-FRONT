@@ -52,21 +52,17 @@ export class PageLogin extends LitElement {
       return;
     }
 
-    try {
-      const auth = await authService.login({
+    const auth = await authService
+      .login({
         username: user,
         password: pass,
+      })
+      .finally(() => {
+        this.isSubmitting = false;
       });
-      authStore.loginWithAuth(auth);
-      navigate("/feed");
-    } catch (err) {
-      authStore.logout();
-      const message =
-        err instanceof Error ? err.message : "No se pudo iniciar sesión.";
-      this.errorMessage = message || "Usuario o contraseña incorrectos.";
-    } finally {
-      this.isSubmitting = false;
-    }
+
+    authStore.loginWithAuth(auth);
+    navigate("/feed");
   }
 
   render() {

@@ -7,24 +7,16 @@ export interface PostViewData {
 const STORAGE_KEY = "post:last-viewed";
 
 function readFromStorage(): PostViewData | null {
-  try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as PostViewData) : null;
-  } catch {
-    return null;
-  }
+  const raw = sessionStorage.getItem(STORAGE_KEY);
+  return raw ? (JSON.parse(raw) as PostViewData) : null;
 }
 
 function writeToStorage(data: PostViewData) {
-  try {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {}
+  sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 function clearStorage() {
-  try {
-    sessionStorage.removeItem(STORAGE_KEY);
-  } catch {}
+  sessionStorage.removeItem(STORAGE_KEY);
 }
 
 let currentPost: PostViewData | null = readFromStorage();

@@ -147,21 +147,17 @@ export class PageNewPost extends LitElement {
 
     this.errorMessage = null;
 
-    try {
-      const created = await postService.create({
-        id: "",
-        caption: `${trimmedTitle} - ${trimmedBody}`,
-        authorId: authStore.currentUserId || CONSTANTS.CURRENT_USER_ID,
-        likes: 0,
-        comments: 0,
-        saves: 0,
-      });
-      if (created.id) {
-        navigate(`/post/${created.id}`);
-      } else {
-        this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
-      }
-    } catch {
+    const created = await postService.create({
+      id: "",
+      caption: `${trimmedTitle} - ${trimmedBody}`,
+      authorId: authStore.currentUserId || CONSTANTS.CURRENT_USER_ID,
+      likes: 0,
+      comments: 0,
+      saves: 0,
+    });
+    if (created.id) {
+      navigate(`/post/${created.id}`);
+    } else {
       this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
     }
   }

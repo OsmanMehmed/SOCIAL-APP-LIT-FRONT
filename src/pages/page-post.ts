@@ -46,34 +46,28 @@ export class PagePost extends ScrollPage {
     this.currentPostId = id;
     this.isLoading = true;
     this.loadError = false;
-    try {
-      const data = await postService.fetchPostWithComments(id);
-      this.postTitle = data.caption ?? this.getPostTitle(id);
-      this.isBanned = Boolean(data.banned);
-      this.liked = Boolean(data.liked);
-      this.likesCount = data.likes ?? 0;
-      this.commentsCount = data.comments ?? data.commentsList?.length ?? 0;
-      this.savesCount = data.saves ?? 0;
-      const comments = data.commentsList ?? [];
-      this.commentItems = comments.map((comment: Comment) => {
-        const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
-          ? comment.authorId
-          : `${CONSTANTS.USERNAME_PREFIX}${comment.authorId}`;
-        return {
-          username,
-          text: comment.text,
-          profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
-        };
+    const data = await postService
+      .fetchPostWithComments(id)
+      .finally(() => {
+        this.isLoading = false;
       });
-    } catch {
-      this.loadError = true;
-      this.postTitle = CONSTANTS.NO_RESULTS_TEXT;
-      this.isBanned = false;
-      this.liked = false;
-      this.commentItems = [];
-    } finally {
-      this.isLoading = false;
-    }
+    this.postTitle = data.caption ?? this.getPostTitle(id);
+    this.isBanned = Boolean(data.banned);
+    this.liked = Boolean(data.liked);
+    this.likesCount = data.likes ?? 0;
+    this.commentsCount = data.comments ?? data.commentsList?.length ?? 0;
+    this.savesCount = data.saves ?? 0;
+    const comments = data.commentsList ?? [];
+    this.commentItems = comments.map((comment: Comment) => {
+      const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
+        ? comment.authorId
+        : `${CONSTANTS.USERNAME_PREFIX}${comment.authorId}`;
+      return {
+        username,
+        text: comment.text,
+        profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
+      };
+    });
   }
 
   protected willUpdate(_changed: Map<string, unknown>) {
@@ -88,15 +82,11 @@ export class PagePost extends ScrollPage {
     if (!postId) return;
     const next = !this.liked;
     this.liked = next;
-    try {
-      const updated = await postService.like(postId, next);
-      this.liked = Boolean(updated.liked ?? next);
-      this.likesCount = updated.likes ?? this.likesCount;
-      this.commentsCount = updated.comments ?? this.commentsCount;
-      this.savesCount = updated.saves ?? this.savesCount;
-    } catch {
-      this.liked = !next;
-    }
+    const updated = await postService.like(postId, next);
+    this.liked = Boolean(updated.liked ?? next);
+    this.likesCount = updated.likes ?? this.likesCount;
+    this.commentsCount = updated.comments ?? this.commentsCount;
+    this.savesCount = updated.saves ?? this.savesCount;
   }
 
   private async vetUser() {
@@ -107,14 +97,12 @@ export class PagePost extends ScrollPage {
     const next = !this.isBanned;
     this.isBanning = true;
     this.isBanned = next;
-    try {
-      const updated = await postService.ban(postId, next);
-      this.isBanned = Boolean(updated.banned);
-    } catch {
-      this.isBanned = !next;
-    } finally {
-      this.isBanning = false;
-    }
+    const updated = await postService
+      .ban(postId, next)
+      .finally(() => {
+        this.isBanning = false;
+      });
+    this.isBanned = Boolean(updated.banned);
   }
 
   private onCommentInput(e: Event) {
