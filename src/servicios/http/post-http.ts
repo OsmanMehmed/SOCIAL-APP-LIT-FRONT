@@ -3,8 +3,10 @@ import type { Comment } from "../../modelos/comment";
 import { request } from "./http-client";
 
 export const postHttp = {
-  list: () => request<Post[]>(`/posts`),
-  getPost: (id: string) => request<Post>(`/posts/${id}`),
+  list: (headers?: Record<string, string>) =>
+    request<Post[]>(`/posts`, { headers }),
+  getPost: (id: string, headers?: Record<string, string>) =>
+    request<Post>(`/posts/${id}`, { headers }),
   getComments: (id: string) => request<Comment[]>(`/posts/${id}/comments`),
   createPost: (post: Post) =>
     request<Post>(`/posts`, { method: "POST", body: post }),
@@ -19,8 +21,15 @@ export const postHttp = {
     }),
   deleteComment: (commentId: string) =>
     request<void>(`/posts/comments/${commentId}`, { method: "DELETE" }),
-  like: (postId: string, like = true) =>
-    request<Post>(`/posts/${postId}/like?like=${like}`, { method: "POST" }),
+  like: (postId: string, like = true, headers?: Record<string, string>) =>
+    request<Post>(`/posts/${postId}/like?like=${like}`, {
+      method: "POST",
+      headers,
+    }),
+  search: (query: string, headers?: Record<string, string>) =>
+    request<Post[]>(`/posts/search?q=${encodeURIComponent(query)}`, {
+      headers,
+    }),
   save: (postId: string, save = true) =>
     request<Post>(`/posts/${postId}/save?save=${save}`, { method: "POST" }),
   ban: (postId: string, banned = true) =>

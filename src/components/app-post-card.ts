@@ -17,11 +17,16 @@ export class AppPostCard extends LitElement {
   @property() image = "";
   @property({ type: Boolean }) showEdit = true;
   @property({ type: Boolean }) banned = false;
+  @property({ type: Boolean }) liked = false;
   @state() private isBanned = false;
   @state() private isBanning = false;
   @property({ type: Number }) likes = 0;
   @property({ type: Number }) comments = 0;
   @property({ type: Number }) saves = 0;
+  @state() private likesCount = 0;
+  @state() private commentsCount = 0;
+  @state() private savesCount = 0;
+  @state() private isLiking = false;
 
   static styles = [
     unsafeCSS(layoutCSS),
@@ -101,17 +106,17 @@ export class AppPostCard extends LitElement {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
+        margin-bottom: 1em;
+        margin-top: 1em;
       }
 
       .edit-btn {
         width: 8em;
-        margin-bottom: 1em;
       }
 
       .vet-btn {
         width: 8em;
         margin-right: 1em;
-        margin-bottom: 1em;
       }
 
       .vet-btn-vetted {
@@ -129,6 +134,19 @@ export class AppPostCard extends LitElement {
         gap: 0.6rem;
         width: 30em;
       }
+
+      .like-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        width: 8em;
+      }
+
+      .like-btn--active {
+        background: transparent;
+        border: 1px solid;
+        box-shadow: none;
+      }
     `,
   ];
 
@@ -144,6 +162,24 @@ export class AppPostCard extends LitElement {
   private editPost(event: Event) {
     event.stopPropagation();
     navigate("/new-post");
+  }
+
+  private async toggleLike(event: Event) {
+    event.stopPropagation();
+    if (this.isLiking || !this.postId) return;
+    const next = !this.liked;
+    this.isLiking = true;
+    try {
+      const updated = await postService.like(this.postId, next);
+      this.liked = Boolean(updated.liked ?? next);
+      this.likesCount = updated.likes ?? this.likesCount;
+      this.commentsCount = updated.comments ?? this.commentsCount;
+      this.savesCount = updated.saves ?? this.savesCount;
+    } catch (err) {
+      console.warn("Like post error", err);
+    } finally {
+      this.isLiking = false;
+    }
   }
 
   private async toggleVet(event: Event) {
@@ -167,6 +203,24 @@ export class AppPostCard extends LitElement {
     if (changed.has("banned")) {
       this.isBanned = this.banned;
     }
+    if (changed.has("liked")) {
+      this.liked = Boolean(this.liked);
+    }
+    if (
+      changed.has("likes") ||
+      changed.has("comments") ||
+      changed.has("saves")
+    ) {
+      this.likesCount = Number(this.likes) || 0;
+      this.commentsCount = Number(this.comments) || 0;
+      this.savesCount = Number(this.saves) || 0;
+    }
+  }
+
+  protected firstUpdated(): void {
+    this.likesCount = Number(this.likes) || 0;
+    this.commentsCount = Number(this.comments) || 0;
+    this.savesCount = Number(this.saves) || 0;
   }
 
   render() {
@@ -187,15 +241,15 @@ export class AppPostCard extends LitElement {
             <div class="stats">
               <div>
                 <sl-icon name="hand-thumbs-up"></sl-icon>
-                <span>${this.likes}</span>
+                <span>${this.likesCount}</span>
               </div>
               <div>
                 <sl-icon name="chat-dots"></sl-icon>
-                <span>${this.comments}</span>
+                <span>${this.commentsCount}</span>
               </div>
               <div>
                 <sl-icon name="bookmark""></sl-icon>
-                <span>${this.saves}</span>
+                <span>${this.savesCount}</span>
               </div>
             </div>
             <div class="footer-actions">
@@ -207,6 +261,20 @@ export class AppPostCard extends LitElement {
                         @click=${this.editPost}
                       >
                         Editar
+                      </button>
+                      <button
+                        class=${`btn-pill btn-sm like-btn ${
+                          this.liked ? "btn-no-fill like-btn--active" : "btn"
+                        }`}
+                        ?disabled=${this.isLiking}
+                        @click=${this.toggleLike}
+                      >
+                        <sl-icon name="hand-thumbs-up"></sl-icon>
+                        <span
+                          >${this.liked
+                            ? CONSTANTS.POST_LIKE_ACTIVE
+                            : CONSTANTS.POST_LIKE_BUTTON}</span
+                        >
                       </button>
                       <button
                         class=${`btn btn-pill btn-sm vet-btn ${

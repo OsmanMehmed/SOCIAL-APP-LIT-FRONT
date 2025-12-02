@@ -3,13 +3,14 @@ import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property, query, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
+import { ScrollPage } from "../shared/scroll-page";
 import "../components/app-avatar";
 import { authStore } from "../state/auth-store";
 import { profileService } from "../servicios/core/profile-service";
 import type { UserProfile } from "../modelos/user-profile";
 
 @customElement("page-profile")
-export class PageProfile extends LitElement {
+export class PageProfile extends ScrollPage {
   @property({ attribute: false }) params?: { id?: string };
   @query(".posts-card") private postsCard?: HTMLDivElement;
   private postsScrollListener = () => this.savePostsScroll();
@@ -22,7 +23,8 @@ export class PageProfile extends LitElement {
   private currentProfileId = "";
 
   private async vetUser() {
-    const id = this.params?.id ?? "me";
+    const id = this.params?.id ?? this.profile?.id;
+    if (!id) return;
     const next = !this.isBanned;
     this.isBanned = next;
     try {
@@ -187,12 +189,13 @@ export class PageProfile extends LitElement {
   ];
 
   private openDm() {
-    const id = this.profile?.id ?? this.params?.id ?? "me";
+    const id = this.profile?.id ?? this.params?.id;
+    if (!id) return;
     navigate(`/dm/${id}`);
   }
 
   private getScrollKey() {
-    const id = this.params?.id ?? "me";
+    const id = this.params?.id ?? this.profile?.id;
     return `profile:posts-scroll:${id}`;
   }
 
@@ -227,10 +230,10 @@ export class PageProfile extends LitElement {
   }
 
   protected willUpdate(_changed: Map<string, unknown>) {
-    const id = this.params?.id ?? "me";
+    const id = this.params?.id;
     if (id !== this.currentProfileId) {
-      this.currentProfileId = id;
-      this.loadProfile(id);
+      this.currentProfileId = id ?? "";
+      this.loadProfile(id ?? "");
     }
   }
 
@@ -253,7 +256,7 @@ export class PageProfile extends LitElement {
   }
 
   render() {
-    const resolvedId = this.profile?.id ?? this.params?.id ?? "me";
+    const resolvedId = this.profile?.id ?? this.params?.id ?? authStore.currentUserId;
     const username =
       this.profile?.username ??
       (resolvedId.startsWith(CONSTANTS.USERNAME_PREFIX)
@@ -261,7 +264,7 @@ export class PageProfile extends LitElement {
         : `${CONSTANTS.USERNAME_PREFIX}${resolvedId}`);
     const subtitle =
       this.profile?.subtitle ?? CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
-    const isMe = resolvedId === "me";
+    const isMe = this.profile?.isOwnProfile ?? false;
     const isAdmin = authStore.currentUserId === "admin";
     const canVet = true; // TODO: hook to admin roles when available
     const showNoProfile = !this.isLoading && (this.loadError || !this.profile);

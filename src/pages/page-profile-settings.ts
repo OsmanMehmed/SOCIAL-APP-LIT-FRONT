@@ -3,6 +3,7 @@ import componentsCSS from "../design-system/components.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
+import { authStore } from "../state/auth-store";
 
 @customElement("page-profile-settings")
 export class PageProfileSettings extends LitElement {
@@ -36,11 +37,11 @@ export class PageProfileSettings extends LitElement {
 
   private save(e: Event) {
     e.preventDefault();
-    navigate("/profile/me");
+    navigate(`/profile`);
   }
 
   private cancel() {
-    navigate("/profile/me");
+    navigate(`/profile`);
   }
 
   render() {

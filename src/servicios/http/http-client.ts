@@ -12,6 +12,14 @@ export async function request<T>(
   options: RequestOptions = {},
 ): Promise<T> {
   const { method = "GET", body, headers = {} } = options;
+  // Auto-attach Authorization header from sessionStorage if available and not provided
+  try {
+    const token = sessionStorage.getItem("auth:token");
+    if (token && !Object.prototype.hasOwnProperty.call(headers, "Authorization")) {
+      headers["Authorization"] = token;
+    }
+  } catch {}
+
   const response = await fetch(`${API_BASE}${path}`, {
     method,
     headers: {
@@ -22,7 +30,32 @@ export async function request<T>(
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status} on ${path}`);
+    // Prettier defaults for common auth errors
+    if (response.status === 401) {
+      throw new Error("Usuario o contraseña incorrectos. Inténtalo de nuevo.");
+    }
+    if (response.status === 403) {
+      throw new Error("No tienes permisos para realizar esta acción.");
+    }
+
+    let message = `HTTP ${response.status} on ${path}`;
+    try {
+      const text = await response.text();
+      if (text) {
+        try {
+          const data = JSON.parse(text);
+          const candidate = data?.message || data?.error || data?.detail;
+          if (candidate && typeof candidate === "string") {
+            message = candidate;
+          }
+        } catch {
+          message = text;
+        }
+      }
+    } catch {
+      /* ignore parsing errors */
+    }
+    throw new Error(message);
   }
 
   if (response.status === 204) {

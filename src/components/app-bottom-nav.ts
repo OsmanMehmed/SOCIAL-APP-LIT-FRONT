@@ -56,7 +56,7 @@ export class AppBottomNav extends LitElement {
           label=${CONSTANTS.NAV_LABEL_PROFILE}
           @click=${() => {
             window.dispatchEvent(new CustomEvent("app:clear-scroll"));
-            navigate("/profile/me");
+            navigate(`/profile`);
           }}
         >
           <sl-icon name="person-circle"></sl-icon>

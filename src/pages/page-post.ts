@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
+import { ScrollPage } from "../shared/scroll-page";
 import { postStore } from "../state/post-store";
 import "../components/app-mini-profile";
 import { postService } from "../servicios/core/post-service";
@@ -10,7 +11,7 @@ import { authStore } from "../state/auth-store";
 import { navigate } from "../router";
 
 @customElement("page-post")
-export class PagePost extends LitElement {
+export class PagePost extends ScrollPage {
   @property({ attribute: false }) params?: { id?: string };
   @state() private liked = false;
   @state() private isBanned = false;
@@ -183,6 +184,7 @@ export class PagePost extends LitElement {
       const data = await postService.fetchPostWithComments(id);
       this.postTitle = data.caption ?? this.getPostTitle(id);
       this.isBanned = Boolean(data.banned);
+      this.liked = Boolean(data.liked);
       const comments = data.commentsList ?? [];
       this.commentItems = comments.map((comment: Comment) => {
         const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
@@ -199,6 +201,7 @@ export class PagePost extends LitElement {
       this.loadError = true;
       this.postTitle = CONSTANTS.NO_RESULTS_TEXT;
       this.isBanned = false;
+      this.liked = false;
       this.commentItems = [];
     } finally {
       this.isLoading = false;
@@ -218,7 +221,8 @@ export class PagePost extends LitElement {
     const next = !this.liked;
     this.liked = next;
     try {
-      await postService.like(postId, next);
+      const updated = await postService.like(postId, next);
+      this.liked = Boolean(updated.liked ?? next);
     } catch (err) {
       console.warn("Like post error", err);
       this.liked = !next;

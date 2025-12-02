@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { AppLocation, parseLocation } from "../router";
+import { authStore } from "../state/auth-store";
 import "./app-toolbar";
 import "./app-bottom-nav";
 import "./app-back-link";
@@ -16,7 +17,6 @@ import "../pages/page-profile";
 import "../pages/page-profile-settings";
 import "../pages/page-not-found";
 import { CONSTANTS } from "../shared/constants";
-import { authStore } from "../state/auth-store";
 
 @customElement("app-root")
 export class AppRoot extends LitElement {
@@ -69,9 +69,9 @@ export class AppRoot extends LitElement {
 
   private onPopState = () => {
     this.navType = "pop";
-    this.saveScroll(this.currentPath);
     this.location = parseLocation(location.pathname);
     this.currentPath = location.pathname;
+    console.log(`[app-root] onPopState detected, navType=pop, path=${this.currentPath}`);
   };
 
   private getTitle(): string {
@@ -108,27 +108,8 @@ export class AppRoot extends LitElement {
     this.scrollPositions.set(path, top);
     try {
       sessionStorage.setItem(`scroll:${path}`, String(top));
+      console.log(`[app-root] Saved scroll for ${path}: ${top}`);
     } catch {}
-  }
-
-  private restoreScroll(path: string) {
-    const main = this.getMainEl();
-    if (!main || !path) return;
-    let top: number | undefined = this.scrollPositions.get(path);
-    if (top === undefined) {
-      try {
-        const stored = sessionStorage.getItem(`scroll:${path}`);
-        top = stored !== null ? Number(stored) : undefined;
-      } catch {
-        top = undefined;
-      }
-    }
-    if (top === undefined || Number.isNaN(top)) {
-      return;
-    }
-    requestAnimationFrame(() => {
-      main.scrollTop = top ?? 0;
-    });
   }
 
   private resetScrollForPath(path: string) {
@@ -195,7 +176,7 @@ export class AppRoot extends LitElement {
       case "profile":
         return "/feed";
       case "profile-settings":
-        return "/profile/me";
+        return "/profile";
       case "post":
         return "/feed";
       default:
@@ -208,8 +189,15 @@ export class AppRoot extends LitElement {
       const previousPath = this.currentPath;
       const keepSet = new Set<string>([previousPath]);
 
+      console.log(`[app-root] updated: navType=${this.navType}, previousPath=${previousPath}, newPath=${location.pathname}`);
+
       if (this.navType === "pop") {
-        this.restoreScroll(location.pathname);
+        // Para pop (back), marca en sessionStorage que debe restaurar scroll
+        // La página lo hará en su firstUpdated()
+        try {
+          sessionStorage.setItem("restore-scroll-on-next-page", "true");
+          console.log(`[app-root] Set restore-scroll-on-next-page flag`);
+        } catch {}
       } else {
         this.clearScrollStorageExcept([previousPath]);
         this.pruneMemoryScroll(keepSet);

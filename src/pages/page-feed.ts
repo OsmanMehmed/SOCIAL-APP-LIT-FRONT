@@ -4,11 +4,12 @@ import { customElement, state } from "lit/decorators.js";
 import "../components/app-mini-profile";
 import "../components/app-post-card";
 import { CONSTANTS } from "../shared/constants";
+import { ScrollPage } from "../shared/scroll-page";
 import { postService } from "../servicios/core/post-service";
 import type { Post } from "../modelos/post";
 
 @customElement("page-feed")
-export class PageFeed extends LitElement {
+export class PageFeed extends ScrollPage {
   @state() private posts: Post[] = [];
   @state() private isLoading = false;
   @state() private loadError = false;
@@ -60,7 +61,18 @@ export class PageFeed extends LitElement {
   }
 
   protected firstUpdated() {
+    console.log(`[page-feed] firstUpdated called`);
     this.loadPosts();
+    // Restaura scroll si estamos volviendo (pop/back)
+    this.restoreScrollIfNeeded("/feed");
+  }
+
+  protected updated(changed: Map<string, unknown>) {
+    // Si los posts terminaron de cargar, restaura scroll nuevamente
+    if (changed.has("isLoading") && !this.isLoading && this.posts.length > 0) {
+      console.log(`[page-feed] Posts loaded, attempting scroll restore`);
+      this.restoreScrollIfNeeded("/feed");
+    }
   }
 
   render() {
@@ -89,6 +101,7 @@ export class PageFeed extends LitElement {
               .username=${username}
               .caption=${post.caption}
               .banned=${Boolean(post.banned)}
+              .liked=${Boolean(post.liked)}
               .likes=${post.likes}
               .comments=${post.comments}
               .saves=${post.saves}

@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS } from "lit";
 import componentsCSS from "../design-system/components.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { navigate } from "../router";
+import { ScrollPage } from "../shared/scroll-page";
 import "../components/app-mini-profile";
 import { messageService } from "../servicios/core/message-service";
 import type { Conversation } from "../modelos/conversation";
@@ -9,7 +10,7 @@ import { authStore } from "../state/auth-store";
 import { CONSTANTS } from "./../shared/constants";
 
 @customElement("page-conversations")
-export class PageConversations extends LitElement {
+export class PageConversations extends ScrollPage {
   @state() private conversations: Conversation[] = [];
   @state() private isLoading = false;
   @state() private loadError = false;
@@ -51,6 +52,7 @@ export class PageConversations extends LitElement {
 
   protected firstUpdated(): void {
     this.loadConversations();
+    this.restoreScrollIfNeeded("/messages");
   }
 
   render() {

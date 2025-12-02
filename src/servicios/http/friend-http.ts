@@ -1,6 +1,7 @@
 import type { FriendRequest } from "../../modelos/friend-request";
 import type { UserProfile } from "../../modelos/user-profile";
 import { request } from "./http-client";
+import { authStore } from "../../state/auth-store";
 
 export const friendHttp = {
   search: (q: string) =>
@@ -8,10 +9,12 @@ export const friendHttp = {
   sendRequest: (from: string, to: string) =>
     request<FriendRequest>(`/friends/requests?from=${from}&to=${to}`, {
       method: "POST",
+      headers: { "X-User-Id": authStore.currentUserId },
     }),
   respond: (id: string, status: string) =>
     request<FriendRequest>(`/friends/requests/${id}/respond?status=${status}`, {
       method: "POST",
+      headers: { "X-User-Id": authStore.currentUserId },
     }),
   listPending: (userId: string) =>
     request<FriendRequest[]>(`/friends/requests?userId=${userId}`),

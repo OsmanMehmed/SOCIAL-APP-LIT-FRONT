@@ -8,6 +8,7 @@ export interface Post {
   comments: number;
   saves: number;
   banned?: boolean;
+  liked?: boolean;
 }
 
 export interface PostWithComments extends Post {

@@ -1,14 +1,25 @@
 import type { Comment } from "../../modelos/comment";
 import type { Post, PostWithComments } from "../../modelos/post";
 import { postHttp } from "../http/post-http";
+import { authStore } from "../../state/auth-store";
+import { CONSTANTS } from "../../shared/constants";
+
+const userHeaders = (): Record<string, string> => {
+  const userId = authStore.currentUserId || CONSTANTS.CURRENT_USER_ID;
+  return { "X-User-Id": userId };
+};
 
 export const postService = {
   async list(): Promise<Post[]> {
-    return postHttp.list();
+    return postHttp.list(userHeaders());
+  },
+
+  async search(query: string): Promise<Post[]> {
+    return postHttp.search(query, userHeaders());
   },
 
   async fetchPostWithComments(id: string): Promise<PostWithComments> {
-    const post = await postHttp.getPost(id);
+    const post = await postHttp.getPost(id, userHeaders());
     const comments = await postHttp.getComments(id);
     return { ...post, banned: post.banned ?? false, commentsList: comments };
   },
@@ -36,7 +47,7 @@ export const postService = {
   },
 
   async like(postId: string, like = true): Promise<Post> {
-    return postHttp.like(postId, like);
+    return postHttp.like(postId, like, userHeaders());
   },
 
   async save(postId: string, save = true): Promise<Post> {
