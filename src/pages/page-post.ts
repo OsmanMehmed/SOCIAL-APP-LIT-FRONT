@@ -21,6 +21,9 @@ export class PagePost extends LitElement {
     text: string;
     profileId: string;
   }[] = [];
+  @state() private likesCount = 0;
+  @state() private commentsCount = 0;
+  @state() private savesCount = 0;
   private currentPostId = "";
   @state() private newComment = "";
   @state() private isLoading = false;
@@ -163,6 +166,22 @@ export class PagePost extends LitElement {
         text-align: center;
         color: var(--muted-foreground);
       }
+
+      .comments-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        width: 100%;
+      }
+
+      .stats {
+        display: flex;
+        flex-direction: row;
+        gap: 0.6rem;
+        font-size: 0.8rem;
+        color: var(--muted-foreground);
+      }
     `,
   ];
 
@@ -184,6 +203,9 @@ export class PagePost extends LitElement {
       this.postTitle = data.caption ?? this.getPostTitle(id);
       this.isBanned = Boolean(data.banned);
       const comments = data.commentsList ?? [];
+      this.likesCount = data.likes ?? 0;
+      this.commentsCount = data.comments ?? comments.length;
+      this.savesCount = data.saves ?? 0;
       this.commentItems = comments.map((comment: Comment) => {
         const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
           ? comment.authorId
@@ -199,6 +221,9 @@ export class PagePost extends LitElement {
       this.loadError = true;
       this.postTitle = CONSTANTS.NO_RESULTS_TEXT;
       this.isBanned = false;
+      this.likesCount = 0;
+      this.commentsCount = 0;
+      this.savesCount = 0;
       this.commentItems = [];
     } finally {
       this.isLoading = false;
@@ -216,11 +241,15 @@ export class PagePost extends LitElement {
     const postId = this.params?.id ?? "";
     if (!postId) return;
     const next = !this.liked;
+    const nextLikes = Math.max(0, this.likesCount + (next ? 1 : -1));
     this.liked = next;
+    this.likesCount = nextLikes;
     try {
-      await postService.like(postId, next);
+      const updated = await postService.like(postId, next);
+      this.likesCount = updated.likes ?? this.likesCount;
     } catch (err) {
       console.warn("Like post error", err);
+      this.likesCount = Math.max(0, this.likesCount + (next ? -1 : 1));
       this.liked = !next;
     }
   }
@@ -273,6 +302,7 @@ export class PagePost extends LitElement {
           profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
         },
       ];
+      this.commentsCount += 1;
       this.newComment = "";
     } catch (err) {
       console.warn("Add comment error", err);
@@ -334,9 +364,23 @@ export class PagePost extends LitElement {
         </div>
 
         <section class="card comments-section">
-          <div>
+          <div class="comments-header">
             <div class="chip-muted chip-comments">
               ${CONSTANTS.POST_COMMENTS_TITLE}
+            </div>
+            <div class="stats">
+              <div>
+                <sl-icon name="hand-thumbs-up"></sl-icon>
+                <span>${this.likesCount}</span>
+              </div>
+              <div>
+                <sl-icon name="chat-dots"></sl-icon>
+                <span>${this.commentsCount}</span>
+              </div>
+              <div>
+                <sl-icon name="bookmark"></sl-icon>
+                <span>${this.savesCount}</span>
+              </div>
             </div>
           </div>
           <form class="comment-input" @submit=${this.onSubmitComment}>
