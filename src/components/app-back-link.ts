@@ -1,5 +1,6 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
+import backLinkCSS from "./app-back-link.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
@@ -8,30 +9,7 @@ import { CONSTANTS } from "../shared/constants";
 export class AppBackLink extends LitElement {
   @property() fallback = "/feed";
 
-  static styles = [
-    unsafeCSS(layoutCSS),
-    css`
-      :host {
-        display: block;
-      }
-
-      .back-wrap {
-        width: 82%;
-        margin: 0.35rem auto 0;
-        display: flex;
-        align-items: center;
-      }
-
-      .back {
-        font-size: 1rem;
-        color: var(--muted-foreground);
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-      }
-    `,
-  ];
+  static styles = [unsafeCSS(layoutCSS), unsafeCSS(backLinkCSS)];
 
   private goBack() {
     if (window.history.length > 1) {

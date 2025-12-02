@@ -1,4 +1,4 @@
-import { LitElement, html, css, unsafeCSS } from "lit";
+import { LitElement, html, unsafeCSS } from "lit";
 import layoutCSS from "../design-system/layout.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
@@ -7,7 +7,7 @@ import "./app-icon-button";
 
 @customElement("app-bottom-nav")
 export class AppBottomNav extends LitElement {
-  static styles = [unsafeCSS(layoutCSS), css``];
+  static styles = [unsafeCSS(layoutCSS)];
 
   render() {
     return html`

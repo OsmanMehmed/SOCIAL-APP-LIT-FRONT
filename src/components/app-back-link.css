@@ -1,0 +1,19 @@
+:host {
+  display: block;
+}
+
+.back-wrap {
+  width: 82%;
+  margin: 0.35rem auto 0;
+  display: flex;
+  align-items: center;
+}
+
+.back {
+  font-size: 1rem;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
