@@ -105,9 +105,7 @@ export class AppRoot extends LitElement {
     if (!main || !path) return;
     const top = main.scrollTop;
     this.scrollPositions.set(path, top);
-    try {
-      sessionStorage.setItem(`scroll:${path}`, String(top));
-    } catch {}
+    sessionStorage.setItem(`scroll:${path}`, String(top));
   }
 
   private resetScrollForPath(path: string) {
@@ -116,9 +114,7 @@ export class AppRoot extends LitElement {
       main.scrollTop = 0;
     }
     this.scrollPositions.delete(path);
-    try {
-      sessionStorage.removeItem(`scroll:${path}`);
-    } catch {}
+    sessionStorage.removeItem(`scroll:${path}`);
   }
 
   private clearScrollStorageExcept(pathsToKeep: string[]) {
@@ -130,24 +126,20 @@ export class AppRoot extends LitElement {
         .map((id) => `profile:posts-scroll:${id}`),
     );
 
-    try {
-      const toRemove: string[] = [];
-      for (let i = 0; i < sessionStorage.length; i++) {
-        const key = sessionStorage.key(i);
-        if (!key) continue;
-        const isScroll = key.startsWith("scroll:");
-        const isProfile = key.startsWith("profile:posts-scroll:");
-        if (
-          (isScroll && !keepScroll.has(key)) ||
-          (isProfile && !keepProfile.has(key))
-        ) {
-          toRemove.push(key);
-        }
+    const toRemove: string[] = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (!key) continue;
+      const isScroll = key.startsWith("scroll:");
+      const isProfile = key.startsWith("profile:posts-scroll:");
+      if (
+        (isScroll && !keepScroll.has(key)) ||
+        (isProfile && !keepProfile.has(key))
+      ) {
+        toRemove.push(key);
       }
-      toRemove.forEach((k) => sessionStorage.removeItem(k));
-    } catch {
-      /* ignore */
     }
+    toRemove.forEach((k) => sessionStorage.removeItem(k));
   }
 
   private pruneMemoryScroll(pathsToKeep: Set<string>) {
@@ -190,9 +182,7 @@ export class AppRoot extends LitElement {
       if (this.navType === "pop") {
         // Para pop (back), marca en sessionStorage que debe restaurar scroll
         // La página lo hará en su firstUpdated()
-        try {
-          sessionStorage.setItem("restore-scroll-on-next-page", "true");
-        } catch {}
+        sessionStorage.setItem("restore-scroll-on-next-page", "true");
       } else {
         this.clearScrollStorageExcept([previousPath]);
         this.pruneMemoryScroll(keepSet);

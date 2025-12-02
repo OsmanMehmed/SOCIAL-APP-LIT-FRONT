@@ -13,12 +13,10 @@ export async function request<T>(
 ): Promise<T> {
   const { method = "GET", body, headers = {} } = options;
   // Auto-attach Authorization header from sessionStorage if available and not provided
-  try {
-    const token = sessionStorage.getItem("auth:token");
-    if (token && !Object.prototype.hasOwnProperty.call(headers, "Authorization")) {
-      headers["Authorization"] = token;
-    }
-  } catch {}
+  const token = sessionStorage.getItem("auth:token");
+  if (token && !Object.prototype.hasOwnProperty.call(headers, "Authorization")) {
+    headers["Authorization"] = token;
+  }
 
   const response = await fetch(`${API_BASE}${path}`, {
     method,
@@ -39,21 +37,9 @@ export async function request<T>(
     }
 
     let message = `HTTP ${response.status} on ${path}`;
-    try {
-      const text = await response.text();
-      if (text) {
-        try {
-          const data = JSON.parse(text);
-          const candidate = data?.message || data?.error || data?.detail;
-          if (candidate && typeof candidate === "string") {
-            message = candidate;
-          }
-        } catch {
-          message = text;
-        }
-      }
-    } catch {
-      /* ignore parsing errors */
+    const text = await response.text();
+    if (text) {
+      message = text;
     }
     throw new Error(message);
   }

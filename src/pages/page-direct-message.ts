@@ -25,14 +25,11 @@ export class PageDirectMessage extends LitElement {
     this.currentConversationId = conversationId;
     this.isLoading = true;
     this.loadError = false;
-    try {
-      this.thread = await messageService.fetchThread(conversationId);
-    } catch {
-      this.thread = [];
-      this.loadError = true;
-    } finally {
-      this.isLoading = false;
-    }
+    this.thread = await messageService
+      .fetchThread(conversationId)
+      .finally(() => {
+        this.isLoading = false;
+      });
   }
 
   private async send(e: Event) {
@@ -41,19 +38,15 @@ export class PageDirectMessage extends LitElement {
     if (!text) return;
     const conversationId = this.params?.id ?? CONSTANTS.CURRENT_USER_ID;
     const { profileId } = this.getParticipantInfo();
-    try {
-      const message = await messageService.sendMessage(
-        conversationId,
-        authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
-        profileId || conversationId,
-        text
-      );
-      this.thread = [...this.thread, message];
-      this.draft = "";
-      this.loadError = false;
-    } catch {
-      this.loadError = true;
-    }
+    const message = await messageService.sendMessage(
+      conversationId,
+      authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
+      profileId || conversationId,
+      text
+    );
+    this.thread = [...this.thread, message];
+    this.draft = "";
+    this.loadError = false;
   }
 
   private onInput(e: Event) {

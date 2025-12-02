@@ -20,14 +20,10 @@ export class PageFeed extends ScrollPage {
   private async loadPosts() {
     this.isLoading = true;
     this.loadError = false;
-    try {
-      this.posts = await postService.list();
-    } catch {
-      this.posts = [];
-      this.loadError = true;
-    } finally {
+    const posts = await postService.list().finally(() => {
       this.isLoading = false;
-    }
+    });
+    this.posts = posts;
   }
 
   protected firstUpdated() {

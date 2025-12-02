@@ -54,16 +54,15 @@ export class AppPostCard extends LitElement {
     if (this.isLiking || !this.postId) return;
     const next = !this.liked;
     this.isLiking = true;
-    try {
-      const updated = await postService.like(this.postId, next);
-      this.liked = Boolean(updated.liked ?? next);
-      this.likesCount = updated.likes ?? this.likesCount;
-      this.commentsCount = updated.comments ?? this.commentsCount;
-      this.savesCount = updated.saves ?? this.savesCount;
-    } catch {
-    } finally {
-      this.isLiking = false;
-    }
+    const updated = await postService
+      .like(this.postId, next)
+      .finally(() => {
+        this.isLiking = false;
+      });
+    this.liked = Boolean(updated.liked ?? next);
+    this.likesCount = updated.likes ?? this.likesCount;
+    this.commentsCount = updated.comments ?? this.commentsCount;
+    this.savesCount = updated.saves ?? this.savesCount;
   }
 
   private async toggleVet(event: Event) {
@@ -72,14 +71,12 @@ export class AppPostCard extends LitElement {
     const next = !this.isBanned;
     this.isBanning = true;
     this.isBanned = next;
-    try {
-      const updated = await postService.ban(this.postId, next);
-      this.isBanned = Boolean(updated.banned);
-    } catch {
-      this.isBanned = !next;
-    } finally {
-      this.isBanning = false;
-    }
+    const updated = await postService
+      .ban(this.postId, next)
+      .finally(() => {
+        this.isBanning = false;
+      });
+    this.isBanned = Boolean(updated.banned);
   }
 
   protected updated(changed: Map<string, unknown>) {

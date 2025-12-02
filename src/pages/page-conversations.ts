@@ -26,14 +26,12 @@ export class PageConversations extends ScrollPage {
     this.isLoading = true;
     this.loadError = false;
     const userId = authStore.currentUserId || "me";
-    try {
-      this.conversations = await messageService.listConversations(userId);
-    } catch {
-      this.conversations = [];
-      this.loadError = true;
-    } finally {
-      this.isLoading = false;
-    }
+    const conversations = await messageService
+      .listConversations(userId)
+      .finally(() => {
+        this.isLoading = false;
+      });
+    this.conversations = conversations;
   }
 
   protected firstUpdated(): void {

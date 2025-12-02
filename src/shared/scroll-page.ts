@@ -35,23 +35,19 @@ export class ScrollPage extends LitElement {
       const container = this.getScrollContainer();
       if (!container) return;
 
-      try {
-        const saved = sessionStorage.getItem(`scroll:${key}`);
-        if (saved) {
-          const top = Number(saved);
-          if (!Number.isNaN(top)) {
-            container.scrollTop = top;
-            // Verify on the next frame that scroll was applied; if not, keep the flag
-            requestAnimationFrame(() => {
-              const applied = Math.abs(container.scrollTop - top) < 1;
-              if (applied) {
-                this.clearRestoreFlag();
-              }
-            });
-          }
+      const saved = sessionStorage.getItem(`scroll:${key}`);
+      if (saved) {
+        const top = Number(saved);
+        if (!Number.isNaN(top)) {
+          container.scrollTop = top;
+          // Verify on the next frame that scroll was applied; if not, keep the flag
+          requestAnimationFrame(() => {
+            const applied = Math.abs(container.scrollTop - top) < 1;
+            if (applied) {
+              this.clearRestoreFlag();
+            }
+          });
         }
-      } catch {
-        // Ignore sessionStorage errors
       }
     });
   }
@@ -60,20 +56,14 @@ export class ScrollPage extends LitElement {
    * Checks if we should restore scroll (without clearing the flag).
    */
   private checkShouldRestore(): boolean {
-    try {
-      const flag = sessionStorage.getItem("restore-scroll-on-next-page");
-      return flag === "true";
-    } catch {
-      return false;
-    }
+    const flag = sessionStorage.getItem("restore-scroll-on-next-page");
+    return flag === "true";
   }
 
   /**
    * Clears the restore flag after finishing.
    */
   private clearRestoreFlag(): void {
-    try {
-      sessionStorage.removeItem("restore-scroll-on-next-page");
-    } catch {}
+    sessionStorage.removeItem("restore-scroll-on-next-page");
   }
 }

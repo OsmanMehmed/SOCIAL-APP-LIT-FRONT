@@ -57,30 +57,20 @@ export class PageSearch extends ScrollPage {
     this.isLoadingPosts = true;
     this.profilesError = false;
     this.postsError = false;
-    try {
-      this.profiles = await friendService.search(q);
-    } catch {
-      this.profiles = [];
-      this.profilesError = true;
-    } finally {
+    this.profiles = await friendService.search(q).finally(() => {
       this.isLoadingProfiles = false;
-    }
+    });
 
-    try {
-      const posts = await postService.search(q);
-      this.recipes = posts.map((post: Post) => ({
-        id: post.id,
-        title: post.caption,
-        authorId: post.authorId,
-        tags: [],
-        time: "",
-      }));
-    } catch {
-      this.recipes = [];
-      this.postsError = true;
-    } finally {
+    const posts = await postService.search(q).finally(() => {
       this.isLoadingPosts = false;
-    }
+    });
+    this.recipes = posts.map((post: Post) => ({
+      id: post.id,
+      title: post.caption,
+      authorId: post.authorId,
+      tags: [],
+      time: "",
+    }));
   }
 
   private openProfile(id: string) {

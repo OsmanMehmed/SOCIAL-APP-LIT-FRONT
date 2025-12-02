@@ -5,23 +5,15 @@ const TOKEN_KEY = "auth:token";
 const USER_KEY = "auth:user";
 
 function readFromStorage(key: string): string | null {
-  try {
-    return sessionStorage.getItem(key);
-  } catch {
-    return null;
-  }
+  return sessionStorage.getItem(key);
 }
 
 function writeToStorage(key: string, value: string) {
-  try {
-    sessionStorage.setItem(key, value);
-  } catch {}
+  sessionStorage.setItem(key, value);
 }
 
 function removeFromStorage(key: string) {
-  try {
-    sessionStorage.removeItem(key);
-  } catch {}
+  sessionStorage.removeItem(key);
 }
 
 function restoreAuth() {
