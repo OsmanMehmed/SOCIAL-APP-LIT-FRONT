@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import componentsCSS from "../design-system/components.css?inline";
-import pageConversationsCSS from "./page-conversations.css?inline";
+import componentsCSS from "../css/components.css?inline";
+import pageConversationsCSS from "../css/page-conversations.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { ScrollPage } from "../shared/scroll-page";

@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import layoutCSS from "../design-system/layout.css?inline";
-import avatarCSS from "./app-avatar.css?inline";
+import layoutCSS from "../css/layout.css?inline";
+import avatarCSS from "../css/app-avatar.css?inline";
 import { customElement, property } from "lit/decorators.js";
 
 @customElement("app-avatar")

@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import layoutCSS from "../design-system/layout.css?inline";
-import iconButtonCSS from "./app-icon-button.css?inline";
+import layoutCSS from "../css/layout.css?inline";
+import iconButtonCSS from "../css/app-icon-button.css?inline";
 import { customElement, property } from "lit/decorators.js";
 
 @customElement("app-icon-button")

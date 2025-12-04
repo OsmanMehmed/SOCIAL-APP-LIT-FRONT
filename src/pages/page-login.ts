@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import componentsCSS from "../design-system/components.css?inline";
-import pageLoginCSS from "./page-login.css?inline";
+import componentsCSS from "../css/components.css?inline";
+import pageLoginCSS from "../css/page-login.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { authStore } from "../state/auth-store";
 import { CONSTANTS } from "../shared/constants";

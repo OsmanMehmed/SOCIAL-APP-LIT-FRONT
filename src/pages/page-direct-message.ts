@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import componentsCSS from "../design-system/components.css?inline";
-import pageDirectMessageCSS from "./page-direct-message.css?inline";
+import componentsCSS from "../css/components.css?inline";
+import pageDirectMessageCSS from "../css/page-direct-message.css?inline";
 import { customElement, property, state, query } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
 import "../components/app-mini-profile";

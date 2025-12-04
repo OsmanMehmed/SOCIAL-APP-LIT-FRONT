@@ -1,5 +1,5 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import layoutCSS from "../design-system/layout.css?inline";
+import layoutCSS from "../css/layout.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { AppLocation, parseLocation } from "../router";
 import { authStore } from "../state/auth-store";
