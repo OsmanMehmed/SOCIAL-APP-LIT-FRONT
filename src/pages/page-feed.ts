@@ -7,11 +7,14 @@ import "../components/app-post-card";
 import { CONSTANTS } from "../shared/constants";
 import { ScrollPage } from "../shared/scroll-page";
 import { postService } from "../servicios/core/post-service";
+import { profileService } from "../servicios/core/profile-service";
 import type { Post } from "../modelos/post";
+import type { UserProfile } from "../modelos/user-profile";
 
 @customElement("page-feed")
 export class PageFeed extends ScrollPage {
   @state() private posts: Post[] = [];
+  @state() private authorProfiles: Map<string, UserProfile> = new Map();
   @state() private isLoading = false;
   @state() private loadError = false;
 
@@ -20,10 +23,27 @@ export class PageFeed extends ScrollPage {
   private async loadPosts() {
     this.isLoading = true;
     this.loadError = false;
-    const posts = await postService.list().finally(() => {
+    try {
+      const posts = await postService.list();
+      this.posts = posts;
+      
+      // Cargar perfiles de autores
+      const profilesMap = new Map<string, UserProfile>();
+      const uniqueAuthorIds = [...new Set(posts.map(p => p.authorId))];
+      
+      for (const authorId of uniqueAuthorIds) {
+        try {
+          const profile = await profileService.fetchProfile(authorId);
+          profilesMap.set(authorId, profile);
+        } catch (error) {
+          console.error(`Error cargando perfil de ${authorId}:`, error);
+        }
+      }
+      
+      this.authorProfiles = profilesMap;
+    } finally {
       this.isLoading = false;
-    });
-    this.posts = posts;
+    }
   }
 
   protected firstUpdated() {
@@ -56,13 +76,14 @@ export class PageFeed extends ScrollPage {
           : null}
 
         ${this.posts.map((post) => {
-          const username = post.authorId?.startsWith(CONSTANTS.USERNAME_PREFIX)
-            ? post.authorId
-            : `${CONSTANTS.USERNAME_PREFIX}${post.authorId}`;
+          const profile = this.authorProfiles.get(post.authorId);
+          const username = profile?.username || `${CONSTANTS.USERNAME_PREFIX}${post.authorId}`;
+          const subtitle = profile?.subtitle || "";
           return html`
             <app-post-card
               .postId=${post.id}
               .username=${username}
+              .subtitle=${subtitle}
               .caption=${post.caption}
               .banned=${Boolean(post.banned)}
               .liked=${Boolean(post.liked)}

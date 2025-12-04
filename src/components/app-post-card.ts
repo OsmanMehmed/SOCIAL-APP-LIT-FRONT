@@ -12,6 +12,7 @@ import { postService } from "../servicios/core/post-service";
 export class AppPostCard extends LitElement {
   @property() postId = "";
   @property() username = CONSTANTS.POST_CARD_DEFAULT_USERNAME;
+  @property() subtitle = "";
   @property() caption = CONSTANTS.POST_CARD_DEFAULT_CAPTION;
   @property() noProfile = false;
   @property() noShadow = false;
@@ -177,7 +178,7 @@ export class AppPostCard extends LitElement {
                 <aside class="sidebar">
                   <app-mini-profile
                     username=${this.username}
-                    subtitle=${this.caption}
+                    subtitle=${this.subtitle}
                     .profileId=${this.username.replace(
                       CONSTANTS.USERNAME_PREFIX,
                       "",

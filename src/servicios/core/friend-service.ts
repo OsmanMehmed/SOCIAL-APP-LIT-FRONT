@@ -1,4 +1,5 @@
 import type { FriendRequest } from "../../modelos/friend-request";
+import type { Friendship } from "../../modelos/friendship";
 import type { UserProfile } from "../../modelos/user-profile";
 import { friendHttp } from "../http/friend-http";
 
@@ -17,5 +18,11 @@ export const friendService = {
   },
   async friends(userId: string): Promise<UserProfile[]> {
     return friendHttp.listFriends(userId);
+  },
+  async connect(friendId: string): Promise<Friendship> {
+    return friendHttp.connect(friendId);
+  },
+  async disconnect(friendId: string): Promise<void> {
+    return friendHttp.disconnect(friendId);
   },
 };

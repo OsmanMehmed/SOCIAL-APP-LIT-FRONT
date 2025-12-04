@@ -5,7 +5,9 @@ import { customElement, property, state, query } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
 import "../components/app-mini-profile";
 import { messageService } from "../servicios/core/message-service";
+import { profileService } from "../servicios/core/profile-service";
 import type { DirectMessage } from "../modelos/direct-message";
+import type { UserProfile } from "../modelos/user-profile";
 import { authStore } from "../state/auth-store";
 
 @customElement("page-direct-message")
@@ -13,6 +15,7 @@ export class PageDirectMessage extends LitElement {
   @property({ attribute: false }) params?: { id?: string };
   @state() draft = "";
   @state() private thread: DirectMessage[] = [];
+  @state() private participantProfile?: UserProfile;
   @query(".thread") private threadEl?: HTMLDivElement;
   private currentConversationId = "";
   @state() private isLoading = false;
@@ -25,11 +28,12 @@ export class PageDirectMessage extends LitElement {
     this.currentConversationId = conversationId;
     this.isLoading = true;
     this.loadError = false;
-    this.thread = await messageService
-      .fetchThread(conversationId)
-      .finally(() => {
-        this.isLoading = false;
-      });
+    try {
+      this.thread = await messageService.fetchThread(conversationId);
+      this.participantProfile = await profileService.fetchProfile(conversationId);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   private async send(e: Event) {
@@ -75,6 +79,13 @@ export class PageDirectMessage extends LitElement {
   }
 
   private getParticipantInfo() {
+    if (this.participantProfile) {
+      return {
+        username: this.participantProfile.username,
+        subtitle: this.participantProfile.subtitle,
+        profileId: this.participantProfile.id,
+      };
+    }
     const conversationId = this.params?.id ?? "";
     const profileId = conversationId || CONSTANTS.CURRENT_USER_ID;
     const username = profileId.startsWith(CONSTANTS.USERNAME_PREFIX)
@@ -95,7 +106,7 @@ export class PageDirectMessage extends LitElement {
       <section class="component-container">
         <app-mini-profile
           .username=${username}
-          .noSubtitle=${true}
+          .subtitle=${subtitle}
           .profileId=${profileId}
         ></app-mini-profile>
         <div class="thread">

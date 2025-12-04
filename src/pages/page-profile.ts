@@ -10,6 +10,7 @@ import "../components/app-post-card";
 import { authStore } from "../state/auth-store";
 import { profileService } from "../servicios/core/profile-service";
 import { postService } from "../servicios/core/post-service";
+import { friendService } from "../servicios/core/friend-service";
 import type { UserProfile } from "../modelos/user-profile";
 import type { Post } from "../modelos/post";
 
@@ -31,7 +32,7 @@ export class PageProfile extends ScrollPage {
   private resolveProfileId(): string {
     const paramId = this.params?.id;
     const sessionId = authStore.currentUserId;
-    if (!paramId || paramId === "me") {
+    if (!paramId) {
       return sessionId ?? "user-1";
     }
     return paramId;
@@ -49,8 +50,16 @@ export class PageProfile extends ScrollPage {
     navigate("/profile-settings");
   }
 
-  private connect() {
-    this.isFriend = true;
+  private async connect() {
+    if (this.isFriend) return;
+    const friendId = this.profile?.id ?? this.resolveProfileId();
+    if (!friendId) return;
+    try {
+      await friendService.connect(friendId);
+      this.isFriend = true;
+    } catch (error) {
+      console.error("Error connecting with user", error);
+    }
   }
 
   private async loadProfile(id: string) {
@@ -64,6 +73,8 @@ export class PageProfile extends ScrollPage {
     this.profile = profile;
     this.isFriend = profile.friend;
     this.isBanned = profile.banned;
+    // Cargar posts usando el ID real del perfil
+    this.loadPosts(profile.id);
   }
 
   private async loadPosts(id: string) {
@@ -78,8 +89,16 @@ export class PageProfile extends ScrollPage {
     this.restorePostsScroll();
   }
 
-  private unfriend() {
-    this.isFriend = false;
+  private async unfriend() {
+    if (!this.isFriend) return;
+    const friendId = this.profile?.id ?? this.resolveProfileId();
+    if (!friendId) return;
+    try {
+      await friendService.disconnect(friendId);
+      this.isFriend = false;
+    } catch (error) {
+      console.error("Error removing friend", error);
+    }
   }
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageProfileCSS)];
@@ -121,10 +140,18 @@ export class PageProfile extends ScrollPage {
 
   protected willUpdate(_changed: Map<string, unknown>) {
     const targetId = this.resolveProfileId();
+    
+    // Si estamos navegando a nuestro propio perfil pero la URL tiene el ID específico,
+    // redirigir a /profile para limpiar la URL
+    if (targetId === authStore.currentUserId && this.params?.id && this.params.id !== "") {
+      navigate("/profile");
+      return;
+    }
+    
     if (targetId !== this.currentProfileId) {
       this.currentProfileId = targetId;
       this.loadProfile(targetId);
-      this.loadPosts(targetId);
+      // Los posts se cargarán después en loadProfile con el ID real del perfil
     }
   }
 
@@ -155,7 +182,7 @@ export class PageProfile extends ScrollPage {
         : `${CONSTANTS.USERNAME_PREFIX}${resolvedId}`);
     const subtitle =
       this.profile?.subtitle ?? CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
-    const isMe = this.profile?.isOwnProfile ?? false;
+    const isMe = this.profile?.id === authStore.currentUserId;
     const isAdmin = authStore.currentUserId === "admin";
     const canVet = true; // TODO: hook to admin roles when available
     const showNoProfile = !this.isLoading && (this.loadError || !this.profile);

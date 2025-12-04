@@ -4,6 +4,7 @@ import miniProfileCSS from "../css/app-mini-profile.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
+import { authStore } from "../state/auth-store";
 
 @customElement("app-mini-profile")
 export class AppMiniProfile extends LitElement {
@@ -22,7 +23,12 @@ export class AppMiniProfile extends LitElement {
     if (!this.supressProfileRoute) {
       event.stopPropagation();
       const id = this.profileId || CONSTANTS.CURRENT_USER_ID;
-      navigate(`/profile/${id}`);
+      // Si es el perfil del usuario logueado, navegar a /profile sin ID
+      if (id === authStore.currentUserId) {
+        navigate("/profile");
+      } else {
+        navigate(`/profile/${id}`);
+      }
     }
   }
 
