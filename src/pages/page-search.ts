@@ -44,12 +44,7 @@ export class PageSearch extends ScrollPage {
   private async runSearch() {
     const q = this.normalizedQuery;
     if (!q) {
-      this.profiles = [];
-      this.recipes = [];
-      this.profilesError = false;
-      this.isLoadingProfiles = false;
-      this.postsError = false;
-      this.isLoadingPosts = false;
+      await this.loadDefaultResults();
       return;
     }
 
@@ -73,6 +68,47 @@ export class PageSearch extends ScrollPage {
     }));
   }
 
+  private async loadDefaultResults() {
+    this.isLoadingProfiles = true;
+    this.isLoadingPosts = true;
+    this.profilesError = false;
+    this.postsError = false;
+
+    const [profilesResult, postsResult] = await Promise.allSettled([
+      friendService.random(5),
+      postService.random(5),
+    ]);
+
+    if (profilesResult.status === "fulfilled") {
+      this.profiles = profilesResult.value;
+      this.profilesError = false;
+    } else {
+      this.profiles = [];
+      this.profilesError = true;
+    }
+    this.isLoadingProfiles = false;
+
+    if (postsResult.status === "fulfilled") {
+      this.recipes = postsResult.value.map((post: Post) => ({
+        id: post.id,
+        title: post.caption,
+        authorId: post.authorId,
+        tags: [],
+        time: "",
+      }));
+      this.postsError = false;
+    } else {
+      this.recipes = [];
+      this.postsError = true;
+    }
+    this.isLoadingPosts = false;
+  }
+
+  protected firstUpdated(_changed: Map<string, unknown>) {
+    super.firstUpdated(_changed);
+    this.loadDefaultResults();
+  }
+
   private openProfile(username: string) {
     const cleanUsername = username.replace(/^@/, "");
     navigate(`/profile/${cleanUsername}`);
@@ -86,10 +122,13 @@ export class PageSearch extends ScrollPage {
   render() {
     const profiles = this.profiles;
     const recipes = this.recipes;
+    const hasQuery = Boolean(this.normalizedQuery);
     const showProfilesNoResults =
+      hasQuery &&
       !this.isLoadingProfiles &&
       (this.profilesError || profiles.length === 0);
     const showRecipesNoResults =
+      hasQuery &&
       !this.isLoadingPosts &&
       (this.postsError || recipes.length === 0);
 

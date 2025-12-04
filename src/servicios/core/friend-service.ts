@@ -28,4 +28,7 @@ export const friendService = {
   async status(friendId: string): Promise<boolean> {
     return friendHttp.status(friendId);
   },
+  async random(limit = 5): Promise<UserProfile[]> {
+    return friendHttp.random(limit);
+  },
 };

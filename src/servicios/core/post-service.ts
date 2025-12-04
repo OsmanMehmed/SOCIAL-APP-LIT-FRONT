@@ -61,4 +61,8 @@ export const postService = {
   async ban(postId: string, banned = true): Promise<Post> {
     return postHttp.ban(postId, banned);
   },
+
+  async random(limit = 5): Promise<Post[]> {
+    return postHttp.random(limit, userHeaders());
+  },
 };

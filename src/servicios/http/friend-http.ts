@@ -35,4 +35,6 @@ export const friendHttp = {
     request<boolean>(`/friends/status?friendId=${friendId}`, {
       headers: { "X-User-Id": authStore.currentUserId },
     }),
+  random: (limit = 5) =>
+    request<UserProfile[]>(`/friends/random?limit=${limit}`),
 };

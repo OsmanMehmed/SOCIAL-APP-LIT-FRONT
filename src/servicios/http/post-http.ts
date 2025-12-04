@@ -32,6 +32,8 @@ export const postHttp = {
     request<Post[]>(`/posts/search?q=${encodeURIComponent(query)}`, {
       headers,
     }),
+  random: (limit = 5, headers?: Record<string, string>) =>
+    request<Post[]>(`/posts/random?limit=${limit}`, { headers }),
   save: (postId: string, save = true) =>
     request<Post>(`/posts/${postId}/save?save=${save}`, { method: "POST" }),
   ban: (postId: string, banned = true) =>
