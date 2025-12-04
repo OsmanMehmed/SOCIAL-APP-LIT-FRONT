@@ -39,7 +39,7 @@ export class PageProfile extends ScrollPage {
   }
 
   private async vetUser() {
-    const id = this.params?.id ?? this.profile?.id;
+    const id = this.profile?.id ?? this.params?.id ?? this.resolveProfileId();
     if (!id) return;
     const next = !this.isBanned;
     this.isBanned = next;
