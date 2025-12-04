@@ -16,21 +16,58 @@ export class PageDirectMessage extends LitElement {
   @state() draft = "";
   @state() private thread: DirectMessage[] = [];
   @state() private participantProfile?: UserProfile;
+  @state() private participantUserId: string = "";
   @query(".thread") private threadEl?: HTMLDivElement;
   private currentConversationId = "";
+  // last processed route param to avoid re-loading on internal state updates
+  private lastLoadedParam = "";
   @state() private isLoading = false;
   @state() private loadError = false;
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageDirectMessageCSS)];
 
-  private async loadThread(conversationId: string) {
-    if (!conversationId) return;
-    this.currentConversationId = conversationId;
+  private async loadThread(userId: string) {
+    if (!userId) return;
     this.isLoading = true;
     this.loadError = false;
     try {
-      this.thread = await messageService.fetchThread(conversationId);
-      this.participantProfile = await profileService.fetchProfile(conversationId);
+      // If the route param is a username (starts with prefix), resolve to profile first
+      let profile: UserProfile | undefined;
+      if (userId.startsWith(CONSTANTS.USERNAME_PREFIX)) {
+        profile = await profileService.fetchProfile(userId);
+      }
+
+      // If we resolved a profile, use its id; otherwise assume param is a conversationId
+      if (profile) {
+        // store participant info for display
+        this.participantProfile = profile;
+        // create or get conversation between current user and the participant (backend expects IDs)
+        const currentUser = authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
+        // createConversation returns a Conversation object with id
+        const conv = await messageService.createConversation(currentUser, profile.id);
+        this.currentConversationId = conv.id;
+        this.thread = await messageService.fetchThread(conv.id);
+        this.participantUserId = profile.id;
+      } else {
+        // param wasn't a username; treat it as conversation id
+        const conversationId = userId;
+        this.currentConversationId = conversationId;
+        this.thread = await messageService.fetchThread(conversationId);
+        // try to infer participant profile from thread if available
+        if (this.thread.length > 0) {
+          const other = this.thread.find(m => m.fromUserId !== (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID))
+            || this.thread.find(m => m.toUserId !== (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID));
+          if (other) {
+            const otherId = other.fromUserId === (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID) ? other.toUserId : other.fromUserId;
+            try {
+              this.participantProfile = await profileService.fetchProfile(otherId);
+              this.participantUserId = otherId;
+            } catch (err) {
+              // ignore profile fetch error
+            }
+          }
+        }
+      }
     } finally {
       this.isLoading = false;
     }
@@ -40,12 +77,35 @@ export class PageDirectMessage extends LitElement {
     e.preventDefault();
     const text = this.draft.trim();
     if (!text) return;
-    const conversationId = this.params?.id ?? CONSTANTS.CURRENT_USER_ID;
+    // Ensure we have a conversation id (UUID) to send to backend
+    let conversationId = this.currentConversationId;
+    // If we don't have conversation id but know the participant (username param), create/get conversation
+    if (!conversationId) {
+      const participantParam = this.params?.id ?? "";
+      let participantId = this.participantUserId;
+      if (!participantId && participantParam) {
+        if (participantParam.startsWith(CONSTANTS.USERNAME_PREFIX)) {
+          const p = await profileService.fetchProfile(participantParam);
+          participantId = p.id;
+          this.participantProfile = p;
+        } else {
+          // if param looks like a conversation id, we can't create conversation from it
+          participantId = participantParam;
+        }
+      }
+      if (participantId) {
+        const currentUser = authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
+        const conv = await messageService.createConversation(currentUser, participantId);
+        conversationId = conv.id;
+        this.currentConversationId = conv.id;
+      }
+    }
+
     const { profileId } = this.getParticipantInfo();
     const message = await messageService.sendMessage(
-      conversationId,
+      conversationId ?? (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID),
       authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
-      profileId || conversationId,
+      profileId || (this.participantUserId ?? this.params?.id ?? CONSTANTS.CURRENT_USER_ID),
       text
     );
     this.thread = [...this.thread, message];
@@ -64,9 +124,17 @@ export class PageDirectMessage extends LitElement {
   }
 
   protected willUpdate(_changed: Map<string, unknown>) {
-    const id = this.params?.id ?? CONSTANTS.CURRENT_USER_ID;
-    if (id !== this.currentConversationId) {
-      this.loadThread(id);
+    const paramId = this.params?.id ?? CONSTANTS.CURRENT_USER_ID;
+    const cleanParamId = paramId.replace(/^@/, "");
+    
+    // If param has @, redirect to clean URL
+    if (paramId !== cleanParamId) {
+      window.history.replaceState(null, "", `/dm/${cleanParamId}`);
+    }
+    
+    if (cleanParamId !== this.lastLoadedParam) {
+      this.lastLoadedParam = cleanParamId;
+      this.loadThread(cleanParamId);
     }
   }
 
@@ -81,16 +149,14 @@ export class PageDirectMessage extends LitElement {
   private getParticipantInfo() {
     if (this.participantProfile) {
       return {
-        username: this.participantProfile.username,
+        username: this.participantProfile.username.replace(/^@/, ""),
         subtitle: this.participantProfile.subtitle,
         profileId: this.participantProfile.id,
       };
     }
     const conversationId = this.params?.id ?? "";
-    const profileId = conversationId || CONSTANTS.CURRENT_USER_ID;
-    const username = profileId.startsWith(CONSTANTS.USERNAME_PREFIX)
-      ? profileId
-      : `${CONSTANTS.USERNAME_PREFIX}${profileId}`;
+    const profileId = conversationId ? conversationId.replace(/^@/,"") : CONSTANTS.CURRENT_USER_ID;
+    const username = profileId;
 
     return {
       username,

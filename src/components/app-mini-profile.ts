@@ -22,12 +22,13 @@ export class AppMiniProfile extends LitElement {
   private goProfile(event: Event) {
     if (!this.supressProfileRoute) {
       event.stopPropagation();
-      const id = this.profileId || CONSTANTS.CURRENT_USER_ID;
-      // Si es el perfil del usuario logueado, navegar a /profile sin ID
-      if (id === authStore.currentUserId) {
+      const cleanUsername = this.username.replace(/^@/, "");
+      const currentUserUsername = authStore.currentUserId;
+      // Si es el perfil del usuario logueado, navegar a /profile sin username
+      if (this.profileId === currentUserUsername) {
         navigate("/profile");
       } else {
-        navigate(`/profile/${id}`);
+        navigate(`/profile/${cleanUsername}`);
       }
     }
   }
@@ -40,7 +41,7 @@ export class AppMiniProfile extends LitElement {
           : html`<app-avatar @click=${this.goProfile}></app-avatar>`}
         <div class="meta">
           <span class="username" @click=${this.goProfile}
-            >${this.username}</span
+            >@${this.username}</span
           >
           ${!this.noSubtitle
             ? html`<span class="chip-muted name" @click=${this.goProfile}

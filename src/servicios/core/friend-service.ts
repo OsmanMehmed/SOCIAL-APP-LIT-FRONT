@@ -25,4 +25,7 @@ export const friendService = {
   async disconnect(friendId: string): Promise<void> {
     return friendHttp.disconnect(friendId);
   },
+  async status(friendId: string): Promise<boolean> {
+    return friendHttp.status(friendId);
+  },
 };

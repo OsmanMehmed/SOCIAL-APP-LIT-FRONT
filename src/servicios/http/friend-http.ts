@@ -31,4 +31,8 @@ export const friendHttp = {
       method: "DELETE",
       headers: { "X-User-Id": authStore.currentUserId },
     }),
+  status: (friendId: string) =>
+    request<boolean>(`/friends/status?friendId=${friendId}`, {
+      headers: { "X-User-Id": authStore.currentUserId },
+    }),
 };

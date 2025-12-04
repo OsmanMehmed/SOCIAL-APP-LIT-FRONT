@@ -1,5 +1,5 @@
 export const CONSTANTS = {
-  USERNAME_PREFIX: "@",
+  USERNAME_PREFIX: "",
 
   NAV_LABEL_HOME: "Inicio",
   NAV_LABEL_SEARCH: "Buscar",
@@ -20,7 +20,7 @@ export const CONSTANTS = {
 
   LOGIN_CHIP_COMMUNITY: "Comunidad Foodies",
   LOGIN_TITLE: "Inicia sesión",
-  LOGIN_INPUT_USERNAME_PLACEHOLDER: "@cool.cheff 😉",
+  LOGIN_INPUT_USERNAME_PLACEHOLDER: "cool.cheff 😉",
   LOGIN_INPUT_PASSWORD_PLACEHOLDER: "Contraseña",
   LOGIN_BUTTON_TEXT: "Entrar a la cocina",
   LOGIN_HELP_TEXT: "¡Comparte tus recetas con la comunidad!",

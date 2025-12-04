@@ -18,8 +18,8 @@ export class PageConversations extends ScrollPage {
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageConversationsCSS)];
 
-  private openDm(id: string) {
-    navigate(`/dm/${id}`);
+  private openDm(visibleUsername: string) {
+    navigate(`/dm/${visibleUsername}`);
   }
 
   private async loadConversations() {
@@ -62,13 +62,12 @@ export class PageConversations extends ScrollPage {
                 ? conversation.participantB
                 : conversation.participantA;
             const otherUser = otherUserRaw || CONSTANTS.CURRENT_USER_ID;
-            const username = otherUser.startsWith(CONSTANTS.USERNAME_PREFIX)
-              ? otherUser
-              : `${CONSTANTS.USERNAME_PREFIX}${otherUser}`;
+            const username = otherUser;
+            const cleanUsername = username.replace(/^@/, "");
             return html`
               <div
                 class="card"
-                @click=${() => this.openDm(conversation.id)}
+                 @click=${() => this.openDm(cleanUsername)}
               >
                 <app-mini-profile
                   .username=${username}

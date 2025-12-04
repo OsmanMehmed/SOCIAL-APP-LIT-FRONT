@@ -21,9 +21,7 @@ export class PageLogin extends LitElement {
     this.username = withoutPrefix;
     this.errorMessage = null;
 
-    const displayValue = this.username
-      ? CONSTANTS.USERNAME_PREFIX + this.username
-      : "";
+    const displayValue = this.username ? "@" + this.username : "";
 
     if (input.value !== displayValue) {
       input.value = displayValue;
@@ -42,6 +40,7 @@ export class PageLogin extends LitElement {
     if (this.isSubmitting) return;
 
     this.isSubmitting = true;
+    this.errorMessage = null;
 
     const user = this.username.trim();
     const pass = this.password.trim();
@@ -52,23 +51,24 @@ export class PageLogin extends LitElement {
       return;
     }
 
-    const auth = await authService
-      .login({
+    try {
+      const auth = await authService.login({
         username: user,
         password: pass,
-      })
-      .finally(() => {
-        this.isSubmitting = false;
       });
 
-    authStore.loginWithAuth(auth);
-    navigate("/feed");
+      authStore.loginWithAuth(auth);
+      navigate("/feed");
+    } catch (error) {
+      this.errorMessage = "Usuario o contraseña incorrectos.";
+      console.error("Login error:", error);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   render() {
-    const displayValue = this.username
-      ? CONSTANTS.USERNAME_PREFIX + this.username
-      : "";
+    const displayValue = this.username ? "@" + this.username : "";
 
     return html`
       <div class="wrap">

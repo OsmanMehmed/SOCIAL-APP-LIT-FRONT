@@ -75,6 +75,7 @@ export class PageProfile extends ScrollPage {
     this.isBanned = profile.banned;
     // Cargar posts usando el ID real del perfil
     this.loadPosts(profile.id);
+    this.refreshFriendState(profile.id);
   }
 
   private async loadPosts(id: string) {
@@ -87,6 +88,20 @@ export class PageProfile extends ScrollPage {
       });
     // Una vez cargados los posts, intentamos restaurar el scroll del contenedor
     this.restorePostsScroll();
+  }
+
+  private async refreshFriendState(friendId: string) {
+    if (!friendId) return;
+    const viewerId = authStore.currentUserId;
+    if (!viewerId || viewerId === CONSTANTS.CURRENT_USER_ID || viewerId === friendId) {
+      return;
+    }
+    try {
+      const status = await friendService.status(friendId);
+      this.isFriend = status;
+    } catch (error) {
+      console.warn("No se pudo verificar la amistad", error);
+    }
   }
 
   private async unfriend() {
@@ -104,9 +119,9 @@ export class PageProfile extends ScrollPage {
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageProfileCSS)];
 
   private openDm() {
-    const id = this.profile?.id ?? this.resolveProfileId();
-    if (!id) return;
-    navigate(`/dm/${id}`);
+    if (!this.profile?.username) return;
+    const username = this.profile.username.replace(/^@/, "");
+    navigate(`/dm/${username}`);
   }
 
   private getScrollKey() {
@@ -139,11 +154,19 @@ export class PageProfile extends ScrollPage {
   }
 
   protected willUpdate(_changed: Map<string, unknown>) {
+    const paramUsername = this.params?.id ?? "";
+    const cleanParamUsername = paramUsername.replace(/^@/, "");
+    
+    // Si param tiene @, redirigir a URL limpia
+    if (paramUsername !== cleanParamUsername && cleanParamUsername) {
+      window.history.replaceState(null, "", `/profile/${cleanParamUsername}`);
+    }
+    
     const targetId = this.resolveProfileId();
     
-    // Si estamos navegando a nuestro propio perfil pero la URL tiene el ID específico,
+    // Si estamos navegando a nuestro propio perfil pero la URL tiene un username específico,
     // redirigir a /profile para limpiar la URL
-    if (targetId === authStore.currentUserId && this.params?.id && this.params.id !== "") {
+    if (targetId === authStore.currentUserId && cleanParamUsername !== "") {
       navigate("/profile");
       return;
     }
@@ -177,9 +200,7 @@ export class PageProfile extends ScrollPage {
     const resolvedId = this.profile?.id ?? this.resolveProfileId();
     const username =
       this.profile?.username ??
-      (resolvedId.startsWith(CONSTANTS.USERNAME_PREFIX)
-        ? resolvedId
-        : `${CONSTANTS.USERNAME_PREFIX}${resolvedId}`);
+      resolvedId;
     const subtitle =
       this.profile?.subtitle ?? CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
     const isMe = this.profile?.id === authStore.currentUserId;
@@ -285,11 +306,7 @@ export class PageProfile extends ScrollPage {
                       ${CONSTANTS.NO_RESULTS_TEXT}
                     </div>`
                   : html`${this.posts.map((post) => {
-                      const username = post.authorId?.startsWith(
-                        CONSTANTS.USERNAME_PREFIX,
-                      )
-                        ? post.authorId
-                        : `${CONSTANTS.USERNAME_PREFIX}${post.authorId}`;
+                      const username = post.authorId;
                       return html`<app-post-card
                         .postId=${post.id}
                         .username=${username}

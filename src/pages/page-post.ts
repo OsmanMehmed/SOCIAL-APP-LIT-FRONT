@@ -59,13 +59,11 @@ export class PagePost extends ScrollPage {
     this.savesCount = data.saves ?? 0;
     const comments = data.commentsList ?? [];
     this.commentItems = comments.map((comment: Comment) => {
-      const username = comment.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
-        ? comment.authorId
-        : `${CONSTANTS.USERNAME_PREFIX}${comment.authorId}`;
+      const username = comment.authorId;
       return {
         username,
         text: comment.text,
-        profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
+        profileId: comment.authorId,
       };
     });
   }
@@ -123,15 +121,13 @@ export class PagePost extends ScrollPage {
       text,
       createdAt: new Date().toISOString(),
     });
-    const username = created.authorId.startsWith(CONSTANTS.USERNAME_PREFIX)
-      ? created.authorId
-      : `${CONSTANTS.USERNAME_PREFIX}${created.authorId}`;
+    const username = created.authorId;
     this.commentItems = [
       ...this.commentItems,
       {
         username,
         text: created.text,
-        profileId: username.replace(CONSTANTS.USERNAME_PREFIX, ""),
+        profileId: created.authorId,
       },
     ];
     this.commentsCount += 1;

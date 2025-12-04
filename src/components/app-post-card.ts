@@ -11,6 +11,7 @@ import { postService } from "../servicios/core/post-service";
 @customElement("app-post-card")
 export class AppPostCard extends LitElement {
   @property() postId = "";
+  @property() authorId = "";
   @property() username = CONSTANTS.POST_CARD_DEFAULT_USERNAME;
   @property() subtitle = "";
   @property() caption = CONSTANTS.POST_CARD_DEFAULT_CAPTION;
@@ -177,12 +178,9 @@ export class AppPostCard extends LitElement {
             ? html`
                 <aside class="sidebar">
                   <app-mini-profile
-                    username=${this.username}
-                    subtitle=${this.subtitle}
-                    .profileId=${this.username.replace(
-                      CONSTANTS.USERNAME_PREFIX,
-                      "",
-                    )}
+                    .username=${this.username}
+                    .subtitle=${this.subtitle}
+                    .profileId=${this.authorId}
                   ></app-mini-profile>
                   <div class="card description">
                     <div class="chip-muted">

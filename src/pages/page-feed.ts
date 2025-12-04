@@ -77,11 +77,12 @@ export class PageFeed extends ScrollPage {
 
         ${this.posts.map((post) => {
           const profile = this.authorProfiles.get(post.authorId);
-          const username = profile?.username || `${CONSTANTS.USERNAME_PREFIX}${post.authorId}`;
+          const username = (profile?.username || post.authorId).replace(/^@/, "");
           const subtitle = profile?.subtitle || "";
           return html`
             <app-post-card
               .postId=${post.id}
+              .authorId=${post.authorId}
               .username=${username}
               .subtitle=${subtitle}
               .caption=${post.caption}

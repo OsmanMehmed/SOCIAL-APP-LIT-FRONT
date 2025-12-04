@@ -73,12 +73,14 @@ export class PageSearch extends ScrollPage {
     }));
   }
 
-  private openProfile(id: string) {
-    navigate(`/profile/${id}`);
+  private openProfile(username: string) {
+    const cleanUsername = username.replace(/^@/, "");
+    navigate(`/profile/${cleanUsername}`);
   }
 
   private openRecipe(id: string) {
-    navigate(`/post/${id}`);
+    const cleanId = id.replace(/^@/, "");
+    navigate(`/post/${cleanId}`);
   }
 
   render() {
@@ -123,9 +125,7 @@ export class PageSearch extends ScrollPage {
                   >
                     <app-avatar></app-avatar>
                     <div class="profile-meta">
-                      <span class="username"
-                        >${profile.username ||
-                        `${CONSTANTS.USERNAME_PREFIX}${profile.id}`}</span
+                      <span class="username">${'@' + (profile.username || profile.id)}</span
                       >
                       <span class="name">${profile.subtitle || ""}</span>
                     </div>
@@ -152,8 +152,7 @@ export class PageSearch extends ScrollPage {
                   >
                     <div class="recipe-title">${recipe.title}</div>
                     <div class="recipe-meta">
-                      <span
-                        >${CONSTANTS.USERNAME_PREFIX}${recipe.authorId}</span
+                      <span>@${recipe.authorId}</span
                       >
                       <span>${recipe.time}</span>
                     </div>
