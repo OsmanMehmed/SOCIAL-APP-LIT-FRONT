@@ -1,5 +1,5 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import componentsCSS from "../design-system/components.css?inline";
+import componentsCSS from "../css/components.css?inline";
 import { customElement } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";

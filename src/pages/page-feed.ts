@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import componentsCSS from "../design-system/components.css?inline";
-import pageFeedCSS from "./page-feed.css?inline";
+import componentsCSS from "../css/components.css?inline";
+import pageFeedCSS from "../css/page-feed.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import "../components/app-mini-profile";
 import "../components/app-post-card";

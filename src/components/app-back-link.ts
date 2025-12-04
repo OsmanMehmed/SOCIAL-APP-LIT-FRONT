@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import layoutCSS from "../design-system/layout.css?inline";
-import backLinkCSS from "./app-back-link.css?inline";
+import layoutCSS from "../css/layout.css?inline";
+import backLinkCSS from "../css/app-back-link.css?inline";
 import { customElement, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";

@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import componentsCSS from "../design-system/components.css?inline";
-import pageSearchCSS from "./page-search.css?inline";
+import componentsCSS from "../css/components.css?inline";
+import pageSearchCSS from "../css/page-search.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";

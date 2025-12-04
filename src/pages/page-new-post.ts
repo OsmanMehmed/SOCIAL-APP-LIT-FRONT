@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import componentsCSS from "../design-system/components.css?inline";
-import pageNewPostCSS from "./page-new-post.css?inline";
+import componentsCSS from "../css/components.css?inline";
+import pageNewPostCSS from "../css/page-new-post.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
 import { postService } from "../servicios/core/post-service";

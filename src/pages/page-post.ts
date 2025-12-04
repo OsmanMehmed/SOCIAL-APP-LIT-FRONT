@@ -1,6 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
-import componentsCSS from "../design-system/components.css?inline";
-import pagePostCSS from "./page-post.css?inline";
+import componentsCSS from "../css/components.css?inline";
+import pagePostCSS from "../css/page-post.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
 import { ScrollPage } from "../shared/scroll-page";
