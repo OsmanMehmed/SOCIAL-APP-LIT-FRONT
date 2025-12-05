@@ -37,7 +37,7 @@
 }
 
 textarea.input {
-  resize: vertical;
+  resize: none;
 }
 
 .form-actions {
@@ -63,6 +63,22 @@ textarea.input {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+}
+
+.images-list-container {
+  max-height: 16rem;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.images-list-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.images-list-container::-webkit-scrollbar-thumb {
+  background: rgba(207, 99, 94, 0.5);
+  border-radius: 999px;
 }
 
 .image-item {

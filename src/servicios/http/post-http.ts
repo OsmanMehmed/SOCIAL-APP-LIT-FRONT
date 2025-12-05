@@ -10,6 +10,8 @@ export const postHttp = {
   getComments: (id: string) => request<Comment[]>(`/posts/${id}/comments`),
   createPost: (post: Post) =>
     request<Post>(`/posts`, { method: "POST", body: post }),
+  uploadPost: (formData: FormData, headers?: Record<string, string>) =>
+    request<Post>(`/posts/upload`, { method: "POST", body: formData, headers }),
   updatePost: (post: Post) =>
     request<Post>(`/posts/${post.id}`, { method: "PUT", body: post }),
   deletePost: (id: string) =>

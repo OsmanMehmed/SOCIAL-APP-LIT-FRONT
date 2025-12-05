@@ -33,6 +33,15 @@ export const postService = {
     return { ...created, banned: created.banned ?? false, commentsList: [] };
   },
 
+  async upload(formData: FormData): Promise<PostWithComments> {
+    const created = await postHttp.uploadPost(formData, userHeaders());
+    return {
+      ...created,
+      banned: created.banned ?? false,
+      commentsList: [],
+    };
+  },
+
   async update(post: Post): Promise<PostWithComments> {
     const updated = await postHttp.updatePost(post);
     return { ...updated, banned: updated.banned ?? false, commentsList: [] };

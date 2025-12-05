@@ -167,14 +167,13 @@ export class PageNewPost extends LitElement {
 
     this.errorMessage = null;
 
-    const created = await postService.create({
-      id: "",
-      caption: `${trimmedTitle} - ${trimmedDescription} - ${trimmedBody}`,
-      authorId: authStore.currentUserId || CONSTANTS.CURRENT_USER_ID,
-      likes: 0,
-      comments: 0,
-      saves: 0,
-    });
+    const formData = new FormData();
+    formData.append("title", trimmedTitle);
+    formData.append("description", trimmedDescription);
+    formData.append("caption", trimmedBody);
+    this.images.forEach((file) => formData.append("images", file));
+
+    const created = await postService.upload(formData);
     if (created.id) {
       navigate(`/post/${created.id}`);
     } else {
@@ -247,6 +246,7 @@ export class PageNewPost extends LitElement {
 
             ${this.images.length
               ? html`
+                  <div class="images-list-container">
                   <ul class="images-list">
                     ${this.images.map(
                       (file, index) => html`
@@ -285,6 +285,7 @@ export class PageNewPost extends LitElement {
                       `,
                     )}
                   </ul>
+                  </div>
                 `
               : null}
           </div>

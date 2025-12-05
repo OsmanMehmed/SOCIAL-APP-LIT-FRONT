@@ -2,6 +2,8 @@ import type { Comment } from "./comment";
 
 export interface Post {
   id: string;
+  title: string;
+  description?: string;
   caption: string;
   authorId: string;
   imageUrl?: string | null;
@@ -14,4 +16,5 @@ export interface Post {
 
 export interface PostWithComments extends Post {
   commentsList: Comment[];
+  imageUrls?: string[];
 }

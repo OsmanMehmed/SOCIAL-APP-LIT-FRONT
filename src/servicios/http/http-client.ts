@@ -17,13 +17,22 @@ export async function request<T>(
     headers["Authorization"] = token;
   }
 
+  const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+  const fetchHeaders = isFormData
+    ? headers
+    : {
+        "Content-Type": "application/json",
+        ...headers,
+      };
+
   const response = await fetch(`${API_BASE}${path}`, {
     method,
-    headers: {
-      "Content-Type": "application/json",
-      ...headers,
-    },
-    body: body ? JSON.stringify(body) : undefined,
+    headers: fetchHeaders,
+    body: body
+      ? isFormData
+        ? (body as FormData)
+        : JSON.stringify(body)
+      : undefined,
   });
 
   if (!response.ok) {

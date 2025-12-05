@@ -87,6 +87,7 @@
   align-self: flex-end;
   background: var(--color-quinary);
   color: #290202;
+  
 }
 
 form {
@@ -97,9 +98,6 @@ form {
 
 input {
   flex: 1;
-}
-
-.send-input {
 }
 
 .send-message-form {

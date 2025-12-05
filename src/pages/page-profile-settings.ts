@@ -1,18 +1,24 @@
 import { LitElement, html, unsafeCSS } from "lit";
 import componentsCSS from "../css/components.css?inline";
 import pageProfileSettingsCSS from "../css/page-profile-settings.css?inline";
-import { customElement, state } from "lit/decorators.js";
+import { customElement, state, property } from "lit/decorators.js";
 import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
+import type { UserProfile } from "../modelos/user-profile";
+import { profileService } from "../servicios/core/profile-service";
+import { authStore } from "../state/auth-store";
 
 @customElement("page-profile-settings")
 export class PageProfileSettings extends LitElement {
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageProfileSettingsCSS)];
 
+  @property({ attribute: false }) params?: { id?: string };
   @state() private name = "";
   @state() private specialty = "";
   @state() private url = "";
   @state() private error = "";
+  @state() private profile?: UserProfile;
+  @state() private isSaving = false;
 
   private goBack() {
     if (window.history.length > 1) {
@@ -46,12 +52,54 @@ export class PageProfileSettings extends LitElement {
       return;
     }
 
+    const username =
+      this.name.trim() ||
+      this.profile?.username?.replace(/^@/, "") ||
+      "";
+    const subtitle = this.specialty.trim() || this.profile?.subtitle || "";
+    const profileUrl = this.url.trim() || this.profile?.url || "";
+    const profileId =
+      this.profile?.id || authStore.currentUserId || CONSTANTS.CURRENT_USER_ID;
+    if (!username) {
+      this.error = "El nombre es obligatorio.";
+      return;
+    }
+    this.isSaving = true;
     this.error = "";
-    this.goBack();
+    profileService
+      .updateProfile(profileId, {
+        username,
+        subtitle,
+        url: profileUrl,
+        avatarUrl: this.profile?.avatarUrl,
+        friend: Boolean(this.profile?.friend),
+        banned: Boolean(this.profile?.banned),
+      })
+      .then((updated) => {
+        this.profile = updated;
+        this.goBack();
+      })
+      .catch((err) => {
+        this.error = err?.message || "No se pudo guardar el perfil.";
+      })
+      .finally(() => {
+        this.isSaving = false;
+      });
   }
 
   private cancel() {
     this.goBack();
+  }
+
+  protected firstUpdated(): void {
+    const profileId =
+      this.params?.id || authStore.currentUserId || CONSTANTS.CURRENT_USER_ID;
+    profileService.fetchProfile(profileId).then((profile) => {
+      this.profile = profile;
+      this.name = profile.username?.replace(/^@/, "") || "";
+      this.specialty = profile.subtitle || "";
+      this.url = profile.url || "";
+    });
   }
 
   render() {
@@ -81,7 +129,7 @@ export class PageProfileSettings extends LitElement {
             ? html`<div class="form-error" role="alert">${this.error}</div>`
             : null}
           <div class="buttons">
-            <button class="btn btn-sm" type="submit">
+            <button class="btn btn-sm" type="submit" ?disabled=${this.isSaving}>
               ${CONSTANTS.PROFILE_SETTINGS_SAVE}
             </button>
             <button

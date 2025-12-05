@@ -36,7 +36,7 @@ export function parseLocation(path: string): AppLocation {
     case "profile":
       return { route: "profile", params: { id: id ?? "me" } };
     case "profile-settings":
-      return { route: "profile-settings" };
+      return { route: "profile-settings", params: { id: id ?? "" } };
     default:
       return { route: "not-found" };
   }

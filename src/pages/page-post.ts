@@ -31,6 +31,8 @@ export class PagePost extends ScrollPage {
   @state() private commentsCount = 0;
   @state() private savesCount = 0;
   @state() private postImage = "";
+  @state() private postDescription = "";
+  @state() private postAuthorId = "";
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pagePostCSS)];
 
@@ -50,13 +52,15 @@ export class PagePost extends ScrollPage {
     const data = await postService.fetchPostWithComments(id).finally(() => {
       this.isLoading = false;
     });
-    this.postTitle = data.caption ?? this.getPostTitle(id);
+    this.postTitle = data.title ?? data.caption ?? this.getPostTitle(id);
     this.isBanned = Boolean(data.banned);
     this.liked = Boolean(data.liked);
     this.likesCount = data.likes ?? 0;
     this.commentsCount = data.comments ?? data.commentsList?.length ?? 0;
     this.savesCount = data.saves ?? 0;
-    this.postImage = data.imageUrl || "";
+    this.postImage = data.imageUrl || data.imageUrls?.[0] || "";
+    this.postDescription = data.description || "";
+    this.postAuthorId = data.authorId;
     const comments = data.commentsList ?? [];
     this.commentItems = comments.map((comment: Comment) => {
       const username = comment.authorId;
@@ -135,6 +139,12 @@ export class PagePost extends ScrollPage {
   render() {
     const id = this.params?.id ?? "";
     const title = this.postTitle || this.getPostTitle(id);
+    const isOwner =
+      this.postAuthorId &&
+      this.postAuthorId ===
+        (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID);
+    const isAdmin = Boolean(authStore.currentUserIsAdmin);
+    const canEdit = isOwner || isAdmin;
     return html`
       <div class="component-container">
         <div class="card">
@@ -162,26 +172,30 @@ export class PagePost extends ScrollPage {
                           : CONSTANTS.POST_LIKE_BUTTON}</span
                       >
                     </button>
-                    <button
-                      class=${`btn btn-pill btn-sm vet-btn ${
-                        this.isBanned
-                          ? "btn-no-fill vet-btn vet-btn-vetted"
-                          : ""
-                      }`}
-                      ?disabled=${this.isBanning}
-                      @click=${this.vetUser}
-                    >
-                      ${this.isBanned
-                        ? CONSTANTS.POST_BANNED_LABEL
-                        : CONSTANTS.POST_BAN_BUTTON}
-                    </button>
+                    ${canEdit
+                      ? html`
+                          <button
+                            class=${`btn btn-pill btn-sm vet-btn ${
+                              this.isBanned
+                                ? "btn-no-fill vet-btn vet-btn-vetted"
+                                : ""
+                            }`}
+                            ?disabled=${this.isBanning}
+                            @click=${this.vetUser}
+                          >
+                            ${this.isBanned
+                              ? CONSTANTS.POST_BANNED_LABEL
+                              : CONSTANTS.POST_BAN_BUTTON}
+                          </button>
 
-                    <button
-                      class="btn btn-pill btn-sm edit-btn"
-                      @click=${() => navigate("/new-post")}
-                    >
-                      ${CONSTANTS.POST_EDIT_BUTTON}
-                    </button>
+                          <button
+                            class="btn btn-pill btn-sm edit-btn"
+                            @click=${() => navigate("/new-post")}
+                          >
+                            ${CONSTANTS.POST_EDIT_BUTTON}
+                          </button>
+                        `
+                      : null}
                   </div>
                 </div>
                 <h2>${title}</h2>
@@ -192,7 +206,7 @@ export class PagePost extends ScrollPage {
                         ${CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT}
                       </div>`}
                 </div>
-                <p>${CONSTANTS.POST_BODY}</p>
+                <p>${this.postDescription || CONSTANTS.POST_BODY}</p>
                 <div class="post-stats">
                   <div>
                     <sl-icon name="hand-thumbs-up"></sl-icon>

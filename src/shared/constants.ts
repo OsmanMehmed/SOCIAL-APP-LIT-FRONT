@@ -98,5 +98,6 @@ export const CONSTANTS = {
   NEW_POST_TAG_PLACEHOLDER: "Añadir etiqueta...",
   NEW_POST_TAG_ADD_BUTTON: "Añadir",
   NEW_POST_TAG_REMOVE: "x",
+  NEW_POST_SAVE_BUTTON: "Guardar receta",
   NEW_POST_REQUIRED_ERROR: "Debes indicar título, descripción y cuerpo.",
 };

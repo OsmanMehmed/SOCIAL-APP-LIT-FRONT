@@ -218,7 +218,9 @@ export class AppRoot extends LitElement {
           .params=${this.location.params}
         ></page-profile>`;
       case "profile-settings":
-        return html`<page-profile-settings></page-profile-settings>`;
+        return html`<page-profile-settings
+          .params=${this.location.params}
+        ></page-profile-settings>`;
       default:
         return html`<page-not-found></page-not-found>`;
     }

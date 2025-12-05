@@ -7,6 +7,12 @@ export const profileHttp = {
     request<UserProfile>(`/profiles/${id}`, {
       headers: { "X-User-Id": authStore.currentUserId },
     }),
+  updateProfile: (id: string, profile: Partial<UserProfile>) =>
+    request<UserProfile>(`/profiles/${id}`, {
+      method: "PUT",
+      body: profile,
+      headers: { "X-User-Id": authStore.currentUserId },
+    }),
   vetProfile: (id: string, banned: boolean) =>
     request<void>(`/profiles/${id}/vet?banned=${banned}`, {
       method: "POST",

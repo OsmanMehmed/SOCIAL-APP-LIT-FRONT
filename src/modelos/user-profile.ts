@@ -5,5 +5,7 @@ export interface UserProfile {
   friend: boolean;
   banned: boolean;
   avatarUrl?: string | null;
+  url?: string | null;
+  admin?: boolean;
   isOwnProfile?: boolean;
 }

@@ -47,7 +47,13 @@ export class PageProfile extends ScrollPage {
   }
 
   private editProfile() {
-    navigate("/profile-settings");
+    const targetId = this.profile?.id ?? this.resolveProfileId();
+    const isAdmin = Boolean(authStore.currentUserIsAdmin);
+    if (isAdmin && targetId) {
+      navigate(`/profile-settings/${targetId}`);
+    } else {
+      navigate("/profile-settings");
+    }
   }
 
   private async connect() {
@@ -197,7 +203,7 @@ export class PageProfile extends ScrollPage {
     const subtitle =
       this.profile?.subtitle ?? CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
     const isMe = this.profile?.id === authStore.currentUserId;
-    const isAdmin = authStore.currentUserId === "admin";
+    const isAdmin = Boolean(authStore.currentUserIsAdmin);
     const canVet = true; // TODO: hook to admin roles when available
     const showNoProfile = !this.isLoading && (this.loadError || !this.profile);
 
@@ -305,6 +311,7 @@ export class PageProfile extends ScrollPage {
                         .postId=${post.id}
                         .authorId=${post.authorId}
                         .username=${username}
+                        .showEdit=${isMe || isAdmin}
                         .caption=${post.caption}
                         .noProfile=${true}
                         .image=${post.imageUrl || ""}

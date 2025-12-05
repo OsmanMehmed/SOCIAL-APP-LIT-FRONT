@@ -63,7 +63,7 @@ export class PageSearch extends ScrollPage {
     });
     this.recipes = posts.map((post: Post) => ({
       id: post.id,
-      title: post.caption,
+      title: post.title || post.caption,
       authorId: post.authorId,
       tags: [],
       time: "",
@@ -94,7 +94,7 @@ export class PageSearch extends ScrollPage {
     if (postsResult.status === "fulfilled") {
       this.recipes = postsResult.value.map((post: Post) => ({
         id: post.id,
-        title: post.caption,
+        title: post.title || post.caption,
         authorId: post.authorId,
         tags: [],
         time: "",
