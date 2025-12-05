@@ -1,5 +1,6 @@
 .component-container {
   justify-self: center;
+  margin-right: 1em;
 }
 
 @media (max-width: 65em) {
@@ -7,18 +8,18 @@
     max-width: 35em;
     min-width: 20em;
   }
+
+  .flow-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6.5em;
+  }
 }
 
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(275px, 0.9fr);
   gap: 0.9rem;
-}
-
-.flow-column {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
 }
 
 .no-results {
