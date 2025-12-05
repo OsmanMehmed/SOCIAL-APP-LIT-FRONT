@@ -19,7 +19,6 @@
   padding-inline: 1em;
   padding-block: 1.25rem;
   position: relative;
-  --thread-fade-color: rgba(250, 232, 222, 0.96);
   -webkit-mask-image: linear-gradient(
     to bottom,
     transparent 0,

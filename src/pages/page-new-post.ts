@@ -96,7 +96,7 @@ export class PageNewPost extends LitElement {
 
     this.images = current;
     if (rejected) {
-      this.errorMessage = "Solo se permiten archivos de imagen.";
+      this.errorMessage = CONSTANTS.NEW_POST_ONLY_IMAGES_ERROR;
     }
     input.value = "";
   }
@@ -161,7 +161,7 @@ export class PageNewPost extends LitElement {
     const trimmedBody = this.body.trim();
 
     if (!trimmedTitle || !trimmedDescription || !trimmedBody) {
-      this.errorMessage = "Debes indicar t?tulo, descripci?n y cuerpo.";
+      this.errorMessage = CONSTANTS.NEW_POST_REQUIRED_ERROR;
       return;
     }
 
@@ -193,25 +193,29 @@ export class PageNewPost extends LitElement {
     return html`
       <div class="card new-post-card">
         <div class="new-post-title">
-          <span>Crear nueva receta</span>
+          <span>${CONSTANTS.NEW_POST_HEADER}</span>
         </div>
 
         <form class="form" @submit=${this.handleSubmit}>
           <div class="form-field">
-            <label class="form-label" for="recipe-title">Título</label>
+            <label class="form-label" for="recipe-title"
+              >${CONSTANTS.NEW_POST_TITLE_LABEL}</label
+            >
             <input
               id="recipe-title"
               class="input"
               type="text"
               .value=${this.title}
               @input=${this.onTitleInput}
-              placeholder="Título de la receta"
+              placeholder=${CONSTANTS.NEW_POST_TITLE_PLACEHOLDER}
               required
             />
           </div>
 
           <div class="form-field">
-            <label class="form-label" for="recipe-images">Imágenes</label>
+            <label class="form-label" for="recipe-images"
+              >${CONSTANTS.NEW_POST_IMAGES_LABEL}</label
+            >
 
             <div class="file-input-wrapper">
               <div class="file-input-display">
@@ -220,14 +224,14 @@ export class PageNewPost extends LitElement {
                   class="btn btn-ghost file-input-trigger"
                   tabindex="-1"
                 >
-                  Elegir archivos
+                  ${CONSTANTS.NEW_POST_SELECT_BUTTON}
                 </button>
                 <span class="file-input-text">
                   ${this.images.length === 0
-                    ? "Ningún archivo seleccionado"
-                    : `${this.images.length} archivo${
-                        this.images.length > 1 ? "s" : ""
-                      } seleccionados`}
+                    ? CONSTANTS.NEW_POST_NO_FILES_SELECTED
+                    : this.images.length === 1
+                      ? CONSTANTS.NEW_POST_ONE_FILE_SELECTED
+                      : `${this.images.length} ${CONSTANTS.NEW_POST_MULTIPLE_FILES_SELECTED}`}
                 </span>
               </div>
 
@@ -260,7 +264,7 @@ export class PageNewPost extends LitElement {
                           <button
                             type="button"
                             class="drag-handle"
-                            aria-label="Reordenar imagen"
+                            aria-label=${CONSTANTS.NEW_POST_REORDER_IMAGE_ARIA}
                           >
                             ⠿
                           </button>
@@ -275,7 +279,7 @@ export class PageNewPost extends LitElement {
                             class="btn-no-fill btn-ghost remove-btn"
                             @click=${() => this.removeImage(index)}
                           >
-                            Eliminar
+                            ${CONSTANTS.NEW_POST_REMOVE_IMAGE}
                           </button>
                         </li>
                       `,
@@ -286,34 +290,38 @@ export class PageNewPost extends LitElement {
           </div>
 
           <div class="form-field">
-            <label class="form-label" for="recipe-description">Descripción</label>
+            <label class="form-label" for="recipe-description"
+              >${CONSTANTS.NEW_POST_DESCRIPTION_LABEL}</label
+            >
             <textarea
               id="recipe-description"
               class="input recipe-description"
               .value=${this.description}
               @input=${this.onDescriptionInput}
-              placeholder="Resumen breve de la receta"
+              placeholder=${CONSTANTS.NEW_POST_DESCRIPTION_PLACEHOLDER}
               required
             ></textarea>
           </div>
 
-          <div class="form-field">
-            <label class="form-label" for="recipe-body">Cuerpo</label>
+          <div class="form-field recipe-body-container">
+            <label class="form-label" for="recipe-body">${CONSTANTS.NEW_POST_BODY_LABEL}</label>
             <textarea
               id="recipe-body"
               class="input recipe-body"
               .value=${this.body}
               @input=${this.onBodyInput}
-              placeholder="Describe la receta, pasos, ingredientes..."
+              placeholder=${CONSTANTS.NEW_POST_BODY_PLACEHOLDER}
               required
             ></textarea>
           </div>
 
-          <label class="form-label" for="recipe-body">Etiquetas</label>
+          <label class="form-label" for="recipe-body"
+            >${CONSTANTS.NEW_POST_TAGS_LABEL}</label
+          >
           <div class="tag-input-row">
             <input
               class="input tag-input"
-              placeholder="Añadir etiqueta..."
+              placeholder=${CONSTANTS.NEW_POST_TAG_PLACEHOLDER}
               .value=${this.newTag}
               @input=${this.onTagInput}
               @keydown=${this.onTagKey}
@@ -323,7 +331,7 @@ export class PageNewPost extends LitElement {
               class="btn-no-fill btn-pill btn-sm tag-add-btn"
               @click=${this.addTag}
             >
-              Añadir
+              ${CONSTANTS.NEW_POST_TAG_ADD_BUTTON}
             </button>
           </div>
           <div class="tags-container">
@@ -331,7 +339,9 @@ export class PageNewPost extends LitElement {
               (t) => html`
                 <span class="tag">
                   #${t}
-                  <button @click=${() => this.removeTag(t)}>×</button>
+                  <button @click=${() => this.removeTag(t)}>
+                    ${CONSTANTS.NEW_POST_TAG_REMOVE}
+                  </button>
                 </span>
               `,
             )}

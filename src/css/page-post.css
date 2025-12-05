@@ -114,7 +114,6 @@
 
 .vet-btn {
   width: 8em;
-  margin-right: 1em;
 }
 
 .vet-btn-vetted {
@@ -135,13 +134,6 @@
 
 .vet-btn-vetted:hover .label-hover {
   display: inline;
-}
-
-.post-edit-container {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.5rem;
-  margin-right: 1rem;
 }
 
 .edit-btn {

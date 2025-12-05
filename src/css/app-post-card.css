@@ -9,6 +9,17 @@
 @media (max-width: 65em) {
   .post-card {
     flex-wrap: wrap-reverse;
+    gap: 0px;
+    margin-bottom: 6em;
+  }
+
+  .sidebar {
+    gap: 0px;
+
+  }
+
+  article {
+    padding-block: 0px;
   }
 }
 
@@ -94,7 +105,6 @@
 
 .vet-btn {
   width: 8em;
-  margin-right: 1em;
 }
 
 .vet-btn-vetted {

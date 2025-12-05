@@ -47,11 +47,9 @@ export class PagePost extends ScrollPage {
     this.currentPostId = id;
     this.isLoading = true;
     this.loadError = false;
-    const data = await postService
-      .fetchPostWithComments(id)
-      .finally(() => {
-        this.isLoading = false;
-      });
+    const data = await postService.fetchPostWithComments(id).finally(() => {
+      this.isLoading = false;
+    });
     this.postTitle = data.caption ?? this.getPostTitle(id);
     this.isBanned = Boolean(data.banned);
     this.liked = Boolean(data.liked);
@@ -97,11 +95,9 @@ export class PagePost extends ScrollPage {
     const next = !this.isBanned;
     this.isBanning = true;
     this.isBanned = next;
-    const updated = await postService
-      .ban(postId, next)
-      .finally(() => {
-        this.isBanning = false;
-      });
+    const updated = await postService.ban(postId, next).finally(() => {
+      this.isBanning = false;
+    });
     this.isBanned = Boolean(updated.banned);
   }
 
@@ -143,7 +139,7 @@ export class PagePost extends ScrollPage {
       <div class="component-container">
         <div class="card">
           ${this.isLoading
-            ? html`<div class="no-results">Cargando...</div>`
+            ? html`<div class="no-results">${CONSTANTS.LOADING_TEXT}</div>`
             : null}
           ${this.loadError
             ? html`<div class="no-results">${CONSTANTS.NO_RESULTS_TEXT}</div>`
@@ -175,7 +171,16 @@ export class PagePost extends ScrollPage {
                       ?disabled=${this.isBanning}
                       @click=${this.vetUser}
                     >
-                      ${this.isBanned ? "Vetado" : "Vetar"}
+                      ${this.isBanned
+                        ? CONSTANTS.POST_BANNED_LABEL
+                        : CONSTANTS.POST_BAN_BUTTON}
+                    </button>
+
+                    <button
+                      class="btn btn-pill btn-sm edit-btn"
+                      @click=${() => navigate("/new-post")}
+                    >
+                      ${CONSTANTS.POST_EDIT_BUTTON}
                     </button>
                   </div>
                 </div>
@@ -202,14 +207,6 @@ export class PagePost extends ScrollPage {
                     <span>${this.savesCount}</span>
                   </div>
                 </div>
-                <div class="post-edit-container">
-                  <button
-                    class="btn btn-pill btn-sm edit-btn"
-                    @click=${() => navigate("/new-post")}
-                  >
-                    Editar
-                  </button>
-                </div>
               `}
         </div>
 
@@ -231,7 +228,7 @@ export class PagePost extends ScrollPage {
             </button>
           </form>
           ${this.isLoading
-            ? html`<div class="no-results">Cargando...</div>`
+            ? html`<div class="no-results">${CONSTANTS.LOADING_TEXT}</div>`
             : null}
           ${!this.isLoading && this.commentItems.length === 0
             ? html`<div class="no-results">${CONSTANTS.NO_RESULTS_TEXT}</div>`

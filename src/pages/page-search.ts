@@ -186,10 +186,12 @@ export class PageSearch extends ScrollPage {
 
         <div class="results">
           <div class="card scroll-card">
-            <div class="chip-muted section-title">Chefs</div>
+            <div class="chip-muted section-title">
+              ${CONSTANTS.SEARCH_SECTION_CHEFS}
+            </div>
             <div class="results-list scrollable-list">
               ${this.isLoadingProfiles
-                ? html`<p class="empty">Cargando...</p>`
+                ? html`<p class="empty">${CONSTANTS.LOADING_TEXT}</p>`
                 : null}
               ${showProfilesNoResults
                 ? html`<p class="empty">${CONSTANTS.NO_RESULTS_TEXT}</p>`
@@ -217,10 +219,12 @@ export class PageSearch extends ScrollPage {
           </div>
 
           <div class="card scroll-card">
-            <div class="chip-muted section-title">Recetas</div>
+            <div class="chip-muted section-title">
+              ${CONSTANTS.SEARCH_SECTION_RECIPES}
+            </div>
             <div class="results-list scrollable-list">
               ${this.isLoadingPosts
-                ? html`<p class="empty">Cargando...</p>`
+                ? html`<p class="empty">${CONSTANTS.LOADING_TEXT}</p>`
                 : null}
               ${showRecipesNoResults
                 ? html`<p class="empty">${CONSTANTS.NO_RESULTS_TEXT}</p>`
