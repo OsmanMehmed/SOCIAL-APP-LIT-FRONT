@@ -12,7 +12,6 @@ export async function request<T>(
   options: RequestOptions = {},
 ): Promise<T> {
   const { method = "GET", body, headers = {} } = options;
-  // Auto-attach Authorization header from sessionStorage if available and not provided
   const token = sessionStorage.getItem("auth:token");
   if (token && !Object.prototype.hasOwnProperty.call(headers, "Authorization")) {
     headers["Authorization"] = token;
@@ -28,7 +27,6 @@ export async function request<T>(
   });
 
   if (!response.ok) {
-    // Prettier defaults for common auth errors
     if (response.status === 401) {
       throw new Error("Usuario o contraseña incorrectos. Inténtalo de nuevo.");
     }

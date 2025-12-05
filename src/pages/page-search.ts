@@ -1,4 +1,4 @@
-import { LitElement, html, unsafeCSS } from "lit";
+import { html, unsafeCSS } from "lit";
 import componentsCSS from "../css/components.css?inline";
 import pageSearchCSS from "../css/page-search.css?inline";
 import { customElement, state } from "lit/decorators.js";
@@ -8,6 +8,7 @@ import { ScrollPage } from "../shared/scroll-page";
 import "../components/app-avatar";
 import { friendService } from "../servicios/core/friend-service";
 import { postService } from "../servicios/core/post-service";
+import { profileService } from "../servicios/core/profile-service";
 import type { UserProfile } from "../modelos/user-profile";
 import type { Post } from "../modelos/post";
 
@@ -28,6 +29,7 @@ export class PageSearch extends ScrollPage {
   @state() private profilesError = false;
   @state() private isLoadingPosts = false;
   @state() private postsError = false;
+  @state() private authorUsernames: Map<string, string> = new Map();
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageSearchCSS)];
 
@@ -66,6 +68,7 @@ export class PageSearch extends ScrollPage {
       tags: [],
       time: "",
     }));
+    await this.hydrateAuthorUsernames(this.recipes);
   }
 
   private async loadDefaultResults() {
@@ -75,8 +78,8 @@ export class PageSearch extends ScrollPage {
     this.postsError = false;
 
     const [profilesResult, postsResult] = await Promise.allSettled([
-      friendService.random(5),
-      postService.random(5),
+      friendService.random(6),
+      postService.random(6),
     ]);
 
     if (profilesResult.status === "fulfilled") {
@@ -97,6 +100,7 @@ export class PageSearch extends ScrollPage {
         time: "",
       }));
       this.postsError = false;
+      await this.hydrateAuthorUsernames(this.recipes);
     } else {
       this.recipes = [];
       this.postsError = true;
@@ -109,8 +113,42 @@ export class PageSearch extends ScrollPage {
     this.loadDefaultResults();
   }
 
-  private openProfile(username: string) {
-    const cleanUsername = username.replace(/^@/, "");
+  private async hydrateAuthorUsernames(recipes: SearchRecipe[]) {
+    const missingIds = Array.from(
+      new Set(
+        recipes
+          .map((r) => r.authorId)
+          .filter((id) => id && !this.authorUsernames.has(id)),
+      ),
+    );
+    if (!missingIds.length) return;
+
+    const entries: Array<[string, string]> = [];
+    await Promise.all(
+      missingIds.map(async (id) => {
+        try {
+          const profile = await profileService.fetchProfile(id);
+          const clean =
+            (profile.username || profile.id || "").replace(/^@/, "") ||
+            CONSTANTS.CURRENT_USER_ID;
+          entries.push([id, clean]);
+        } catch {
+        }
+      }),
+    );
+
+    if (entries.length) {
+      this.authorUsernames = new Map([
+        ...Array.from(this.authorUsernames.entries()),
+        ...entries,
+      ]);
+    }
+  }
+
+  private openProfile(profile: UserProfile) {
+    const candidate = profile.username || profile.id || "";
+    const cleanUsername =
+      candidate.replace(/^@/, "") || CONSTANTS.CURRENT_USER_ID;
     navigate(`/profile/${cleanUsername}`);
   }
 
@@ -147,36 +185,40 @@ export class PageSearch extends ScrollPage {
         </div>
 
         <div class="results">
-          <div class="card">
+          <div class="card scroll-card">
             <div class="chip-muted section-title">Chefs</div>
-            <div class="results-list">
+            <div class="results-list scrollable-list">
               ${this.isLoadingProfiles
                 ? html`<p class="empty">Cargando...</p>`
                 : null}
               ${showProfilesNoResults
                 ? html`<p class="empty">${CONSTANTS.NO_RESULTS_TEXT}</p>`
                 : null}
-              ${profiles.map(
-                (profile) => html`
+              ${profiles.map((profile) => {
+                const cleanUsername = (profile.username || profile.id || "")
+                  .replace(/^@/, "");
+                const displayUsername = cleanUsername
+                  ? `@${cleanUsername}`
+                  : `@${CONSTANTS.CURRENT_USER_ID}`;
+                return html`
                   <div
                     class="profile-row"
-                    @click=${() => this.openProfile(profile.id)}
+                    @click=${() => this.openProfile(profile)}
                   >
-                    <app-avatar></app-avatar>
+                    <app-avatar .src=${profile.avatarUrl || ""}></app-avatar>
                     <div class="profile-meta">
-                      <span class="username">${'@' + (profile.username || profile.id)}</span
-                      >
+                      <span class="username">${displayUsername}</span>
                       <span class="name">${profile.subtitle || ""}</span>
                     </div>
                   </div>
-                `,
-              )}
+                `;
+              })}
             </div>
           </div>
 
-          <div class="card">
+          <div class="card scroll-card">
             <div class="chip-muted section-title">Recetas</div>
-            <div class="results-list">
+            <div class="results-list scrollable-list">
               ${this.isLoadingPosts
                 ? html`<p class="empty">Cargando...</p>`
                 : null}
@@ -191,17 +233,23 @@ export class PageSearch extends ScrollPage {
                   >
                     <div class="recipe-title">${recipe.title}</div>
                     <div class="recipe-meta">
-                      <span>@${recipe.authorId}</span
-                      >
+                      ${(() => {
+                        const cleanId = recipe.authorId.replace(/^@/, "");
+                        const username =
+                          this.authorUsernames.get(recipe.authorId) || cleanId;
+                        const display =
+                          username || CONSTANTS.CURRENT_USER_ID;
+                        return html`<span>@${display}</span>`;
+                      })()}
                       <span>${recipe.time}</span>
                     </div>
                     <div class="recipe-tags">
                       ${recipe.tags.map(
-                        (tag) => html` <span class="recipe-tag">${tag}</span> `,
+                        (tag) => html` <span class="recipe-tag">${tag}</span> `
                       )}
                     </div>
                   </div>
-                `,
+                `
               )}
             </div>
           </div>

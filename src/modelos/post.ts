@@ -4,6 +4,7 @@ export interface Post {
   id: string;
   caption: string;
   authorId: string;
+  imageUrl?: string | null;
   likes: number;
   comments: number;
   saves: number;

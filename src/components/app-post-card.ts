@@ -18,6 +18,7 @@ export class AppPostCard extends LitElement {
   @property() noProfile = false;
   @property() noShadow = false;
   @property() image = "";
+  @property() avatarUrl = "";
   @property({ type: Boolean }) showEdit = true;
   @property({ type: Boolean }) banned = false;
   @property({ type: Boolean }) liked = false;
@@ -118,6 +119,11 @@ export class AppPostCard extends LitElement {
                 : CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT
             }
           </div>
+          ${this.username
+            ? html`<div class="username">
+                @${this.username.replace(/^@/, "")}
+              </div>`
+            : null}
           <div class="caption">${this.caption}</div>
           <div class="footer">
             <div class="stats">
@@ -181,6 +187,7 @@ export class AppPostCard extends LitElement {
                     .username=${this.username}
                     .subtitle=${this.subtitle}
                     .profileId=${this.authorId}
+                    .avatarUrl=${this.avatarUrl}
                   ></app-mini-profile>
                   <div class="card description">
                     <div class="chip-muted">

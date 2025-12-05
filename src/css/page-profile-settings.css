@@ -8,8 +8,7 @@
   display: flex;
   flex-direction: column;
   gap: 1em;
-  min-width: 15em;
-  width: 35em;
+  padding-right: 1em;
 }
 
 .edit-profile-input {
@@ -19,4 +18,11 @@
 .component-container {
   justify-self: center;
   min-width: 20em;
+  width: 50%;
+}
+
+.form-error {
+  color: #c5292a;
+  font-size: 0.9rem;
+  margin-top: -0.25rem;
 }

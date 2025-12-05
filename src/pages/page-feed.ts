@@ -1,4 +1,4 @@
-import { LitElement, html, unsafeCSS } from "lit";
+import { html, unsafeCSS } from "lit";
 import componentsCSS from "../css/components.css?inline";
 import pageFeedCSS from "../css/page-feed.css?inline";
 import { customElement, state } from "lit/decorators.js";
@@ -27,7 +27,6 @@ export class PageFeed extends ScrollPage {
       const posts = await postService.list();
       this.posts = posts;
       
-      // Cargar perfiles de autores
       const profilesMap = new Map<string, UserProfile>();
       const uniqueAuthorIds = [...new Set(posts.map(p => p.authorId))];
       
@@ -48,12 +47,10 @@ export class PageFeed extends ScrollPage {
 
   protected firstUpdated() {
     this.loadPosts();
-    // Restaura scroll si estamos volviendo (pop/back)
     this.restoreScrollIfNeeded("/feed");
   }
 
   protected updated(changed: Map<string, unknown>) {
-    // Si los posts terminaron de cargar, restaura scroll nuevamente
     if (changed.has("isLoading") && !this.isLoading && this.posts.length > 0) {
       this.restoreScrollIfNeeded("/feed");
     }
@@ -77,8 +74,10 @@ export class PageFeed extends ScrollPage {
 
         ${this.posts.map((post) => {
           const profile = this.authorProfiles.get(post.authorId);
-          const username = (profile?.username || post.authorId).replace(/^@/, "");
+          const username = (profile?.username || "").replace(/^@/, "");
           const subtitle = profile?.subtitle || "";
+          const avatar = profile?.avatarUrl || "";
+          const image = post.imageUrl || "";
           return html`
             <app-post-card
               .postId=${post.id}
@@ -86,6 +85,8 @@ export class PageFeed extends ScrollPage {
               .username=${username}
               .subtitle=${subtitle}
               .caption=${post.caption}
+              .avatarUrl=${avatar}
+              .image=${image}
               .banned=${Boolean(post.banned)}
               .liked=${Boolean(post.liked)}
               .likes=${post.likes}

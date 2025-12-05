@@ -37,7 +37,6 @@
 }
 
 textarea.input {
-  min-height: 175px;
   resize: vertical;
 }
 
@@ -227,5 +226,10 @@ textarea.input {
   height: 2.5em;
 }
 
-.recipe-body-container {
+.recipe-description{
+  min-height: 2em;
+}
+
+.recipe-body{
+  min-height: 10em;
 }

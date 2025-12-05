@@ -180,8 +180,6 @@ export class AppRoot extends LitElement {
       const keepSet = new Set<string>([previousPath]);
 
       if (this.navType === "pop") {
-        // Para pop (back), marca en sessionStorage que debe restaurar scroll
-        // La página lo hará en su firstUpdated()
         sessionStorage.setItem("restore-scroll-on-next-page", "true");
       } else {
         this.clearScrollStorageExcept([previousPath]);

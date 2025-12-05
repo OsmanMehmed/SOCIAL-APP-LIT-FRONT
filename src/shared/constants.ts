@@ -34,7 +34,7 @@ export const CONSTANTS = {
   FEED_SIDEBAR_TEXT:
     "Busca recetas, sigue a otros chefs y guarda tus platos favoritos.",
 
-  MINI_PROFILE_USERNAME_DEFAULT: "@default",
+  MINI_PROFILE_USERNAME_DEFAULT: "default",
   MINI_PROFILE_SUBTITLE_DEFAULT: "default",
   MINI_PROFILE_ACTION_VIEW: "Ver",
 

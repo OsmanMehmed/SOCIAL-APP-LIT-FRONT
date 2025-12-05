@@ -10,6 +10,7 @@ import { navigate } from "../router";
 @customElement("page-new-post")
 export class PageNewPost extends LitElement {
   @property({ type: String }) title = "";
+  @property({ type: String }) description = "";
   @property({ type: String }) body = "";
   @property({ attribute: false }) images: File[] = [];
 
@@ -60,6 +61,12 @@ export class PageNewPost extends LitElement {
     this.errorMessage = null;
   }
 
+  private onDescriptionInput(e: Event) {
+    const target = e.target as HTMLTextAreaElement;
+    this.description = target.value;
+    this.errorMessage = null;
+  }
+
   private onImagesChange(e: Event) {
     const input = e.target as HTMLInputElement;
     const files = input.files;
@@ -68,7 +75,16 @@ export class PageNewPost extends LitElement {
     const current = [...this.images];
     const incoming = Array.from(files);
 
+    let rejected = false;
     for (const file of incoming) {
+      const isImage =
+        (file.type && file.type.startsWith("image/")) ||
+        /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(file.name);
+      if (!isImage) {
+        rejected = true;
+        continue;
+      }
+
       const exists = current.some(
         (f) =>
           f.name === file.name &&
@@ -79,6 +95,9 @@ export class PageNewPost extends LitElement {
     }
 
     this.images = current;
+    if (rejected) {
+      this.errorMessage = "Solo se permiten archivos de imagen.";
+    }
     input.value = "";
   }
 
@@ -138,10 +157,11 @@ export class PageNewPost extends LitElement {
     e.preventDefault();
 
     const trimmedTitle = this.title.trim();
+    const trimmedDescription = this.description.trim();
     const trimmedBody = this.body.trim();
 
-    if (!trimmedTitle || !trimmedBody) {
-      this.errorMessage = "Debes indicar al menos título y cuerpo.";
+    if (!trimmedTitle || !trimmedDescription || !trimmedBody) {
+      this.errorMessage = "Debes indicar t?tulo, descripci?n y cuerpo.";
       return;
     }
 
@@ -149,7 +169,7 @@ export class PageNewPost extends LitElement {
 
     const created = await postService.create({
       id: "",
-      caption: `${trimmedTitle} - ${trimmedBody}`,
+      caption: `${trimmedTitle} - ${trimmedDescription} - ${trimmedBody}`,
       authorId: authStore.currentUserId || CONSTANTS.CURRENT_USER_ID,
       likes: 0,
       comments: 0,
@@ -216,6 +236,7 @@ export class PageNewPost extends LitElement {
                 class="input recipe-images"
                 type="file"
                 multiple
+                accept="image/*"
                 @change=${this.onImagesChange}
               />
             </div>
@@ -264,11 +285,23 @@ export class PageNewPost extends LitElement {
               : null}
           </div>
 
-          <div class="form-field recipe-body-container">
+          <div class="form-field">
+            <label class="form-label" for="recipe-description">Descripción</label>
+            <textarea
+              id="recipe-description"
+              class="input recipe-description"
+              .value=${this.description}
+              @input=${this.onDescriptionInput}
+              placeholder="Resumen breve de la receta"
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-field">
             <label class="form-label" for="recipe-body">Cuerpo</label>
             <textarea
               id="recipe-body"
-              class="input"
+              class="input recipe-body"
               .value=${this.body}
               @input=${this.onBodyInput}
               placeholder="Describe la receta, pasos, ingredientes..."

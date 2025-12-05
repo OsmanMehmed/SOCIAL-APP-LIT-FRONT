@@ -1,4 +1,4 @@
-import { LitElement, html, unsafeCSS } from "lit";
+import { html, unsafeCSS } from "lit";
 import componentsCSS from "../css/components.css?inline";
 import pagePostCSS from "../css/page-post.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
@@ -30,6 +30,7 @@ export class PagePost extends ScrollPage {
   @state() private likesCount = 0;
   @state() private commentsCount = 0;
   @state() private savesCount = 0;
+  @state() private postImage = "";
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pagePostCSS)];
 
@@ -57,6 +58,7 @@ export class PagePost extends ScrollPage {
     this.likesCount = data.likes ?? 0;
     this.commentsCount = data.comments ?? data.commentsList?.length ?? 0;
     this.savesCount = data.saves ?? 0;
+    this.postImage = data.imageUrl || "";
     const comments = data.commentsList ?? [];
     this.commentItems = comments.map((comment: Comment) => {
       const username = comment.authorId;
@@ -178,6 +180,13 @@ export class PagePost extends ScrollPage {
                   </div>
                 </div>
                 <h2>${title}</h2>
+                <div class="post-image">
+                  ${this.postImage
+                    ? html`<img src=${this.postImage} alt=${title} />`
+                    : html`<div class="image-placeholder">
+                        ${CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT}
+                      </div>`}
+                </div>
                 <p>${CONSTANTS.POST_BODY}</p>
                 <div class="post-stats">
                   <div>

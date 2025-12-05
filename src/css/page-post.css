@@ -20,6 +20,27 @@
   gap: 1rem;
 }
 
+.post-image {
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.post-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-placeholder {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+}
+
 .post-actions {
   display: inline-flex;
   gap: 0.5rem;

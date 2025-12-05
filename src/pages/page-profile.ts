@@ -1,4 +1,4 @@
-import { LitElement, html, unsafeCSS } from "lit";
+import { html, unsafeCSS } from "lit";
 import componentsCSS from "../css/components.css?inline";
 import pageProfileCSS from "../css/page-profile.css?inline";
 import { customElement, property, query, state } from "lit/decorators.js";
@@ -73,7 +73,6 @@ export class PageProfile extends ScrollPage {
     this.profile = profile;
     this.isFriend = profile.friend;
     this.isBanned = profile.banned;
-    // Cargar posts usando el ID real del perfil
     this.loadPosts(profile.id);
     this.refreshFriendState(profile.id);
   }
@@ -86,7 +85,6 @@ export class PageProfile extends ScrollPage {
       .finally(() => {
         this.postsLoading = false;
       });
-    // Una vez cargados los posts, intentamos restaurar el scroll del contenedor
     this.restorePostsScroll();
   }
 
@@ -157,15 +155,12 @@ export class PageProfile extends ScrollPage {
     const paramUsername = this.params?.id ?? "";
     const cleanParamUsername = paramUsername.replace(/^@/, "");
     
-    // Si param tiene @, redirigir a URL limpia
     if (paramUsername !== cleanParamUsername && cleanParamUsername) {
       window.history.replaceState(null, "", `/profile/${cleanParamUsername}`);
     }
     
     const targetId = this.resolveProfileId();
     
-    // Si estamos navegando a nuestro propio perfil pero la URL tiene un username específico,
-    // redirigir a /profile para limpiar la URL
     if (targetId === authStore.currentUserId && cleanParamUsername !== "") {
       navigate("/profile");
       return;
@@ -174,7 +169,6 @@ export class PageProfile extends ScrollPage {
     if (targetId !== this.currentProfileId) {
       this.currentProfileId = targetId;
       this.loadProfile(targetId);
-      // Los posts se cargarán después en loadProfile con el ID real del perfil
     }
   }
 
@@ -198,9 +192,8 @@ export class PageProfile extends ScrollPage {
 
   render() {
     const resolvedId = this.profile?.id ?? this.resolveProfileId();
-    const username =
-      this.profile?.username ??
-      resolvedId;
+    const cleanUsername = (this.profile?.username || "").replace(/^@/, "");
+    const username = cleanUsername ? `@${cleanUsername}` : "";
     const subtitle =
       this.profile?.subtitle ?? CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
     const isMe = this.profile?.id === authStore.currentUserId;
@@ -223,6 +216,7 @@ export class PageProfile extends ScrollPage {
                   <app-avatar
                     .cursorPointer=${false}
                     .bigAvatar=${true}
+                    .src=${this.profile?.avatarUrl || ""}
                   ></app-avatar>
                   <div class="profile-name">
                     <span>${username}</span>
@@ -305,13 +299,15 @@ export class PageProfile extends ScrollPage {
                   ? html`<div class="no-results">
                       ${CONSTANTS.NO_RESULTS_TEXT}
                     </div>`
-                  : html`${this.posts.map((post) => {
-                      const username = post.authorId;
+                    : html`${this.posts.map((post) => {
+                      const username = cleanUsername;
                       return html`<app-post-card
                         .postId=${post.id}
+                        .authorId=${post.authorId}
                         .username=${username}
                         .caption=${post.caption}
                         .noProfile=${true}
+                        .image=${post.imageUrl || ""}
                         .banned=${Boolean(post.banned)}
                         .liked=${Boolean(post.liked)}
                         .likes=${post.likes}

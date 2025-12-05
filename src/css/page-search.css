@@ -9,6 +9,33 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  max-height: 43em;
+}
+
+.scroll-card {
+  max-height: 20rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.scrollable-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.35rem;
+}
+
+.scrollable-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb {
+  background: rgba(228, 121, 112, 0.4);
+  border-radius: 999px;
+}
+
+.scrollable-list::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .section-title {
@@ -26,7 +53,6 @@
 .recipe-row {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
   padding-block: 0.35rem;
   cursor: pointer;
 }
@@ -40,6 +66,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  margin-left: 0.5em;
 }
 
 .username {

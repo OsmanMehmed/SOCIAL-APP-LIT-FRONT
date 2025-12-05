@@ -19,7 +19,6 @@ export class PageDirectMessage extends LitElement {
   @state() private participantUserId: string = "";
   @query(".thread") private threadEl?: HTMLDivElement;
   private currentConversationId = "";
-  // last processed route param to avoid re-loading on internal state updates
   private lastLoadedParam = "";
   @state() private isLoading = false;
   @state() private loadError = false;
@@ -31,39 +30,49 @@ export class PageDirectMessage extends LitElement {
     this.isLoading = true;
     this.loadError = false;
     try {
-      // If the route param is a username (starts with prefix), resolve to profile first
       let profile: UserProfile | undefined;
       if (userId.startsWith(CONSTANTS.USERNAME_PREFIX)) {
         profile = await profileService.fetchProfile(userId);
       }
 
-      // If we resolved a profile, use its id; otherwise assume param is a conversationId
       if (profile) {
-        // store participant info for display
         this.participantProfile = profile;
-        // create or get conversation between current user and the participant (backend expects IDs)
-        const currentUser = authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
-        // createConversation returns a Conversation object with id
-        const conv = await messageService.createConversation(currentUser, profile.id);
+        const currentUser =
+          authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
+        const conv = await messageService.createConversation(
+          currentUser,
+          profile.id
+        );
         this.currentConversationId = conv.id;
         this.thread = await messageService.fetchThread(conv.id);
         this.participantUserId = profile.id;
       } else {
-        // param wasn't a username; treat it as conversation id
         const conversationId = userId;
         this.currentConversationId = conversationId;
         this.thread = await messageService.fetchThread(conversationId);
-        // try to infer participant profile from thread if available
         if (this.thread.length > 0) {
-          const other = this.thread.find(m => m.fromUserId !== (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID))
-            || this.thread.find(m => m.toUserId !== (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID));
+          const other =
+            this.thread.find(
+              (m) =>
+                m.fromUserId !==
+                (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID)
+            ) ||
+            this.thread.find(
+              (m) =>
+                m.toUserId !==
+                (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID)
+            );
           if (other) {
-            const otherId = other.fromUserId === (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID) ? other.toUserId : other.fromUserId;
+            const otherId =
+              other.fromUserId ===
+              (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID)
+                ? other.toUserId
+                : other.fromUserId;
             try {
-              this.participantProfile = await profileService.fetchProfile(otherId);
+              this.participantProfile =
+                await profileService.fetchProfile(otherId);
               this.participantUserId = otherId;
             } catch (err) {
-              // ignore profile fetch error
             }
           }
         }
@@ -77,9 +86,7 @@ export class PageDirectMessage extends LitElement {
     e.preventDefault();
     const text = this.draft.trim();
     if (!text) return;
-    // Ensure we have a conversation id (UUID) to send to backend
     let conversationId = this.currentConversationId;
-    // If we don't have conversation id but know the participant (username param), create/get conversation
     if (!conversationId) {
       const participantParam = this.params?.id ?? "";
       let participantId = this.participantUserId;
@@ -89,13 +96,16 @@ export class PageDirectMessage extends LitElement {
           participantId = p.id;
           this.participantProfile = p;
         } else {
-          // if param looks like a conversation id, we can't create conversation from it
           participantId = participantParam;
         }
       }
       if (participantId) {
-        const currentUser = authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
-        const conv = await messageService.createConversation(currentUser, participantId);
+        const currentUser =
+          authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
+        const conv = await messageService.createConversation(
+          currentUser,
+          participantId
+        );
         conversationId = conv.id;
         this.currentConversationId = conv.id;
       }
@@ -103,9 +113,12 @@ export class PageDirectMessage extends LitElement {
 
     const { profileId } = this.getParticipantInfo();
     const message = await messageService.sendMessage(
-      conversationId ?? (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID),
+      conversationId ?? authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
       authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
-      profileId || (this.participantUserId ?? this.params?.id ?? CONSTANTS.CURRENT_USER_ID),
+      profileId ||
+        (this.participantUserId ??
+          this.params?.id ??
+          CONSTANTS.CURRENT_USER_ID),
       text
     );
     this.thread = [...this.thread, message];
@@ -126,12 +139,11 @@ export class PageDirectMessage extends LitElement {
   protected willUpdate(_changed: Map<string, unknown>) {
     const paramId = this.params?.id ?? CONSTANTS.CURRENT_USER_ID;
     const cleanParamId = paramId.replace(/^@/, "");
-    
-    // If param has @, redirect to clean URL
+
     if (paramId !== cleanParamId) {
       window.history.replaceState(null, "", `/dm/${cleanParamId}`);
     }
-    
+
     if (cleanParamId !== this.lastLoadedParam) {
       this.lastLoadedParam = cleanParamId;
       this.loadThread(cleanParamId);
@@ -152,21 +164,26 @@ export class PageDirectMessage extends LitElement {
         username: this.participantProfile.username.replace(/^@/, ""),
         subtitle: this.participantProfile.subtitle,
         profileId: this.participantProfile.id,
+        avatarUrl: this.participantProfile.avatarUrl || "",
       };
     }
     const conversationId = this.params?.id ?? "";
-    const profileId = conversationId ? conversationId.replace(/^@/,"") : CONSTANTS.CURRENT_USER_ID;
+    const profileId = conversationId
+      ? conversationId.replace(/^@/, "")
+      : CONSTANTS.CURRENT_USER_ID;
     const username = profileId;
 
     return {
       username,
       subtitle: "",
       profileId,
+      avatarUrl: "",
     };
   }
 
   render() {
-    const { username, subtitle, profileId } = this.getParticipantInfo();
+    const { username, subtitle, profileId, avatarUrl } =
+      this.getParticipantInfo();
 
     return html`
       <section class="component-container">
@@ -174,13 +191,13 @@ export class PageDirectMessage extends LitElement {
           .username=${username}
           .subtitle=${subtitle}
           .profileId=${profileId}
+          .avatarUrl=${avatarUrl}
         ></app-mini-profile>
         <div class="thread">
           ${this.isLoading
             ? html`<div class="no-results">Cargando...</div>`
             : null}
-          ${!this.isLoading &&
-          (this.loadError || this.thread.length === 0)
+          ${!this.isLoading && (this.loadError || this.thread.length === 0)
             ? html`<div class="no-results">${CONSTANTS.NO_RESULTS_TEXT}</div>`
             : null}
           ${!this.isLoading && this.thread.length > 0
