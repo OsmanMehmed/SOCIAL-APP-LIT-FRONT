@@ -117,7 +117,6 @@ export class PagePost extends ScrollPage {
     const authorId = authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID;
 
     const created = await postService.addComment({
-      id: "",
       postId,
       authorId,
       text,

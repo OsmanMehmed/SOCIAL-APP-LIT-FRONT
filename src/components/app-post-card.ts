@@ -119,11 +119,6 @@ export class AppPostCard extends LitElement {
                 : CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT
             }
           </div>
-          ${this.username
-            ? html`<div class="username">
-                @${this.username.replace(/^@/, "")}
-              </div>`
-            : null}
           <div class="caption">${this.caption}</div>
           <div class="footer">
             <div class="stats">

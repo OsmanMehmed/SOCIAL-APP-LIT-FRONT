@@ -186,8 +186,10 @@ export class PageSearch extends ScrollPage {
 
         <div class="results">
           <div class="card scroll-card">
-            <div class="chip-muted section-title">
-              ${CONSTANTS.SEARCH_SECTION_CHEFS}
+            <div class="section-title">
+              <span class="chip-muted">
+                ${CONSTANTS.SEARCH_SECTION_CHEFS}
+              </span>
             </div>
             <div class="results-list scrollable-list">
               ${this.isLoadingProfiles
@@ -219,8 +221,10 @@ export class PageSearch extends ScrollPage {
           </div>
 
           <div class="card scroll-card">
-            <div class="chip-muted section-title">
-              ${CONSTANTS.SEARCH_SECTION_RECIPES}
+            <div class="section-title">
+              <span class="chip-muted">
+                ${CONSTANTS.SEARCH_SECTION_RECIPES}
+              </span>
             </div>
             <div class="results-list scrollable-list">
               ${this.isLoadingPosts

@@ -10,6 +10,7 @@ import { postService } from "../servicios/core/post-service";
 import { profileService } from "../servicios/core/profile-service";
 import type { Post } from "../modelos/post";
 import type { UserProfile } from "../modelos/user-profile";
+import { authStore } from "../state/auth-store";
 
 @customElement("page-feed")
 export class PageFeed extends ScrollPage {
@@ -78,6 +79,10 @@ export class PageFeed extends ScrollPage {
           const subtitle = profile?.subtitle || "";
           const avatar = profile?.avatarUrl || "";
           const image = post.imageUrl || "";
+          const isOwner =
+            post.authorId ===
+            (authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID);
+          const isAdmin = Boolean(authStore.currentUserIsAdmin);
           return html`
             <app-post-card
               .postId=${post.id}
@@ -87,6 +92,7 @@ export class PageFeed extends ScrollPage {
               .caption=${post.caption}
               .avatarUrl=${avatar}
               .image=${image}
+              .showEdit=${isOwner || isAdmin}
               .banned=${Boolean(post.banned)}
               .liked=${Boolean(post.liked)}
               .likes=${post.likes}

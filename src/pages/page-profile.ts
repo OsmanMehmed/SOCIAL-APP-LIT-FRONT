@@ -204,7 +204,6 @@ export class PageProfile extends ScrollPage {
       this.profile?.subtitle ?? CONSTANTS.MINI_PROFILE_SUBTITLE_DEFAULT;
     const isMe = this.profile?.id === authStore.currentUserId;
     const isAdmin = Boolean(authStore.currentUserIsAdmin);
-    const canVet = true; // TODO: hook to admin roles when available
     const showNoProfile = !this.isLoading && (this.loadError || !this.profile);
 
     return html`
@@ -230,9 +229,9 @@ export class PageProfile extends ScrollPage {
                   <div class="profile-subtitle">${subtitle}</div>
                 </div>
                 <div class="buttons-2">
-                  ${!isMe
+                  ${isAdmin
                     ? html`
-                        ${!isAdmin && this.isFriend
+                        ${this.isFriend
                           ? html`
                               <button
                                 class="btn-no-fill btn-pill btn-sm friend-btn"
@@ -247,41 +246,30 @@ export class PageProfile extends ScrollPage {
                                 </span>
                               </button>
                             `
-                          : null}
-                        ${!this.isFriend
-                          ? html`
+                          : html`
                               <button
                                 class="btn btn-pill btn-sm connect-btn"
                                 @click=${this.connect}
                               >
                                 ${CONSTANTS.PROFILE_CONNECT_BUTTON}
                               </button>
-                            `
-                          : null}
-                        ${canVet
-                          ? html`
-                              <button
-                                class=${`btn btn-pill btn-sm connect-btn ${
-                                  this.isBanned
-                                    ? "btn-no-fill btn-pill btn-sm vet-btn"
-                                    : ""
-                                }`}
-                                @click=${this.vetUser}
-                              >
-                                ${this.isBanned ? "Vetado" : "Vetar"}
-                              </button>
-                            `
-                          : null}
+                            `}
+                        <button
+                          class=${`btn btn-pill btn-sm connect-btn ${
+                            this.isBanned
+                              ? "btn-no-fill btn-pill btn-sm vet-btn"
+                              : ""
+                          }`}
+                          @click=${this.vetUser}
+                        >
+                          ${this.isBanned ? "Vetado" : "Vetar"}
+                        </button>
                         <button
                           class="btn-no-fill btn-pill btn-sm"
                           @click=${this.openDm}
                         >
                           Mensaje
                         </button>
-                      `
-                    : null}
-                  ${isMe || isAdmin
-                    ? html`
                         <button
                           class="btn btn-pill btn-sm edit-profile-btn"
                           @click=${this.editProfile}
@@ -289,7 +277,33 @@ export class PageProfile extends ScrollPage {
                           ${CONSTANTS.PROFILE_EDIT_BUTTON}
                         </button>
                       `
-                    : null}
+                    : isMe
+                        ? html`
+                            <button
+                              class="btn btn-pill btn-sm edit-profile-btn"
+                              @click=${this.editProfile}
+                            >
+                              ${CONSTANTS.PROFILE_EDIT_BUTTON}
+                            </button>
+                          `
+                        : html`
+                            ${!this.isFriend
+                              ? html`
+                                  <button
+                                    class="btn btn-pill btn-sm connect-btn"
+                                    @click=${this.connect}
+                                  >
+                                    ${CONSTANTS.PROFILE_CONNECT_BUTTON}
+                                  </button>
+                                `
+                              : null}
+                            <button
+                              class="btn-no-fill btn-pill btn-sm"
+                              @click=${this.openDm}
+                            >
+                              Mensaje
+                            </button>
+                          `}
                 </div>
               `}
         </div>
