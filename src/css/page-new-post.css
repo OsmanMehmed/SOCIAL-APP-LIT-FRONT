@@ -73,7 +73,7 @@ textarea.input {
 }
 
 .images-list-container::-webkit-scrollbar {
-  width: 4px;
+  width: 8px;
 }
 
 .images-list-container::-webkit-scrollbar-thumb {

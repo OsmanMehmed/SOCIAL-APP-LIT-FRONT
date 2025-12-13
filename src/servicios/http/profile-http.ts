@@ -18,4 +18,13 @@ export const profileHttp = {
       method: "POST",
       headers: { "X-User-Id": authStore.currentUserId },
     }),
+  uploadAvatar: (id: string, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return request<UserProfile>(`/profiles/${id}/avatar`, {
+      method: "POST",
+      body: formData,
+      headers: { "X-User-Id": authStore.currentUserId },
+    });
+  },
 };

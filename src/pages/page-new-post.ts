@@ -9,6 +9,8 @@ import { navigate } from "../router";
 
 @customElement("page-new-post")
 export class PageNewPost extends LitElement {
+  @property({ attribute: false }) params?: { id?: string };
+  @property({ type: Boolean }) isEdit = false;
   @property({ type: String }) title = "";
   @property({ type: String }) description = "";
   @property({ type: String }) body = "";
@@ -18,6 +20,10 @@ export class PageNewPost extends LitElement {
   @state() private draggingIndex: number | null = null;
   @state() private tags: string[] = [];
   @state() private newTag = "";
+  @state() private isLoading = false;
+  @state() private existingImages: string[] = [];
+  @state() private loadedPostId = "";
+  @state() private existingStats = { likes: 0, comments: 0, saves: 0, banned: false };
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageNewPostCSS)];
 
@@ -153,8 +159,58 @@ export class PageNewPost extends LitElement {
     this.draggingIndex = null;
   }
 
+  protected firstUpdated() {
+    if (this.isEdit && this.params?.id) {
+      this.loadExisting(this.params.id);
+    }
+  }
+
+  protected willUpdate(changed: Map<string, unknown>) {
+    if (this.isEdit && (changed.has("params") || changed.has("isEdit"))) {
+      const id = this.params?.id ?? "";
+      if (id && id !== this.loadedPostId) {
+        this.loadExisting(id);
+      }
+    }
+  }
+
+  private async loadExisting(id: string) {
+    this.isLoading = true;
+    this.errorMessage = null;
+    try {
+      const data = await postService.fetchPostDetails(id);
+      this.title = data.title ?? "";
+      this.description = data.description ?? "";
+      this.body = data.caption ?? "";
+      this.loadedPostId = data.id ?? id;
+      this.existingImages =
+        data.imageUrls && data.imageUrls.length
+          ? data.imageUrls
+          : data.imageUrl
+            ? [data.imageUrl]
+            : [];
+      this.existingStats = {
+        likes: data.likes ?? 0,
+        comments: data.comments ?? data.commentsList?.length ?? 0,
+        saves: data.saves ?? 0,
+        banned: Boolean(data.banned),
+      };
+      this.images = [];
+      this.tags = [];
+      this.newTag = "";
+    } catch (_err) {
+      this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
   private async handleSubmit(e: Event) {
     e.preventDefault();
+    if (this.isEdit && !this.params?.id) {
+      this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
+      return;
+    }
 
     const trimmedTitle = this.title.trim();
     const trimmedDescription = this.description.trim();
@@ -166,6 +222,39 @@ export class PageNewPost extends LitElement {
     }
 
     this.errorMessage = null;
+
+    if (this.isEdit && this.params?.id) {
+      const postId = this.params.id;
+      let updated;
+      if (this.images.length > 0) {
+        const formData = new FormData();
+        formData.append("title", trimmedTitle);
+        formData.append("description", trimmedDescription);
+        formData.append("caption", trimmedBody);
+        this.images.forEach((file) => formData.append("images", file));
+        updated = await postService.updateWithImages(postId, formData);
+      } else {
+        updated = await postService.update({
+          id: postId,
+          title: trimmedTitle,
+          description: trimmedDescription,
+          caption: trimmedBody,
+          authorId: authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
+          imageUrl: this.existingImages[0] ?? "",
+          likes: this.existingStats.likes,
+          comments: this.existingStats.comments,
+          saves: this.existingStats.saves,
+          banned: this.existingStats.banned,
+          liked: false,
+        });
+      }
+      if (updated.id) {
+        navigate(`/post/${updated.id}`);
+      } else {
+        this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
+      }
+      return;
+    }
 
     const formData = new FormData();
     formData.append("title", trimmedTitle);
@@ -189,10 +278,23 @@ export class PageNewPost extends LitElement {
   }
 
   render() {
+    const header = this.isEdit ? CONSTANTS.EDIT_POST_HEADER : CONSTANTS.NEW_POST_HEADER;
+    const submitLabel = this.isEdit
+      ? CONSTANTS.EDIT_POST_SAVE_BUTTON
+      : CONSTANTS.NEW_POST_SAVE_BUTTON;
+    if (this.isEdit && this.isLoading) {
+      return html`
+        <div class="card new-post-card">
+          <div class="new-post-title">
+            <span>${CONSTANTS.LOADING_TEXT}</span>
+          </div>
+        </div>
+      `;
+    }
     return html`
       <div class="card new-post-card">
         <div class="new-post-title">
-          <span>${CONSTANTS.NEW_POST_HEADER}</span>
+          <span>${header}</span>
         </div>
 
         <form class="form" @submit=${this.handleSubmit}>
@@ -244,6 +346,31 @@ export class PageNewPost extends LitElement {
               />
             </div>
 
+            ${this.isEdit && this.existingImages.length
+              ? html`
+                  <div class="images-list-container">
+                    <ul class="images-list">
+                      ${this.existingImages.map(
+                        (url, index) => html`
+                          <li class="image-item">
+                            <div class="file-info">
+                              <span class="file-name">
+                                ${CONSTANTS.EDIT_POST_CURRENT_IMAGE} ${index + 1}
+                              </span>
+                              <span class="file-size">${url}</span>
+                            </div>
+                            <img
+                              src=${url}
+                              alt=${this.title}
+                              style="width:56px;height:56px;object-fit:cover;border-radius:8px;"
+                            />
+                          </li>
+                        `,
+                      )}
+                    </ul>
+                  </div>
+                `
+              : null}
             ${this.images.length
               ? html`
                   <div class="images-list-container">
@@ -354,7 +481,7 @@ export class PageNewPost extends LitElement {
 
           <div class="form-actions">
             <button class="btn save-button" type="submit">
-              Guardar receta
+              ${submitLabel}
             </button>
           </div>
         </form>

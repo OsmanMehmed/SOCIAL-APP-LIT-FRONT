@@ -210,7 +210,7 @@ export class PagePost extends ScrollPage {
 
                           <button
                             class="btn btn-pill btn-sm edit-btn"
-                            @click=${() => navigate("/new-post")}
+                            @click=${() => navigate(`/edit-post/${id}`)}
                           >
                             ${CONSTANTS.POST_EDIT_BUTTON}
                           </button>

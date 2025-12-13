@@ -28,6 +28,22 @@ export const postService = {
     return { ...post, banned: post.banned ?? false, commentsList: comments };
   },
 
+  async fetchPostDetails(id: string): Promise<PostWithComments> {
+    const post = await postHttp.getPostDetails(id, userHeaders());
+    const imageUrls =
+      post.imageUrls && post.imageUrls.length
+        ? post.imageUrls
+        : post.imageUrl
+          ? [post.imageUrl]
+          : [];
+    return {
+      ...post,
+      banned: post.banned ?? false,
+      commentsList: post.commentsList ?? [],
+      imageUrls,
+    };
+  },
+
   async create(post: Post): Promise<PostWithComments> {
     const created = await postHttp.createPost(post);
     return { ...created, banned: created.banned ?? false, commentsList: [] };
@@ -44,7 +60,22 @@ export const postService = {
 
   async update(post: Post): Promise<PostWithComments> {
     const updated = await postHttp.updatePost(post);
-    return { ...updated, banned: updated.banned ?? false, commentsList: [] };
+    return {
+      ...updated,
+      banned: updated.banned ?? false,
+      commentsList: updated.commentsList ?? [],
+      imageUrls: updated.imageUrls ?? [],
+    };
+  },
+
+  async updateWithImages(postId: string, formData: FormData): Promise<PostWithComments> {
+    const updated = await postHttp.updatePostImages(postId, formData, userHeaders());
+    return {
+      ...updated,
+      banned: updated.banned ?? false,
+      commentsList: updated.commentsList ?? [],
+      imageUrls: updated.imageUrls ?? [],
+    };
   },
 
   async delete(id: string): Promise<void> {

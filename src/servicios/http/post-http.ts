@@ -1,4 +1,4 @@
-import type { Post } from "../../modelos/post";
+import type { Post, PostWithComments } from "../../modelos/post";
 import type { Comment } from "../../modelos/comment";
 import { request } from "./http-client";
 
@@ -7,13 +7,21 @@ export const postHttp = {
     request<Post[]>(`/posts`, { headers }),
   getPost: (id: string, headers?: Record<string, string>) =>
     request<Post>(`/posts/${id}`, { headers }),
+  getPostDetails: (id: string, headers?: Record<string, string>) =>
+    request<PostWithComments>(`/posts/${id}/details`, { headers }),
   getComments: (id: string) => request<Comment[]>(`/posts/${id}/comments`),
   createPost: (post: Post) =>
     request<Post>(`/posts`, { method: "POST", body: post }),
   uploadPost: (formData: FormData, headers?: Record<string, string>) =>
     request<Post>(`/posts/upload`, { method: "POST", body: formData, headers }),
   updatePost: (post: Post) =>
-    request<Post>(`/posts/${post.id}`, { method: "PUT", body: post }),
+    request<PostWithComments>(`/posts/${post.id}`, { method: "PUT", body: post }),
+  updatePostImages: (postId: string, formData: FormData, headers?: Record<string, string>) =>
+    request<PostWithComments>(`/posts/${postId}/upload`, {
+      method: "PUT",
+      body: formData,
+      headers,
+    }),
   deletePost: (id: string) =>
     request<void>(`/posts/${id}`, { method: "DELETE" }),
   listByAuthor: (authorId: string, headers?: Record<string, string>) =>

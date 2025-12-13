@@ -1,4 +1,5 @@
 import { LitElement, html, unsafeCSS } from "lit";
+import "../components/app-mini-profile";
 import componentsCSS from "../css/components.css?inline";
 import pageProfileSettingsCSS from "../css/page-profile-settings.css?inline";
 import { customElement, state, property } from "lit/decorators.js";
@@ -53,9 +54,7 @@ export class PageProfileSettings extends LitElement {
     }
 
     const username =
-      this.name.trim() ||
-      this.profile?.username?.replace(/^@/, "") ||
-      "";
+      this.name.trim() || this.profile?.username?.replace(/^@/, "") || "";
     const subtitle = this.specialty.trim() || this.profile?.subtitle || "";
     const profileUrl = this.url.trim() || this.profile?.url || "";
     const profileId =
@@ -102,11 +101,68 @@ export class PageProfileSettings extends LitElement {
     });
   }
 
+  private handleFileChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const profileId =
+        this.profile?.id ||
+        authStore.currentUserId ||
+        CONSTANTS.CURRENT_USER_ID;
+      if (!profileId) return;
+
+      this.isSaving = true;
+      this.error = "";
+      profileService
+        .uploadAvatar(profileId, file)
+        .then((updated) => {
+          this.profile = updated;
+        })
+        .catch((err) => {
+          this.error = "Error al subir la imagen";
+        })
+        .finally(() => {
+          this.isSaving = false;
+        });
+    }
+  }
+
+  private triggerFileUpload() {
+    const input = this.shadowRoot?.getElementById(
+      "file-upload"
+    ) as HTMLInputElement;
+    input?.click();
+  }
+
   render() {
     return html`
       <div class="component-container">
         <form class="edit-profile-card card" @submit=${this.save}>
           <div class="chip-muted">${CONSTANTS.PROFILE_SETTINGS_TITLE}</div>
+
+          <div
+            style="margin: 1rem 0; cursor: pointer; display: flex; justify-content: center;"
+            @click=${this.triggerFileUpload}
+          >
+            <app-mini-profile
+              .username=${this.name || this.profile?.username || ""}
+              .subtitle=${this.specialty ||
+              this.profile?.subtitle ||
+              "Click para cambiar foto"}
+              .avatarUrl=${this.profile?.avatarUrl || ""}
+              .supressProfileRoute=${true}
+              .onlyAvatar=${true}
+              .large=${true}
+            ></app-mini-profile>
+          </div>
+          <input
+            type="file"
+            id="file-upload"
+            accept="image/*"
+            style="display: none"
+            @change=${this.handleFileChange}
+          />
+
           <input
             class="input edit-profile-input"
             placeholder=${CONSTANTS.PROFILE_SETTINGS_NAME}

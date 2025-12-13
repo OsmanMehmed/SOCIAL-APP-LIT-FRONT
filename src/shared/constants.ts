@@ -12,6 +12,7 @@ export const CONSTANTS = {
   TITLE_FEED: "Feed",
   TITLE_POST: "Receta",
   TITLE_NEW_POST: "Nueva receta",
+  TITLE_EDIT_POST: "Editar receta",
   TITLE_SEARCH: "Búsqueda",
   TITLE_CONVERSATIONS: "Chefs / Mensajes",
   TITLE_DM: "Mensaje directo",
@@ -86,6 +87,7 @@ export const CONSTANTS = {
   NO_RESULTS_TEXT: "No hay resultados.",
 
   NEW_POST_HEADER: "Crear nueva receta",
+  EDIT_POST_HEADER: "Editar receta",
   NEW_POST_TITLE_LABEL: "Título",
   NEW_POST_TITLE_PLACEHOLDER: "Título de la receta",
   NEW_POST_IMAGES_LABEL: "Imágenes",
@@ -106,4 +108,6 @@ export const CONSTANTS = {
   NEW_POST_TAG_REMOVE: "x",
   NEW_POST_SAVE_BUTTON: "Guardar receta",
   NEW_POST_REQUIRED_ERROR: "Debes indicar título, descripción y cuerpo.",
+  EDIT_POST_SAVE_BUTTON: "Actualizar receta",
+  EDIT_POST_CURRENT_IMAGE: "Imagen",
 };

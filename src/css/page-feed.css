@@ -12,7 +12,7 @@
   .flow-column {
     display: flex;
     flex-direction: column;
-    gap: 6.5em;
+    gap: 3.5em;
   }
 }
 

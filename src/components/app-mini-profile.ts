@@ -17,6 +17,8 @@ export class AppMiniProfile extends LitElement {
   @property({ type: Boolean }) supressProfileRoute = false;
   @property({ type: Boolean }) noSubtitle = false;
   @property({ type: Boolean }) hideAvatar = false;
+  @property({ type: Boolean }) onlyAvatar = false;
+  @property({ type: Boolean }) large = false;
 
   static styles = [unsafeCSS(layoutCSS), unsafeCSS(miniProfileCSS)];
 
@@ -40,18 +42,23 @@ export class AppMiniProfile extends LitElement {
           ? null
           : html`<app-avatar
               .src=${this.avatarUrl}
+              ?bigAvatar=${this.large}
               @click=${this.goProfile}
             ></app-avatar>`}
-        <div class="meta">
-          <span class="username" @click=${this.goProfile}
-            >@${this.username}</span
-          >
-          ${!this.noSubtitle
-            ? html`<span class="chip-muted name" @click=${this.goProfile}
-                >${this.subtitle}</span
-              >`
-            : null}
-        </div>
+        ${this.onlyAvatar
+          ? null
+          : html`
+              <div class="meta">
+                <span class="username" @click=${this.goProfile}
+                  >@${this.username}</span
+                >
+                ${!this.noSubtitle
+                  ? html`<span class="chip-muted name" @click=${this.goProfile}
+                      >${this.subtitle}</span
+                    >`
+                  : null}
+              </div>
+            `}
       </div>
     `;
   }

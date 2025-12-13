@@ -29,13 +29,10 @@ app-bottom-nav {
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
-
-  scrollbar-width: thin;
-  scrollbar-color: rgba(183, 32, 46, 0.45) transparent;
 }
 
 .app-main::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 .app-main::-webkit-scrollbar-track {
@@ -45,7 +42,6 @@ app-bottom-nav {
 .app-main::-webkit-scrollbar-thumb {
   background: rgba(183, 32, 46, 0.45);
   border-radius: var(--radius-full);
-  border: 2.5px solid rgba(250, 244, 239, 0.9);
 }
 
 .app-main::-webkit-scrollbar-thumb:hover {

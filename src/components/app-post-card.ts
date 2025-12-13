@@ -49,7 +49,8 @@ export class AppPostCard extends LitElement {
 
   private editPost(event: Event) {
     event.stopPropagation();
-    navigate("/new-post");
+    if (!this.postId) return;
+    navigate(`/edit-post/${this.postId}`);
   }
 
   private async toggleLike(event: Event) {
