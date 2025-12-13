@@ -6,6 +6,7 @@ import { CONSTANTS } from "../shared/constants";
 import { ScrollPage } from "../shared/scroll-page";
 import { postStore } from "../state/post-store";
 import "../components/app-mini-profile";
+import "../components/app-fallback";
 import { postService } from "../servicios/core/post-service";
 import type { Comment } from "../modelos/comment";
 import { authStore } from "../state/auth-store";
@@ -34,6 +35,7 @@ export class PagePost extends ScrollPage {
   @state() private postImage = "";
   @state() private postDescription = "";
   @state() private postAuthorId = "";
+  @state() private tags: string[] = [];
   @state() private authorNames: Record<string, string> = {};
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pagePostCSS)];
@@ -63,6 +65,7 @@ export class PagePost extends ScrollPage {
     this.postImage = data.imageUrl || data.imageUrls?.[0] || "";
     this.postDescription = data.description || "";
     this.postAuthorId = data.authorId;
+    this.tags = data.tags || [];
     const comments = data.commentsList ?? [];
     await this.loadAuthorUsernames(comments.map((c: Comment) => c.authorId));
     this.commentItems = comments.map((comment: Comment) => {
@@ -147,7 +150,7 @@ export class PagePost extends ScrollPage {
       missing.map(async (id) => {
         const profile = await profileService.fetchProfile(id);
         return { id, username: profile.username.replace(/^@/, "") };
-      }),
+      })
     );
     const next = { ...this.authorNames };
     fetched.forEach(({ id, username }) => {
@@ -169,103 +172,125 @@ export class PagePost extends ScrollPage {
       <div class="component-container">
         <div class="card">
           ${this.isLoading
-            ? html`<div class="no-results">${CONSTANTS.LOADING_TEXT}</div>`
+            ? html`<app-fallback
+                type="loading"
+                message=${CONSTANTS.LOADING_TEXT}
+              ></app-fallback>`
             : null}
-          ${this.loadError
-            ? html`<div class="no-results">${CONSTANTS.NO_RESULTS_TEXT}</div>`
-            : html`
-                <div class="post-header">
-                  <div class="chip-muted">
-                    ${CONSTANTS.POST_CHIP_LABEL_PREFIX}
-                  </div>
-                  <div class="post-actions">
-                    <button
-                      class=${`btn-pill btn-sm like-btn ${
-                        this.liked ? "btn-no-fill like-btn--active" : "btn"
-                      }`}
-                      @click=${this.toggleLike}
-                    >
-                      <sl-icon name="hand-thumbs-up"></sl-icon>
-                      <span
-                        >${this.liked
-                          ? CONSTANTS.POST_LIKE_ACTIVE
-                          : CONSTANTS.POST_LIKE_BUTTON}</span
+          ${this.loadError && !this.isLoading
+            ? html`<app-fallback
+                type="empty"
+                message=${CONSTANTS.NO_RESULTS_TEXT}
+              ></app-fallback>`
+            : !this.isLoading
+              ? html`
+                  <div class="post-header">
+                    <div class="post-actions">
+                      <button
+                        class=${`btn-pill btn-sm like-btn ${
+                          this.liked ? "btn-no-fill like-btn--active" : "btn"
+                        }`}
+                        @click=${this.toggleLike}
                       >
-                    </button>
-                    ${canEdit
-                      ? html`
-                          <button
-                            class=${`btn btn-pill btn-sm vet-btn ${
-                              this.isBanned
-                                ? "btn-no-fill vet-btn vet-btn-vetted"
-                                : ""
-                            }`}
-                            ?disabled=${this.isBanning}
-                            @click=${this.vetUser}
-                          >
-                            ${this.isBanned
-                              ? CONSTANTS.POST_BANNED_LABEL
-                              : CONSTANTS.POST_BAN_BUTTON}
-                          </button>
+                        <sl-icon name="hand-thumbs-up"></sl-icon>
+                        <span
+                          >${this.liked
+                            ? CONSTANTS.POST_LIKE_ACTIVE
+                            : CONSTANTS.POST_LIKE_BUTTON}</span
+                        >
+                      </button>
+                      ${canEdit
+                        ? html`
+                            <button
+                              class=${`btn btn-pill btn-sm vet-btn ${
+                                this.isBanned
+                                  ? "btn-no-fill vet-btn vet-btn-vetted"
+                                  : ""
+                              }`}
+                              ?disabled=${this.isBanning}
+                              @click=${this.vetUser}
+                            >
+                              ${this.isBanned
+                                ? CONSTANTS.POST_BANNED_LABEL
+                                : CONSTANTS.POST_BAN_BUTTON}
+                            </button>
 
-                          <button
-                            class="btn btn-pill btn-sm edit-btn"
-                            @click=${() => navigate(`/edit-post/${id}`)}
-                          >
-                            ${CONSTANTS.POST_EDIT_BUTTON}
-                          </button>
-                        `
-                      : null}
+                            <button
+                              class="btn btn-pill btn-sm edit-btn"
+                              @click=${() => navigate(`/edit-post/${id}`)}
+                            >
+                              ${CONSTANTS.POST_EDIT_BUTTON}
+                            </button>
+                          `
+                        : null}
+                    </div>
                   </div>
-                </div>
-                <h2>${title}</h2>
-                <div class="post-image">
-                  ${this.postImage
-                    ? html`<img src=${this.postImage} alt=${title} />`
-                    : html`<div class="image-placeholder">
-                        ${CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT}
-                      </div>`}
-                </div>
-                <p>${this.postDescription || CONSTANTS.POST_BODY}</p>
-                <div class="post-stats">
-                  <div>
-                    <sl-icon name="hand-thumbs-up"></sl-icon>
-                    <span>${this.likesCount}</span>
+                  <h2>${title}</h2>
+                  <div class="post-image">
+                    ${this.postImage
+                      ? html`<img src=${this.postImage} alt=${title} />`
+                      : html`<div class="image-placeholder">
+                          ${CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT}
+                        </div>`}
                   </div>
-                  <div>
-                    <sl-icon name="chat-dots"></sl-icon>
-                    <span>${this.commentsCount}</span>
+                  <p>${this.postDescription || CONSTANTS.POST_BODY}</p>
+                  ${this.tags.length > 0
+                    ? html`
+                        <div class="post-tags">
+                          ${this.tags.map(
+                            (tag) =>
+                              html`<span class="chip-muted">#${tag}</span>`
+                          )}
+                        </div>
+                      `
+                    : null}
+                  <div class="post-stats">
+                    <div>
+                      <sl-icon name="hand-thumbs-up"></sl-icon>
+                      <span>${this.likesCount}</span>
+                    </div>
+                    <div>
+                      <sl-icon name="chat-dots"></sl-icon>
+                      <span>${this.commentsCount}</span>
+                    </div>
+                    <div>
+                      <sl-icon name="bookmark"></sl-icon>
+                      <span>${this.savesCount}</span>
+                    </div>
                   </div>
-                  <div>
-                    <sl-icon name="bookmark"></sl-icon>
-                    <span>${this.savesCount}</span>
-                  </div>
-                </div>
-              `}
+                `
+              : null}
         </div>
 
         <section class="card comments-section">
-          <div>
-            <div class="chip-muted chip-comments">
-              ${CONSTANTS.POST_COMMENTS_TITLE}
-            </div>
-          </div>
-          <form class="comment-input" @submit=${this.onSubmitComment}>
-            <input
-              class="input"
-              placeholder=${CONSTANTS.POST_COMMENT_PLACEHOLDER}
-              .value=${this.newComment}
-              @input=${this.onCommentInput}
-            />
-            <button class="btn btn-sm btn-send-comment" type="submit">
-              ${CONSTANTS.POST_COMMENT_SEND}
-            </button>
-          </form>
+          ${!this.isLoading
+            ? html`
+                <div>
+                  <div class="chip-muted chip-comments">
+                    ${CONSTANTS.POST_COMMENTS_TITLE}
+                  </div>
+                </div>
+                <form class="comment-input" @submit=${this.onSubmitComment}>
+                  <input
+                    class="input"
+                    placeholder=${CONSTANTS.POST_COMMENT_PLACEHOLDER}
+                    .value=${this.newComment}
+                    @input=${this.onCommentInput}
+                  />
+                </form>
+              `
+            : null}
           ${this.isLoading
-            ? html`<div class="no-results">${CONSTANTS.LOADING_TEXT}</div>`
+            ? html`<app-fallback
+                type="loading"
+                message=${CONSTANTS.LOADING_TEXT}
+              ></app-fallback>`
             : null}
           ${!this.isLoading && this.commentItems.length === 0
-            ? html`<div class="no-results">${CONSTANTS.NO_RESULTS_TEXT}</div>`
+            ? html`<app-fallback
+                type="empty"
+                message="No hay comentarios aún"
+              ></app-fallback>`
             : null}
           ${!this.isLoading && this.commentItems.length > 0
             ? html`

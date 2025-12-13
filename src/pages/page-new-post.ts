@@ -116,6 +116,10 @@ export class PageNewPost extends LitElement {
     this.images = this.images.filter((_, i) => i !== index);
   }
 
+  private removeExistingImage(index: number) {
+    this.existingImages = this.existingImages.filter((_, i) => i !== index);
+  }
+
   private onDragStart(e: DragEvent, index: number) {
     this.draggingIndex = index;
     if (e.dataTransfer) {
@@ -230,33 +234,19 @@ export class PageNewPost extends LitElement {
 
     if (this.isEdit && this.params?.id) {
       const postId = this.params.id;
-      let updated;
-      if (this.images.length > 0) {
-        const formData = new FormData();
-        formData.append("title", trimmedTitle);
-        formData.append("description", trimmedDescription);
-        formData.append("caption", trimmedBody);
-        this.images.forEach((file) => formData.append("images", file));
-        if (this.tags.length > 0) {
-          this.tags.forEach((tag) => formData.append("tags", tag));
-        }
-        updated = await postService.updateWithImages(postId, formData);
-      } else {
-        updated = await postService.update({
-          id: postId,
-          title: trimmedTitle,
-          description: trimmedDescription,
-          caption: trimmedBody,
-          authorId: authStore.currentUserId ?? CONSTANTS.CURRENT_USER_ID,
-          imageUrl: this.existingImages[0] ?? "",
-          likes: this.existingStats.likes,
-          comments: this.existingStats.comments,
-          saves: this.existingStats.saves,
-          banned: this.existingStats.banned,
-          liked: false,
-          tags: this.tags,
-        });
+      const formData = new FormData();
+      formData.append("title", trimmedTitle);
+      formData.append("description", trimmedDescription);
+      formData.append("caption", trimmedBody);
+      this.images.forEach((file) => formData.append("images", file));
+      this.existingImages.forEach((url) =>
+        formData.append("existingImages", url)
+      );
+      if (this.tags.length > 0) {
+        this.tags.forEach((tag) => formData.append("tags", tag));
       }
+      const updated = await postService.updateWithImages(postId, formData);
+
       if (updated.id) {
         navigate(`/post/${updated.id}`);
       } else {
@@ -379,6 +369,13 @@ export class PageNewPost extends LitElement {
                               alt=${this.title}
                               style="width:56px;height:56px;object-fit:cover;border-radius:8px;"
                             />
+                            <button
+                              type="button"
+                              class="btn-no-fill btn-ghost remove-btn"
+                              @click=${() => this.removeExistingImage(index)}
+                            >
+                              ${CONSTANTS.NEW_POST_REMOVE_IMAGE}
+                            </button>
                           </li>
                         `
                       )}
@@ -484,7 +481,7 @@ export class PageNewPost extends LitElement {
               (t) => html`
                 <span class="tag">
                   #${t}
-                  <button @click=${() => this.removeTag(t)}>
+                  <button type="button" @click=${() => this.removeTag(t)}>
                     ${CONSTANTS.NEW_POST_TAG_REMOVE}
                   </button>
                 </span>

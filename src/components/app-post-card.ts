@@ -12,6 +12,7 @@ import { postService } from "../servicios/core/post-service";
 export class AppPostCard extends LitElement {
   @property() postId = "";
   @property() authorId = "";
+  @property() description = "";
   @property() username = CONSTANTS.POST_CARD_DEFAULT_USERNAME;
   @property() subtitle = "";
   @property() caption = CONSTANTS.POST_CARD_DEFAULT_CAPTION;
@@ -27,6 +28,7 @@ export class AppPostCard extends LitElement {
   @property({ type: Number }) likes = 0;
   @property({ type: Number }) comments = 0;
   @property({ type: Number }) saves = 0;
+  @property({ type: Array }) tags: string[] = [];
   @state() private likesCount = 0;
   @state() private commentsCount = 0;
   @state() private savesCount = 0;
@@ -58,11 +60,9 @@ export class AppPostCard extends LitElement {
     if (this.isLiking || !this.postId) return;
     const next = !this.liked;
     this.isLiking = true;
-    const updated = await postService
-      .like(this.postId, next)
-      .finally(() => {
-        this.isLiking = false;
-      });
+    const updated = await postService.like(this.postId, next).finally(() => {
+      this.isLiking = false;
+    });
     this.liked = Boolean(updated.liked ?? next);
     this.likesCount = updated.likes ?? this.likesCount;
     this.commentsCount = updated.comments ?? this.commentsCount;
@@ -75,11 +75,9 @@ export class AppPostCard extends LitElement {
     const next = !this.isBanned;
     this.isBanning = true;
     this.isBanned = next;
-    const updated = await postService
-      .ban(this.postId, next)
-      .finally(() => {
-        this.isBanning = false;
-      });
+    const updated = await postService.ban(this.postId, next).finally(() => {
+      this.isBanning = false;
+    });
     this.isBanned = Boolean(updated.banned);
   }
 
@@ -120,6 +118,7 @@ export class AppPostCard extends LitElement {
                 : CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT
             }
           </div>
+
           <div class="caption">${this.caption}</div>
           <div class="footer">
             <div class="stats">
@@ -163,7 +162,7 @@ export class AppPostCard extends LitElement {
                       >
                         ${this.isBanned ? "Vetado" : "Vetar"}
                       </button>
-                       <button
+                      <button
                         class="btn btn-pill btn-sm edit-btn"
                         @click=${this.editPost}
                       >
@@ -186,12 +185,19 @@ export class AppPostCard extends LitElement {
                     .avatarUrl=${this.avatarUrl}
                   ></app-mini-profile>
                   <div class="card description">
-                    <div class="chip-muted">
-                      ${CONSTANTS.FEED_SIDEBAR_TITLE}
-                    </div>
                     <div style="margin-top:0.3rem;">
-                      ${CONSTANTS.FEED_SIDEBAR_TEXT}
+                      ${this.description || CONSTANTS.FEED_SIDEBAR_TEXT}
                     </div>
+                    ${this.tags.length > 0
+                      ? html`
+                          <div class="post-tags" style="margin-top: 0.8rem;">
+                            ${this.tags.map(
+                              (tag) =>
+                                html`<span class="chip-muted">#${tag}</span>`
+                            )}
+                          </div>
+                        `
+                      : null}
                   </div>
                 </aside>
               `

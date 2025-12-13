@@ -15,8 +15,8 @@
 
 .post-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  justify-self: right;
   gap: 1rem;
 }
 
@@ -153,8 +153,20 @@
   color: var(--muted-foreground);
 }
 
-.post-stats div {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.tag {
+  background-color: var(--accent);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
 }

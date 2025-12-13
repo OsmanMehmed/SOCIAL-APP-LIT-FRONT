@@ -12,7 +12,6 @@ export class AppFallback extends LitElement {
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
       text-align: center;
       color: var(--muted-foreground);
       width: 100%;

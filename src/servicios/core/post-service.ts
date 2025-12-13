@@ -23,7 +23,7 @@ export const postService = {
   },
 
   async fetchPostWithComments(id: string): Promise<PostWithComments> {
-    const post = await postHttp.getPost(id, userHeaders());
+    const post = await postHttp.getPostDetails(id, userHeaders());
     const comments = await postHttp.getComments(id);
     return { ...post, banned: post.banned ?? false, commentsList: comments };
   },
@@ -68,8 +68,15 @@ export const postService = {
     };
   },
 
-  async updateWithImages(postId: string, formData: FormData): Promise<PostWithComments> {
-    const updated = await postHttp.updatePostImages(postId, formData, userHeaders());
+  async updateWithImages(
+    postId: string,
+    formData: FormData
+  ): Promise<PostWithComments> {
+    const updated = await postHttp.updatePostImages(
+      postId,
+      formData,
+      userHeaders()
+    );
     return {
       ...updated,
       banned: updated.banned ?? false,

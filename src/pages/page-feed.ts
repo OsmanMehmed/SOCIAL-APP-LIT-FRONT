@@ -98,6 +98,8 @@ export class PageFeed extends ScrollPage {
               .likes=${post.likes}
               .comments=${post.comments}
               .saves=${post.saves}
+              .tags=${post.tags || []}
+              .description=${post.description}
             ></app-post-card>
           `;
         })}
