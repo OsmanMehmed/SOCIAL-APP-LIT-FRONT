@@ -5,6 +5,7 @@ import { customElement, state } from "lit/decorators.js";
 import { navigate } from "../router";
 import { ScrollPage } from "../shared/scroll-page";
 import "../components/app-mini-profile";
+import "../components/app-fallback";
 import { messageService } from "../servicios/core/message-service";
 import { profileService } from "../servicios/core/profile-service";
 import type { Conversation } from "../modelos/conversation";
@@ -41,7 +42,7 @@ export class PageConversations extends ScrollPage {
 
   private async loadParticipantProfiles(
     conversations: Conversation[],
-    currentUser: string,
+    currentUser: string
   ) {
     const ids = new Set<string>();
     conversations.forEach((conversation) => {
@@ -75,54 +76,51 @@ export class PageConversations extends ScrollPage {
   render() {
     const currentUser = authStore.currentUserId || CONSTANTS.CURRENT_USER_ID;
     const showNoResults =
-      !this.isLoading &&
-      (this.loadError || this.conversations.length === 0);
+      !this.isLoading && (this.loadError || this.conversations.length === 0);
 
     return html`
       <section class="flow-column component-container">
         ${this.isLoading
-          ? html`<div class="card no-results">Cargando...</div>`
+          ? html`<app-fallback type="loading"></app-fallback>`
           : null}
         ${showNoResults
-          ? html`<div class="card no-results">
-              ${CONSTANTS.NO_RESULTS_TEXT}
-            </div>`
+          ? html`<app-fallback
+              type="empty"
+              message=${CONSTANTS.NO_RESULTS_TEXT}
+            ></app-fallback>`
           : null}
-        ${this.conversations.map(
-          (conversation) => {
-            const otherUserRaw =
-              conversation.participantA === currentUser
-                ? conversation.participantB
-                : conversation.participantA;
-            const otherUser = otherUserRaw || CONSTANTS.CURRENT_USER_ID;
-            const profile = this.participantProfiles[otherUser];
-            const username = profile
-              ? profile.username.replace(/^@/, "")
-              : otherUser.replace(/^@/, "");
-            const subtitle = profile?.subtitle ?? "";
-            const avatar = profile?.avatarUrl ?? "";
-            const cleanUsername =
-              username || otherUser.replace(/^@/, "") || CONSTANTS.CURRENT_USER_ID;
-            return html`
-              <div
-                class="card"
-                 @click=${() => this.openDm(cleanUsername)}
-              >
-                <app-mini-profile
-                  .username=${username}
-                  .subtitle=${subtitle}
-                  .profileId=${otherUser}
-                  .avatarUrl=${avatar}
-                  .supressProfileRoute=${true}
-                  .noSubtitle=${!subtitle}
-                ></app-mini-profile>
-                <p class="chip-muted">
-                  ${formatTimestamp(conversation.updatedAt)}
-                </p>
-              </div>
-            `;
-          },
-        )}
+        ${this.conversations.map((conversation) => {
+          const otherUserRaw =
+            conversation.participantA === currentUser
+              ? conversation.participantB
+              : conversation.participantA;
+          const otherUser = otherUserRaw || CONSTANTS.CURRENT_USER_ID;
+          const profile = this.participantProfiles[otherUser];
+          const username = profile
+            ? profile.username.replace(/^@/, "")
+            : otherUser.replace(/^@/, "");
+          const subtitle = profile?.subtitle ?? "";
+          const avatar = profile?.avatarUrl ?? "";
+          const cleanUsername =
+            username ||
+            otherUser.replace(/^@/, "") ||
+            CONSTANTS.CURRENT_USER_ID;
+          return html`
+            <div class="card" @click=${() => this.openDm(cleanUsername)}>
+              <app-mini-profile
+                .username=${username}
+                .subtitle=${subtitle}
+                .profileId=${otherUser}
+                .avatarUrl=${avatar}
+                .supressProfileRoute=${true}
+                .noSubtitle=${!subtitle}
+              ></app-mini-profile>
+              <p class="chip-muted">
+                ${formatTimestamp(conversation.updatedAt)}
+              </p>
+            </div>
+          `;
+        })}
       </section>
     `;
   }

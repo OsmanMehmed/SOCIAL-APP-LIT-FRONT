@@ -12,6 +12,7 @@ export interface Post {
   saves: number;
   banned?: boolean;
   liked?: boolean;
+  tags?: string[];
 }
 
 export interface PostWithComments extends Post {

@@ -7,6 +7,7 @@ import { CONSTANTS } from "../shared/constants";
 import { ScrollPage } from "../shared/scroll-page";
 import "../components/app-avatar";
 import "../components/app-post-card";
+import "../components/app-fallback";
 import { authStore } from "../state/auth-store";
 import { profileService } from "../servicios/core/profile-service";
 import { postService } from "../servicios/core/post-service";
@@ -71,11 +72,9 @@ export class PageProfile extends ScrollPage {
   private async loadProfile(id: string) {
     this.isLoading = true;
     this.loadError = false;
-    const profile = await profileService
-      .fetchProfile(id)
-      .finally(() => {
-        this.isLoading = false;
-      });
+    const profile = await profileService.fetchProfile(id).finally(() => {
+      this.isLoading = false;
+    });
     this.profile = profile;
     this.isFriend = profile.friend;
     this.isBanned = profile.banned;
@@ -86,18 +85,20 @@ export class PageProfile extends ScrollPage {
   private async loadPosts(id: string) {
     if (!id) return;
     this.postsLoading = true;
-    this.posts = await postService
-      .listByAuthor(id)
-      .finally(() => {
-        this.postsLoading = false;
-      });
+    this.posts = await postService.listByAuthor(id).finally(() => {
+      this.postsLoading = false;
+    });
     this.restorePostsScroll();
   }
 
   private async refreshFriendState(friendId: string) {
     if (!friendId) return;
     const viewerId = authStore.currentUserId;
-    if (!viewerId || viewerId === CONSTANTS.CURRENT_USER_ID || viewerId === friendId) {
+    if (
+      !viewerId ||
+      viewerId === CONSTANTS.CURRENT_USER_ID ||
+      viewerId === friendId
+    ) {
       return;
     }
     try {
@@ -160,18 +161,18 @@ export class PageProfile extends ScrollPage {
   protected willUpdate(_changed: Map<string, unknown>) {
     const paramUsername = this.params?.id ?? "";
     const cleanParamUsername = paramUsername.replace(/^@/, "");
-    
+
     if (paramUsername !== cleanParamUsername && cleanParamUsername) {
       window.history.replaceState(null, "", `/profile/${cleanParamUsername}`);
     }
-    
+
     const targetId = this.resolveProfileId();
-    
+
     if (targetId === authStore.currentUserId && cleanParamUsername !== "") {
       navigate("/profile");
       return;
     }
-    
+
     if (targetId !== this.currentProfileId) {
       this.currentProfileId = targetId;
       this.loadProfile(targetId);
@@ -183,7 +184,7 @@ export class PageProfile extends ScrollPage {
     this.postsCard?.addEventListener("scroll", this.postsScrollListener);
     window.addEventListener(
       "app:navigate-start",
-      this.beforeNavigateListener as EventListener,
+      this.beforeNavigateListener as EventListener
     );
   }
 
@@ -191,7 +192,7 @@ export class PageProfile extends ScrollPage {
     this.postsCard?.removeEventListener("scroll", this.postsScrollListener);
     window.removeEventListener(
       "app:navigate-start",
-      this.beforeNavigateListener as EventListener,
+      this.beforeNavigateListener as EventListener
     );
     super.disconnectedCallback();
   }
@@ -210,102 +211,112 @@ export class PageProfile extends ScrollPage {
       <section class="flow-column component-container">
         <div class="card profile-card">
           ${this.isLoading
-            ? html`<div class="no-results">Cargando...</div>`
-            : null}
-          ${showNoProfile
-            ? html`<div class="no-results">
-                ${CONSTANTS.NO_RESULTS_TEXT}
-              </div>`
-            : html`
-                <div class="profile-info">
-                  <app-avatar
-                    .cursorPointer=${false}
-                    .bigAvatar=${true}
-                    .src=${this.profile?.avatarUrl || ""}
-                  ></app-avatar>
-                  <div class="profile-name">
-                    <span>${username}</span>
+            ? html`<app-fallback type="loading"></app-fallback>`
+            : showNoProfile
+              ? html`<app-fallback
+                  type="error"
+                  message=${CONSTANTS.NO_RESULTS_TEXT}
+                ></app-fallback>`
+              : html`
+                  <div class="profile-info">
+                    <app-avatar
+                      .cursorPointer=${false}
+                      .bigAvatar=${true}
+                      .src=${this.profile?.avatarUrl || ""}
+                    ></app-avatar>
+                    <div class="profile-name">
+                      <span>${username}</span>
+                    </div>
+                    <div class="profile-subtitle">${subtitle}</div>
+                    ${this.profile?.url
+                      ? html`<a
+                          href="${this.profile.url}"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="profile-url"
+                          ><sl-icon name="link-45deg"></sl-icon> ${this.profile
+                            .url}</a
+                        >`
+                      : null}
                   </div>
-                  <div class="profile-subtitle">${subtitle}</div>
-                </div>
-                <div class="buttons-2">
-                  ${isMe
-                    ? html`
-                        <button
-                          class="btn btn-pill btn-sm edit-profile-btn"
-                          @click=${this.editProfile}
-                        >
-                          ${CONSTANTS.PROFILE_EDIT_BUTTON}
-                        </button>
-                      `
-                    : isAdmin
-                    ? html`
-                        ${this.isFriend
-                          ? html`
-                              <button
-                                class="btn-no-fill btn-pill btn-sm friend-btn"
-                                @click=${this.unfriend}
-                                aria-label=${CONSTANTS.PROFILE_UNFRIEND_ALT}
-                              >
-                                <span class="label-default">
-                                  ${CONSTANTS.PROFILE_FRIEND_BUTTON}
-                                </span>
-                                <span class="label-hover">
-                                  ${CONSTANTS.PROFILE_UNFRIEND_SYMBOL}
-                                </span>
-                              </button>
-                            `
-                          : html`
-                              <button
-                                class="btn btn-pill btn-sm connect-btn"
-                                @click=${this.connect}
-                              >
-                                ${CONSTANTS.PROFILE_CONNECT_BUTTON}
-                              </button>
-                            `}
-                        <button
-                          class=${`btn btn-pill btn-sm connect-btn ${
-                            this.isBanned
-                              ? "btn-no-fill btn-pill btn-sm vet-btn"
-                              : ""
-                          }`}
-                          @click=${this.vetUser}
-                        >
-                          ${this.isBanned ? "Vetado" : "Vetar"}
-                        </button>
-                        <button
-                          class="btn-no-fill btn-pill btn-sm"
-                          @click=${this.openDm}
-                        >
-                          Mensaje
-                        </button>
-                        <button
-                          class="btn btn-pill btn-sm edit-profile-btn"
-                          @click=${this.editProfile}
-                        >
-                          ${CONSTANTS.PROFILE_EDIT_BUTTON}
-                        </button>
-                      `
-                    : html`
-                        ${!this.isFriend
-                          ? html`
-                              <button
-                                class="btn btn-pill btn-sm connect-btn"
-                                @click=${this.connect}
-                              >
-                                ${CONSTANTS.PROFILE_CONNECT_BUTTON}
-                              </button>
-                            `
-                          : null}
-                        <button
-                          class="btn-no-fill btn-pill btn-sm"
-                          @click=${this.openDm}
-                        >
-                          Mensaje
-                        </button>
-                      `}
-                </div>
-              `}
+                  <div class="buttons-2">
+                    ${isMe
+                      ? html`
+                          <button
+                            class="btn btn-pill btn-sm edit-profile-btn"
+                            @click=${this.editProfile}
+                          >
+                            ${CONSTANTS.PROFILE_EDIT_BUTTON}
+                          </button>
+                        `
+                      : isAdmin
+                        ? html`
+                            ${this.isFriend
+                              ? html`
+                                  <button
+                                    class="btn-no-fill btn-pill btn-sm friend-btn"
+                                    @click=${this.unfriend}
+                                    aria-label=${CONSTANTS.PROFILE_UNFRIEND_ALT}
+                                  >
+                                    <span class="label-default">
+                                      ${CONSTANTS.PROFILE_FRIEND_BUTTON}
+                                    </span>
+                                    <span class="label-hover">
+                                      ${CONSTANTS.PROFILE_UNFRIEND_SYMBOL}
+                                    </span>
+                                  </button>
+                                `
+                              : html`
+                                  <button
+                                    class="btn btn-pill btn-sm connect-btn"
+                                    @click=${this.connect}
+                                  >
+                                    ${CONSTANTS.PROFILE_CONNECT_BUTTON}
+                                  </button>
+                                `}
+                            <button
+                              class=${`btn btn-pill btn-sm connect-btn ${
+                                this.isBanned
+                                  ? "btn-no-fill btn-pill btn-sm vet-btn"
+                                  : ""
+                              }`}
+                              @click=${this.vetUser}
+                            >
+                              ${this.isBanned ? "Vetado" : "Vetar"}
+                            </button>
+                            <button
+                              class="btn-no-fill btn-pill btn-sm"
+                              @click=${this.openDm}
+                            >
+                              Mensaje
+                            </button>
+                            <button
+                              class="btn btn-pill btn-sm edit-profile-btn"
+                              @click=${this.editProfile}
+                            >
+                              ${CONSTANTS.PROFILE_EDIT_BUTTON}
+                            </button>
+                          `
+                        : html`
+                            ${!this.isFriend
+                              ? html`
+                                  <button
+                                    class="btn btn-pill btn-sm connect-btn"
+                                    @click=${this.connect}
+                                  >
+                                    ${CONSTANTS.PROFILE_CONNECT_BUTTON}
+                                  </button>
+                                `
+                              : null}
+                            <button
+                              class="btn-no-fill btn-pill btn-sm"
+                              @click=${this.openDm}
+                            >
+                              Mensaje
+                            </button>
+                          `}
+                  </div>
+                `}
         </div>
 
         <div class="card posts-card">
@@ -314,28 +325,26 @@ export class PageProfile extends ScrollPage {
           </div>
           <div class="posts-container">
             ${this.postsLoading
-              ? html`<div class="no-results">Cargando...</div>`
+              ? html`<app-fallback type="loading"></app-fallback>`
               : this.posts.length === 0
-                  ? html`<div class="no-results">
-                      ${CONSTANTS.NO_RESULTS_TEXT}
-                    </div>`
-                    : html`${this.posts.map((post) => {
-                      const username = cleanUsername;
-                      return html`<app-post-card
-                        .postId=${post.id}
-                        .authorId=${post.authorId}
-                        .username=${username}
-                        .showEdit=${isMe || isAdmin}
-                        .caption=${post.caption}
-                        .noProfile=${true}
-                        .image=${post.imageUrl || ""}
-                        .banned=${Boolean(post.banned)}
-                        .liked=${Boolean(post.liked)}
-                        .likes=${post.likes}
-                        .comments=${post.comments}
-                        .saves=${post.saves}
-                      ></app-post-card>`;
-                    })}`}
+                ? html`<app-fallback type="empty"></app-fallback>`
+                : html`${this.posts.map((post) => {
+                    const username = cleanUsername;
+                    return html`<app-post-card
+                      .postId=${post.id}
+                      .authorId=${post.authorId}
+                      .username=${username}
+                      .showEdit=${isMe || isAdmin}
+                      .caption=${post.caption}
+                      .noProfile=${true}
+                      .image=${post.imageUrl || ""}
+                      .banned=${Boolean(post.banned)}
+                      .liked=${Boolean(post.liked)}
+                      .likes=${post.likes}
+                      .comments=${post.comments}
+                      .saves=${post.saves}
+                    ></app-post-card>`;
+                  })}`}
           </div>
         </div>
       </section>

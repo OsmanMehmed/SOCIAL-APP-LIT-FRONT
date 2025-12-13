@@ -4,7 +4,7 @@
   width: 50%;
   max-width: 52em;
   padding-bottom: 0.8rem;
-  height: 50em;
+  height: 90%;
 }
 
 @media (max-width: 65em) {
@@ -32,6 +32,29 @@
   margin-left: 1em;
   color: var(--muted-foreground);
   font-size: 0.9rem;
+}
+
+.profile-url {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+  margin-top: 0.25rem;
+  width: 100%;
+  margin-left: 1em;
+}
+
+.profile-url:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.profile-url sl-icon {
+  font-size: 1rem;
 }
 
 .buttons-2 {
@@ -109,6 +132,33 @@
   overflow-y: auto;
   background: none;
   border: none;
+  box-shadow: none;
+  padding-right: 1.5rem;
+  -webkit-mask-image:
+    linear-gradient(to left, #000 20px, transparent 20px),
+    linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  mask-image:
+    linear-gradient(to left, #000 20px, transparent 20px),
+    linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-composite: source-over;
+  mask-composite: add;
+}
+
+.posts-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.posts-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.posts-card::-webkit-scrollbar-thumb {
+  background: rgba(183, 32, 46, 0.45);
+  border-radius: var(--radius-full);
+}
+
+.posts-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(183, 32, 46, 0.7);
 }
 
 .posts-container {

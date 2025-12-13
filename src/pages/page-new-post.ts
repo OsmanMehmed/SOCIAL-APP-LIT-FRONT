@@ -23,7 +23,12 @@ export class PageNewPost extends LitElement {
   @state() private isLoading = false;
   @state() private existingImages: string[] = [];
   @state() private loadedPostId = "";
-  @state() private existingStats = { likes: 0, comments: 0, saves: 0, banned: false };
+  @state() private existingStats = {
+    likes: 0,
+    comments: 0,
+    saves: 0,
+    banned: false,
+  };
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageNewPostCSS)];
 
@@ -95,7 +100,7 @@ export class PageNewPost extends LitElement {
         (f) =>
           f.name === file.name &&
           f.size === file.size &&
-          f.lastModified === file.lastModified,
+          f.lastModified === file.lastModified
       );
       if (!exists) current.push(file);
     }
@@ -196,7 +201,7 @@ export class PageNewPost extends LitElement {
         banned: Boolean(data.banned),
       };
       this.images = [];
-      this.tags = [];
+      this.tags = data.tags ?? [];
       this.newTag = "";
     } catch (_err) {
       this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
@@ -232,6 +237,9 @@ export class PageNewPost extends LitElement {
         formData.append("description", trimmedDescription);
         formData.append("caption", trimmedBody);
         this.images.forEach((file) => formData.append("images", file));
+        if (this.tags.length > 0) {
+          this.tags.forEach((tag) => formData.append("tags", tag));
+        }
         updated = await postService.updateWithImages(postId, formData);
       } else {
         updated = await postService.update({
@@ -246,6 +254,7 @@ export class PageNewPost extends LitElement {
           saves: this.existingStats.saves,
           banned: this.existingStats.banned,
           liked: false,
+          tags: this.tags,
         });
       }
       if (updated.id) {
@@ -260,6 +269,9 @@ export class PageNewPost extends LitElement {
     formData.append("title", trimmedTitle);
     formData.append("description", trimmedDescription);
     formData.append("caption", trimmedBody);
+    if (this.tags.length > 0) {
+      this.tags.forEach((tag) => formData.append("tags", tag));
+    }
     this.images.forEach((file) => formData.append("images", file));
 
     const created = await postService.upload(formData);
@@ -278,7 +290,9 @@ export class PageNewPost extends LitElement {
   }
 
   render() {
-    const header = this.isEdit ? CONSTANTS.EDIT_POST_HEADER : CONSTANTS.NEW_POST_HEADER;
+    const header = this.isEdit
+      ? CONSTANTS.EDIT_POST_HEADER
+      : CONSTANTS.NEW_POST_HEADER;
     const submitLabel = this.isEdit
       ? CONSTANTS.EDIT_POST_SAVE_BUTTON
       : CONSTANTS.NEW_POST_SAVE_BUTTON;
@@ -355,7 +369,8 @@ export class PageNewPost extends LitElement {
                           <li class="image-item">
                             <div class="file-info">
                               <span class="file-name">
-                                ${CONSTANTS.EDIT_POST_CURRENT_IMAGE} ${index + 1}
+                                ${CONSTANTS.EDIT_POST_CURRENT_IMAGE}
+                                ${index + 1}
                               </span>
                               <span class="file-size">${url}</span>
                             </div>
@@ -365,7 +380,7 @@ export class PageNewPost extends LitElement {
                               style="width:56px;height:56px;object-fit:cover;border-radius:8px;"
                             />
                           </li>
-                        `,
+                        `
                       )}
                     </ul>
                   </div>
@@ -374,44 +389,44 @@ export class PageNewPost extends LitElement {
             ${this.images.length
               ? html`
                   <div class="images-list-container">
-                  <ul class="images-list">
-                    ${this.images.map(
-                      (file, index) => html`
-                        <li
-                          class="image-item ${this.draggingIndex === index
-                            ? "dragging"
-                            : ""}"
-                          draggable="true"
-                          @dragstart=${(e: DragEvent) =>
-                            this.onDragStart(e, index)}
-                          @dragover=${this.onDragOver}
-                          @drop=${(e: DragEvent) => this.onDrop(e, index)}
-                          @dragend=${this.onDragEnd}
-                        >
-                          <button
-                            type="button"
-                            class="drag-handle"
-                            aria-label=${CONSTANTS.NEW_POST_REORDER_IMAGE_ARIA}
+                    <ul class="images-list">
+                      ${this.images.map(
+                        (file, index) => html`
+                          <li
+                            class="image-item ${this.draggingIndex === index
+                              ? "dragging"
+                              : ""}"
+                            draggable="true"
+                            @dragstart=${(e: DragEvent) =>
+                              this.onDragStart(e, index)}
+                            @dragover=${this.onDragOver}
+                            @drop=${(e: DragEvent) => this.onDrop(e, index)}
+                            @dragend=${this.onDragEnd}
                           >
-                            ⠿
-                          </button>
-                          <div class="file-info">
-                            <span class="file-name">${file.name}</span>
-                            <span class="file-size"
-                              >${this.formatSize(file.size)}</span
+                            <button
+                              type="button"
+                              class="drag-handle"
+                              aria-label=${CONSTANTS.NEW_POST_REORDER_IMAGE_ARIA}
                             >
-                          </div>
-                          <button
-                            type="button"
-                            class="btn-no-fill btn-ghost remove-btn"
-                            @click=${() => this.removeImage(index)}
-                          >
-                            ${CONSTANTS.NEW_POST_REMOVE_IMAGE}
-                          </button>
-                        </li>
-                      `,
-                    )}
-                  </ul>
+                              ⠿
+                            </button>
+                            <div class="file-info">
+                              <span class="file-name">${file.name}</span>
+                              <span class="file-size"
+                                >${this.formatSize(file.size)}</span
+                              >
+                            </div>
+                            <button
+                              type="button"
+                              class="btn-no-fill btn-ghost remove-btn"
+                              @click=${() => this.removeImage(index)}
+                            >
+                              ${CONSTANTS.NEW_POST_REMOVE_IMAGE}
+                            </button>
+                          </li>
+                        `
+                      )}
+                    </ul>
                   </div>
                 `
               : null}
@@ -432,7 +447,9 @@ export class PageNewPost extends LitElement {
           </div>
 
           <div class="form-field recipe-body-container">
-            <label class="form-label" for="recipe-body">${CONSTANTS.NEW_POST_BODY_LABEL}</label>
+            <label class="form-label" for="recipe-body"
+              >${CONSTANTS.NEW_POST_BODY_LABEL}</label
+            >
             <textarea
               id="recipe-body"
               class="input recipe-body"
@@ -471,7 +488,7 @@ export class PageNewPost extends LitElement {
                     ${CONSTANTS.NEW_POST_TAG_REMOVE}
                   </button>
                 </span>
-              `,
+              `
             )}
           </div>
 

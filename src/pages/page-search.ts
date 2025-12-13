@@ -6,6 +6,7 @@ import { navigate } from "../router";
 import { CONSTANTS } from "../shared/constants";
 import { ScrollPage } from "../shared/scroll-page";
 import "../components/app-avatar";
+import "../components/app-fallback";
 import { friendService } from "../servicios/core/friend-service";
 import { postService } from "../servicios/core/post-service";
 import { profileService } from "../servicios/core/profile-service";
@@ -118,8 +119,8 @@ export class PageSearch extends ScrollPage {
       new Set(
         recipes
           .map((r) => r.authorId)
-          .filter((id) => id && !this.authorUsernames.has(id)),
-      ),
+          .filter((id) => id && !this.authorUsernames.has(id))
+      )
     );
     if (!missingIds.length) return;
 
@@ -132,9 +133,8 @@ export class PageSearch extends ScrollPage {
             (profile.username || profile.id || "").replace(/^@/, "") ||
             CONSTANTS.CURRENT_USER_ID;
           entries.push([id, clean]);
-        } catch {
-        }
-      }),
+        } catch {}
+      })
     );
 
     if (entries.length) {
@@ -193,14 +193,17 @@ export class PageSearch extends ScrollPage {
             </div>
             <div class="results-list scrollable-list">
               ${this.isLoadingProfiles
-                ? html`<p class="empty">${CONSTANTS.LOADING_TEXT}</p>`
+                ? html`<app-fallback type="loading"></app-fallback>`
                 : null}
               ${showProfilesNoResults
-                ? html`<p class="empty">${CONSTANTS.NO_RESULTS_TEXT}</p>`
+                ? html`<app-fallback type="empty"></app-fallback>`
                 : null}
               ${profiles.map((profile) => {
-                const cleanUsername = (profile.username || profile.id || "")
-                  .replace(/^@/, "");
+                const cleanUsername = (
+                  profile.username ||
+                  profile.id ||
+                  ""
+                ).replace(/^@/, "");
                 const displayUsername = cleanUsername
                   ? `@${cleanUsername}`
                   : `@${CONSTANTS.CURRENT_USER_ID}`;
@@ -228,10 +231,10 @@ export class PageSearch extends ScrollPage {
             </div>
             <div class="results-list scrollable-list">
               ${this.isLoadingPosts
-                ? html`<p class="empty">${CONSTANTS.LOADING_TEXT}</p>`
+                ? html`<app-fallback type="loading"></app-fallback>`
                 : null}
               ${showRecipesNoResults
-                ? html`<p class="empty">${CONSTANTS.NO_RESULTS_TEXT}</p>`
+                ? html`<app-fallback type="empty"></app-fallback>`
                 : null}
               ${recipes.map(
                 (recipe) => html`
@@ -245,8 +248,7 @@ export class PageSearch extends ScrollPage {
                         const cleanId = recipe.authorId.replace(/^@/, "");
                         const username =
                           this.authorUsernames.get(recipe.authorId) || cleanId;
-                        const display =
-                          username || CONSTANTS.CURRENT_USER_ID;
+                        const display = username || CONSTANTS.CURRENT_USER_ID;
                         return html`<span>@${display}</span>`;
                       })()}
                       <span>${recipe.time}</span>

@@ -95,11 +95,6 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  /*
-  background-image: url("./food-pattern.png");
-  background-repeat: repeat;
-  background-size: 625px 625px;
-  */
   filter: blur(0.375px);
   transform: scale(1.05);
   z-index: -1;

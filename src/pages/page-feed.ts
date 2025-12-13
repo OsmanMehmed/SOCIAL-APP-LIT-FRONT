@@ -4,6 +4,7 @@ import pageFeedCSS from "../css/page-feed.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import "../components/app-mini-profile";
 import "../components/app-post-card";
+import "../components/app-fallback";
 import { CONSTANTS } from "../shared/constants";
 import { ScrollPage } from "../shared/scroll-page";
 import { postService } from "../servicios/core/post-service";
@@ -27,10 +28,10 @@ export class PageFeed extends ScrollPage {
     try {
       const posts = await postService.list();
       this.posts = posts;
-      
+
       const profilesMap = new Map<string, UserProfile>();
-      const uniqueAuthorIds = [...new Set(posts.map(p => p.authorId))];
-      
+      const uniqueAuthorIds = [...new Set(posts.map((p) => p.authorId))];
+
       for (const authorId of uniqueAuthorIds) {
         try {
           const profile = await profileService.fetchProfile(authorId);
@@ -39,7 +40,7 @@ export class PageFeed extends ScrollPage {
           console.error(`Error cargando perfil de ${authorId}:`, error);
         }
       }
-      
+
       this.authorProfiles = profilesMap;
     } finally {
       this.isLoading = false;
@@ -64,15 +65,14 @@ export class PageFeed extends ScrollPage {
     return html`
       <section class="flow-column component-container">
         ${this.isLoading
-          ? html`<div class="card no-results">Cargando...</div>`
+          ? html`<app-fallback type="loading"></app-fallback>`
           : null}
-
         ${showNoResults
-          ? html`<div class="card no-results">
-              ${CONSTANTS.NO_RESULTS_TEXT}
-            </div>`
+          ? html`<app-fallback
+              type="empty"
+              message=${CONSTANTS.NO_RESULTS_TEXT}
+            ></app-fallback>`
           : null}
-
         ${this.posts.map((post) => {
           const profile = this.authorProfiles.get(post.authorId);
           const username = (profile?.username || "").replace(/^@/, "");
