@@ -140,12 +140,6 @@ export class AppPostCard extends LitElement {
                 this.showEdit
                   ? html`
                       <button
-                        class="btn btn-pill btn-sm edit-btn"
-                        @click=${this.editPost}
-                      >
-                        Editar
-                      </button>
-                      <button
                         class=${`btn-pill btn-sm like-btn ${
                           this.liked ? "btn-no-fill like-btn--active" : "btn"
                         }`}
@@ -167,6 +161,12 @@ export class AppPostCard extends LitElement {
                         @click=${this.toggleVet}
                       >
                         ${this.isBanned ? "Vetado" : "Vetar"}
+                      </button>
+                       <button
+                        class="btn btn-pill btn-sm edit-btn"
+                        @click=${this.editPost}
+                      >
+                        Editar
                       </button>
                     `
                   : null

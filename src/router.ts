@@ -1,5 +1,6 @@
 export type Route =
   | "login"
+  | "register"
   | "feed"
   | "post"
   | "new-post"
@@ -23,6 +24,8 @@ export function parseLocation(path: string): AppLocation {
       return { route: "feed" };
     case "login":
       return { route: "login" };
+    case "register":
+      return { route: "register" };
     case "post":
       return { route: "post", params: { id: id ?? "" } };
     case "new-post":
@@ -46,7 +49,7 @@ export function navigate(path: string) {
   window.dispatchEvent(
     new CustomEvent("app:navigate-start", {
       detail: { from: location.pathname },
-    }),
+    })
   );
   history.pushState({}, "", path);
   window.dispatchEvent(new PopStateEvent("popstate"));

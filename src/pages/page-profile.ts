@@ -229,7 +229,16 @@ export class PageProfile extends ScrollPage {
                   <div class="profile-subtitle">${subtitle}</div>
                 </div>
                 <div class="buttons-2">
-                  ${isAdmin
+                  ${isMe
+                    ? html`
+                        <button
+                          class="btn btn-pill btn-sm edit-profile-btn"
+                          @click=${this.editProfile}
+                        >
+                          ${CONSTANTS.PROFILE_EDIT_BUTTON}
+                        </button>
+                      `
+                    : isAdmin
                     ? html`
                         ${this.isFriend
                           ? html`
@@ -277,33 +286,24 @@ export class PageProfile extends ScrollPage {
                           ${CONSTANTS.PROFILE_EDIT_BUTTON}
                         </button>
                       `
-                    : isMe
-                        ? html`
-                            <button
-                              class="btn btn-pill btn-sm edit-profile-btn"
-                              @click=${this.editProfile}
-                            >
-                              ${CONSTANTS.PROFILE_EDIT_BUTTON}
-                            </button>
-                          `
-                        : html`
-                            ${!this.isFriend
-                              ? html`
-                                  <button
-                                    class="btn btn-pill btn-sm connect-btn"
-                                    @click=${this.connect}
-                                  >
-                                    ${CONSTANTS.PROFILE_CONNECT_BUTTON}
-                                  </button>
-                                `
-                              : null}
-                            <button
-                              class="btn-no-fill btn-pill btn-sm"
-                              @click=${this.openDm}
-                            >
-                              Mensaje
-                            </button>
-                          `}
+                    : html`
+                        ${!this.isFriend
+                          ? html`
+                              <button
+                                class="btn btn-pill btn-sm connect-btn"
+                                @click=${this.connect}
+                              >
+                                ${CONSTANTS.PROFILE_CONNECT_BUTTON}
+                              </button>
+                            `
+                          : null}
+                        <button
+                          class="btn-no-fill btn-pill btn-sm"
+                          @click=${this.openDm}
+                        >
+                          Mensaje
+                        </button>
+                      `}
                 </div>
               `}
         </div>

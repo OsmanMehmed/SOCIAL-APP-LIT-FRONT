@@ -10,6 +10,7 @@ import { postService } from "../servicios/core/post-service";
 import type { Comment } from "../modelos/comment";
 import { authStore } from "../state/auth-store";
 import { navigate } from "../router";
+import { profileService } from "../servicios/core/profile-service";
 
 @customElement("page-post")
 export class PagePost extends ScrollPage {
@@ -33,6 +34,7 @@ export class PagePost extends ScrollPage {
   @state() private postImage = "";
   @state() private postDescription = "";
   @state() private postAuthorId = "";
+  @state() private authorNames: Record<string, string> = {};
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pagePostCSS)];
 
@@ -62,8 +64,9 @@ export class PagePost extends ScrollPage {
     this.postDescription = data.description || "";
     this.postAuthorId = data.authorId;
     const comments = data.commentsList ?? [];
+    await this.loadAuthorUsernames(comments.map((c: Comment) => c.authorId));
     this.commentItems = comments.map((comment: Comment) => {
-      const username = comment.authorId;
+      const username = this.authorNames[comment.authorId] ?? comment.authorId;
       return {
         username,
         text: comment.text,
@@ -122,7 +125,8 @@ export class PagePost extends ScrollPage {
       text,
       createdAt: new Date().toISOString(),
     });
-    const username = created.authorId;
+    await this.loadAuthorUsernames([created.authorId]);
+    const username = this.authorNames[created.authorId] ?? created.authorId;
     this.commentItems = [
       ...this.commentItems,
       {
@@ -133,6 +137,23 @@ export class PagePost extends ScrollPage {
     ];
     this.commentsCount += 1;
     this.newComment = "";
+  }
+
+  private async loadAuthorUsernames(ids: string[]) {
+    const unique = Array.from(new Set(ids.filter(Boolean)));
+    const missing = unique.filter((id) => !this.authorNames[id]);
+    if (!missing.length) return;
+    const fetched = await Promise.all(
+      missing.map(async (id) => {
+        const profile = await profileService.fetchProfile(id);
+        return { id, username: profile.username.replace(/^@/, "") };
+      }),
+    );
+    const next = { ...this.authorNames };
+    fetched.forEach(({ id, username }) => {
+      next[id] = username;
+    });
+    this.authorNames = next;
   }
 
   render() {

@@ -7,8 +7,8 @@ import { CONSTANTS } from "../shared/constants";
 import { navigate } from "../router";
 import { authService } from "../servicios/core/auth-service";
 
-@customElement("page-login")
-export class PageLogin extends LitElement {
+@customElement("page-register")
+export class PageRegister extends LitElement {
   @state() username = "";
   @state() password = "";
   @state() errorMessage: string | null = null;
@@ -35,7 +35,7 @@ export class PageLogin extends LitElement {
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pageLoginCSS)];
 
-  private async onLogin(e: Event) {
+  private async onRegister(e: Event) {
     e.preventDefault();
     if (this.isSubmitting) return;
 
@@ -52,7 +52,7 @@ export class PageLogin extends LitElement {
     }
 
     try {
-      const auth = await authService.login({
+      const auth = await authService.register({
         username: user,
         password: pass,
       });
@@ -60,11 +60,15 @@ export class PageLogin extends LitElement {
       authStore.loginWithAuth(auth);
       navigate("/feed");
     } catch (error) {
-      this.errorMessage = "Usuario o contraseña incorrectos.";
-      console.error("Login error:", error);
+      this.errorMessage = "Error al registrarse. El usuario podría existir.";
+      console.error("Register error:", error);
     } finally {
       this.isSubmitting = false;
     }
+  }
+
+  private goToLogin() {
+    navigate("/login");
   }
 
   render() {
@@ -72,8 +76,8 @@ export class PageLogin extends LitElement {
 
     return html`
       <div class="wrap">
-        <form class="panel" @submit=${this.onLogin}>
-          <div class="title">${CONSTANTS.LOGIN_TITLE}</div>
+        <form class="panel" @submit=${this.onRegister}>
+          <div class="title">${CONSTANTS.REGISTER_TITLE}</div>
           <input
             id="user"
             class="input login-input"
@@ -93,8 +97,16 @@ export class PageLogin extends LitElement {
             required
           />
           <button class="btn" type="submit">
-            ${CONSTANTS.LOGIN_BUTTON_TEXT}
+            ${CONSTANTS.REGISTER_BUTTON_TEXT}
           </button>
+
+          <div
+            style="text-align: center; cursor: pointer; color: var(--accent); font-size: 0.9rem;"
+            @click=${this.goToLogin}
+          >
+            ${CONSTANTS.REGISTER_TO_LOGIN}
+          </div>
+
           <div
             class=${`error ${this.errorMessage ? "" : "hidden"}`}
             role="alert"
@@ -102,15 +114,8 @@ export class PageLogin extends LitElement {
           >
             ${this.errorMessage || " "}
           </div>
-
-          <div
-            style="text-align: center; cursor: pointer; color: var(--accent); font-size: 0.9rem;"
-            @click=${() => navigate("/register")}
-          >
-            ${CONSTANTS.LOGIN_TO_REGISTER}
-          </div>
           <div class="chip-muted chip-login">
-            <span>${CONSTANTS.LOGIN_HELP_TEXT}</span>
+            <span>${CONSTANTS.REGISTER_HELP_TEXT}</span>
           </div>
         </form>
       </div>

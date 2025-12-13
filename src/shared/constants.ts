@@ -23,6 +23,12 @@ export const CONSTANTS = {
   LOGIN_INPUT_PASSWORD_PLACEHOLDER: "Contraseña",
   LOGIN_BUTTON_TEXT: "Entrar a la cocina",
   LOGIN_HELP_TEXT: "¡Comparte tus recetas con la comunidad!",
+  LOGIN_TO_REGISTER: "¿No tienes cuenta? ¡Regístrate!",
+
+  REGISTER_TITLE: "Únete a la cocina",
+  REGISTER_BUTTON_TEXT: "Registrarse",
+  REGISTER_HELP_TEXT: "Crea tu perfil y empieza a compartir.",
+  REGISTER_TO_LOGIN: "¿Ya tienes cuenta? Inicia sesión",
 
   FEED_SIDEBAR_TITLE: "Explora sabores",
   FEED_SIDEBAR_TEXT:
