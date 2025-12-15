@@ -336,7 +336,8 @@ export class PageProfile extends ScrollPage {
                         .authorId=${post.authorId}
                         .username=${username}
                         .showEdit=${isMe || isAdmin}
-                        .caption=${post.title}
+                        .title=${post.title}
+                        .caption=${post.caption}
                         .noProfile=${true}
                         .image=${post.imageUrl || ""}
                         .banned=${Boolean(post.banned)}

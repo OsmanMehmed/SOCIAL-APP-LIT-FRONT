@@ -22,6 +22,14 @@
   }
 }
 
+.title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--red-dark);
+  cursor: pointer;
+}
+
 .card {
   border: 1.25px solid rgba(255, 179, 71, 0.26);
   padding-left: 0.75rem;
