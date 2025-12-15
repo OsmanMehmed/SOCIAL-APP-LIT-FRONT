@@ -111,4 +111,12 @@ export const CONSTANTS = {
   EDIT_POST_SAVE_BUTTON: "Actualizar receta",
   EDIT_POST_CANCEL_BUTTON: "Cancelar",
   EDIT_POST_CURRENT_IMAGE: "Imagen",
+
+  // UI Icons
+  ICON_EMPTY: "📂",
+  ICON_LOADING: "🥘",
+  ICON_ERROR: "⚠️",
+
+  // Generic Messages
+  ERROR_TEXT: "Ocurrió un error.",
 };

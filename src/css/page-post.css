@@ -41,6 +41,13 @@
   font-size: 0.95rem;
 }
 
+.post-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--foreground);
+  margin: 1rem 0;
+}
+
 .post-actions {
   display: inline-flex;
   gap: 0.5rem;

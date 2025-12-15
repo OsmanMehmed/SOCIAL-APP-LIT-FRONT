@@ -6,7 +6,9 @@ import { authStore } from "../../state/auth-store";
 
 export const friendHttp = {
   search: (q: string) =>
-    request<UserProfile[]>(`/friends/search?q=${encodeURIComponent(q)}`),
+    request<UserProfile[]>(`/friends/search?q=${encodeURIComponent(q)}`, {
+      headers: { "X-User-Id": authStore.currentUserId },
+    }),
   sendRequest: (from: string, to: string) =>
     request<FriendRequest>(`/friends/requests?from=${from}&to=${to}`, {
       method: "POST",
@@ -20,7 +22,9 @@ export const friendHttp = {
   listPending: (userId: string) =>
     request<FriendRequest[]>(`/friends/requests?userId=${userId}`),
   listFriends: (userId: string) =>
-    request<UserProfile[]>(`/friends?userId=${userId}`),
+    request<UserProfile[]>(`/friends?userId=${userId}`, {
+      headers: { "X-User-Id": authStore.currentUserId },
+    }),
   connect: (friendId: string) =>
     request<Friendship>(`/friends?friendId=${friendId}`, {
       method: "POST",
@@ -36,5 +40,7 @@ export const friendHttp = {
       headers: { "X-User-Id": authStore.currentUserId },
     }),
   random: (limit = 3) =>
-    request<UserProfile[]>(`/friends/random?limit=${limit}`),
+    request<UserProfile[]>(`/friends/random?limit=${limit}`, {
+      headers: { "X-User-Id": authStore.currentUserId },
+    }),
 };

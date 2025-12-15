@@ -1,5 +1,6 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
+import { CONSTANTS } from "../shared/constants";
 
 @customElement("app-fallback")
 export class AppFallback extends LitElement {
@@ -53,15 +54,15 @@ export class AppFallback extends LitElement {
   `;
 
   render() {
-    let icon = "📂";
-    if (this.type === "loading") icon = "🥘";
-    if (this.type === "error") icon = "⚠️";
+    let icon = CONSTANTS.ICON_EMPTY;
+    if (this.type === "loading") icon = CONSTANTS.ICON_LOADING;
+    if (this.type === "error") icon = CONSTANTS.ICON_ERROR;
 
     let displayMessage = this.message;
     if (!displayMessage) {
-      if (this.type === "loading") displayMessage = "Cargando...";
-      else if (this.type === "error") displayMessage = "Ocurrió un error.";
-      else displayMessage = "No hay resultados.";
+      if (this.type === "loading") displayMessage = CONSTANTS.LOADING_TEXT;
+      else if (this.type === "error") displayMessage = CONSTANTS.ERROR_TEXT;
+      else displayMessage = CONSTANTS.NO_RESULTS_TEXT;
     }
 
     return html`

@@ -39,6 +39,9 @@ export class PagePost extends ScrollPage {
   @state() private postAuthorId = "";
   @state() private tags: string[] = [];
   @state() private authorNames: Record<string, string> = {};
+  @state() private postAuthorUsername = "";
+  @state() private postAuthorAvatar = "";
+  @state() private postAuthorSubtitle = "";
 
   static styles = [unsafeCSS(componentsCSS), unsafeCSS(pagePostCSS)];
 
@@ -76,6 +79,19 @@ export class PagePost extends ScrollPage {
     this.postAuthorId = data.authorId;
     this.tags = data.tags || [];
     const comments = data.commentsList ?? [];
+
+    // Fetch author profile
+    try {
+      if (this.postAuthorId) {
+        const profile = await profileService.fetchProfile(this.postAuthorId);
+        this.postAuthorUsername = profile.username.replace(/^@/, "");
+        this.postAuthorAvatar = profile.avatarUrl;
+        this.postAuthorSubtitle = profile.subtitle;
+      }
+    } catch (e) {
+      console.error("Failed to fetch post author profile", e);
+    }
+
     await this.loadAuthorUsernames(comments.map((c: Comment) => c.authorId));
     this.commentItems = comments.map((comment: Comment) => {
       const username = this.authorNames[comment.authorId] ?? comment.authorId;
@@ -194,6 +210,18 @@ export class PagePost extends ScrollPage {
             : !this.isLoading
               ? html`
                   <h2>${title}</h2>
+                  ${this.postAuthorUsername
+                    ? html`
+                        <div style="margin-bottom: 1rem;">
+                          <app-mini-profile
+                            .username=${this.postAuthorUsername}
+                            .profileId=${this.postAuthorId}
+                            .avatarUrl=${this.postAuthorAvatar}
+                            .subtitle=${this.postAuthorSubtitle}
+                          ></app-mini-profile>
+                        </div>
+                      `
+                    : null}
                   ${this.postImages.length > 1
                     ? html`<div class="post-gallery">
                         ${this.postImages.map(
@@ -212,7 +240,9 @@ export class PagePost extends ScrollPage {
                           />
                         </div>`
                       : null}
-                  <p>${this.postDescription || CONSTANTS.POST_BODY}</p>
+                  <p class="post-description">
+                    ${this.postDescription || CONSTANTS.POST_BODY}
+                  </p>
                   ${this.postCaption
                     ? html`<div class="post-caption">${this.postCaption}</div>`
                     : null}
