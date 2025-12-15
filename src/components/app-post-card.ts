@@ -16,7 +16,7 @@ export class AppPostCard extends LitElement {
   @property() description = "";
   @property() username = CONSTANTS.POST_CARD_DEFAULT_USERNAME;
   @property() subtitle = "";
-  @property() caption = CONSTANTS.POST_CARD_DEFAULT_CAPTION;
+
   @property() noProfile = false;
   @property() noShadow = false;
   @property() image = "";
@@ -50,7 +50,7 @@ export class AppPostCard extends LitElement {
   private openPost() {
     postStore.setCurrent({
       id: this.postId,
-      title: this.caption,
+      title: this.title,
       username: this.username,
     });
     navigate(`/post/${this.postId}`);

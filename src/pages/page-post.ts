@@ -193,7 +193,57 @@ export class PagePost extends ScrollPage {
               ></app-fallback>`
             : !this.isLoading
               ? html`
-                  <div class="post-header">
+                  <h2>${title}</h2>
+                  ${this.postImages.length > 1
+                    ? html`<div class="post-gallery">
+                        ${this.postImages.map(
+                          (url) => html`
+                            <div class="post-gallery-item">
+                              <img src=${this.getBustedUrl(url)} alt=${title} />
+                            </div>
+                          `
+                        )}
+                      </div>`
+                    : this.postImage
+                      ? html`<div class="post-image">
+                          <img
+                            src=${this.getBustedUrl(this.postImage)}
+                            alt=${title}
+                          />
+                        </div>`
+                      : null}
+                  <p>${this.postDescription || CONSTANTS.POST_BODY}</p>
+                  ${this.postCaption
+                    ? html`<div class="post-caption">${this.postCaption}</div>`
+                    : null}
+                  ${this.tags.length > 0
+                    ? html`
+                        <div class="post-tags">
+                          ${this.tags.map(
+                            (tag) =>
+                              html`<span class="chip-muted">#${tag}</span>`
+                          )}
+                        </div>
+                      `
+                    : null}
+                  <div
+                    class="post-footer"
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;"
+                  >
+                    <div class="post-stats">
+                      <div>
+                        <sl-icon name="hand-thumbs-up"></sl-icon>
+                        <span>${this.likesCount}</span>
+                      </div>
+                      <div>
+                        <sl-icon name="chat-dots"></sl-icon>
+                        <span>${this.commentsCount}</span>
+                      </div>
+                      <div>
+                        <sl-icon name="bookmark"></sl-icon>
+                        <span>${this.savesCount}</span>
+                      </div>
+                    </div>
                     <div class="post-actions">
                       <button
                         class=${`btn-pill btn-sm like-btn ${
@@ -232,53 +282,6 @@ export class PagePost extends ScrollPage {
                             </button>
                           `
                         : null}
-                    </div>
-                  </div>
-                  <h2>${title}</h2>
-                  ${this.postImages.length > 1
-                    ? html`<div class="post-gallery">
-                        ${this.postImages.map(
-                          (url) => html`
-                            <div class="post-gallery-item">
-                              <img src=${this.getBustedUrl(url)} alt=${title} />
-                            </div>
-                          `
-                        )}
-                      </div>`
-                    : this.postImage
-                      ? html`<div class="post-image">
-                          <img
-                            src=${this.getBustedUrl(this.postImage)}
-                            alt=${title}
-                          />
-                        </div>`
-                      : null}
-                  <p>${this.postDescription || CONSTANTS.POST_BODY}</p>
-                  ${this.postCaption
-                    ? html`<div class="post-caption">${this.postCaption}</div>`
-                    : null}
-                  ${this.tags.length > 0
-                    ? html`
-                        <div class="post-tags">
-                          ${this.tags.map(
-                            (tag) =>
-                              html`<span class="chip-muted">#${tag}</span>`
-                          )}
-                        </div>
-                      `
-                    : null}
-                  <div class="post-stats">
-                    <div>
-                      <sl-icon name="hand-thumbs-up"></sl-icon>
-                      <span>${this.likesCount}</span>
-                    </div>
-                    <div>
-                      <sl-icon name="chat-dots"></sl-icon>
-                      <span>${this.commentsCount}</span>
-                    </div>
-                    <div>
-                      <sl-icon name="bookmark"></sl-icon>
-                      <span>${this.savesCount}</span>
                     </div>
                   </div>
                 `

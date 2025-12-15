@@ -90,7 +90,6 @@ export class PageFeed extends ScrollPage {
               .title=${post.title}
               .username=${username}
               .subtitle=${subtitle}
-              .caption=${post.caption}
               .avatarUrl=${avatar}
               .image=${image}
               .showEdit=${isOwner || isAdmin}

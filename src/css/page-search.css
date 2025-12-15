@@ -100,7 +100,7 @@
 }
 
 .empty {
+  margin-block: 1.5em;
   font-size: 0.82rem;
   color: var(--muted-foreground);
-  margin-top: 0.3rem;
 }

@@ -28,6 +28,10 @@ export class AppFallback extends LitElement {
       font-weight: 500;
     }
 
+    .empty {
+      margin-block: 1.5rem;
+    }
+
     .loading .icon {
       animation: pulse 1.5s infinite;
     }
