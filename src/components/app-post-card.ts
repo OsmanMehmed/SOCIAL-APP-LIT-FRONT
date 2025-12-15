@@ -41,6 +41,12 @@ export class AppPostCard extends LitElement {
     unsafeCSS(postCardCSS),
   ];
 
+  private cacheBuster = Date.now();
+
+  private getBustedUrl(url: string) {
+    return `${url}?t=${this.cacheBuster}`;
+  }
+
   private openPost() {
     postStore.setCurrent({
       id: this.postId,
@@ -114,7 +120,9 @@ export class AppPostCard extends LitElement {
         } @click=${this.openPost}>
             ${
               this.image
-                ? html`<div class="image"><img src=${this.image} /></div>`
+                ? html`<div class="image">
+                    <img src=${this.getBustedUrl(this.image)} />
+                  </div>`
                 : null
             }
 

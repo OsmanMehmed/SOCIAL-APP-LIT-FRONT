@@ -25,6 +25,7 @@ app-bottom-nav {
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
+  margin-bottom: 1.5em;
 }
 
 

@@ -49,6 +49,11 @@ export class PagePost extends ScrollPage {
     }
     return CONSTANTS.NO_RESULTS_TEXT;
   }
+  private cacheBuster = Date.now();
+
+  private getBustedUrl(url: string) {
+    return `${url}?t=${this.cacheBuster}`;
+  }
 
   private async loadPost(id: string) {
     if (!id) return;
@@ -235,14 +240,17 @@ export class PagePost extends ScrollPage {
                         ${this.postImages.map(
                           (url) => html`
                             <div class="post-gallery-item">
-                              <img src=${url} alt=${title} />
+                              <img src=${this.getBustedUrl(url)} alt=${title} />
                             </div>
                           `
                         )}
                       </div>`
                     : this.postImage
                       ? html`<div class="post-image">
-                          <img src=${this.postImage} alt=${title} />
+                          <img
+                            src=${this.getBustedUrl(this.postImage)}
+                            alt=${title}
+                          />
                         </div>`
                       : null}
                   <p>${this.postDescription || CONSTANTS.POST_BODY}</p>
@@ -278,9 +286,13 @@ export class PagePost extends ScrollPage {
         </div>
 
         <section class="card comments-section">
-          <div class="comments-scroll-wrapper">
-            ${!this.isLoading
-              ? html`
+          ${this.isLoading
+            ? html`<app-fallback
+                type="loading"
+                message=${CONSTANTS.LOADING_TEXT}
+              ></app-fallback>`
+            : html`
+                <div class="comments-scroll-wrapper">
                   <div>
                     <div class="chip-muted chip-comments">
                       ${CONSTANTS.POST_COMMENTS_TITLE}
@@ -294,40 +306,33 @@ export class PagePost extends ScrollPage {
                       @input=${this.onCommentInput}
                     />
                   </form>
-                `
-              : null}
-            ${this.isLoading
-              ? html`<app-fallback
-                  type="loading"
-                  message=${CONSTANTS.LOADING_TEXT}
-                ></app-fallback>`
-              : null}
-            ${!this.isLoading && this.commentItems.length === 0
-              ? html`<app-fallback
-                  type="empty"
-                  message="No hay comentarios aún"
-                ></app-fallback>`
-              : null}
-            ${!this.isLoading && this.commentItems.length > 0
-              ? html`
-                  <div class="comments-list">
-                    ${this.commentItems.map(
-                      (comment) => html`
-                        <div class="comment-card">
-                          <app-mini-profile
-                            .username=${comment.username}
-                            .profileId=${comment.profileId}
-                            .noSubtitle=${true}
-                            .hideAvatar=${true}
-                          ></app-mini-profile>
-                          <p class="comment-text">${comment.text}</p>
+                  ${this.commentItems.length === 0
+                    ? html`<app-fallback
+                        type="empty"
+                        message="No hay comentarios aún"
+                      ></app-fallback>`
+                    : null}
+                  ${this.commentItems.length > 0
+                    ? html`
+                        <div class="comments-list">
+                          ${this.commentItems.map(
+                            (comment) => html`
+                              <div class="comment-card">
+                                <app-mini-profile
+                                  .username=${comment.username}
+                                  .profileId=${comment.profileId}
+                                  .noSubtitle=${true}
+                                  .hideAvatar=${true}
+                                ></app-mini-profile>
+                                <p class="comment-text">${comment.text}</p>
+                              </div>
+                            `
+                          )}
                         </div>
                       `
-                    )}
-                  </div>
-                `
-              : null}
-          </div>
+                    : null}
+                </div>
+              `}
         </section>
       </div>
     `;

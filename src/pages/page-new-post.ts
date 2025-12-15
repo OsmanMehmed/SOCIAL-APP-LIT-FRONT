@@ -1,5 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
 import componentsCSS from "../css/components.css?inline";
+import "../components/app-fallback";
 import pageNewPostCSS from "../css/page-new-post.css?inline";
 import { customElement, property, state } from "lit/decorators.js";
 import { CONSTANTS } from "../shared/constants";
@@ -302,11 +303,10 @@ export class PageNewPost extends LitElement {
       : CONSTANTS.NEW_POST_SAVE_BUTTON;
     if (this.isEdit && this.isLoading) {
       return html`
-        <div class="card new-post-card">
-          <div class="new-post-title">
-            <span>${CONSTANTS.LOADING_TEXT}</span>
-          </div>
-        </div>
+        <app-fallback
+          type="loading"
+          message=${CONSTANTS.LOADING_TEXT}
+        ></app-fallback>
       `;
     }
     return html`
@@ -506,21 +506,20 @@ export class PageNewPost extends LitElement {
           ${this.errorMessage
             ? html`<div class="error">${this.errorMessage}</div>`
             : null}
-
           <div class="form-actions">
             ${this.isEdit
               ? html`
                   <button
-                    class="btn btn-secondary"
+                    class="btn-no-fill btn-sm"
                     type="button"
                     @click=${this.handleCancel}
-                    style="margin-right: 0.5rem; background: var(--muted); border-color: transparent; color: var(--red-dark);"
+                    style="margin-right: 1em; width: auto;"
                   >
                     ${CONSTANTS.EDIT_POST_CANCEL_BUTTON ?? "Cancelar"}
                   </button>
                 `
               : null}
-            <button class="btn save-button" type="submit">
+            <button class="btn btn-sm save-button" type="submit">
               ${submitLabel}
             </button>
           </div>

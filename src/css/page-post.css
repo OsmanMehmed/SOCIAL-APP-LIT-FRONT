@@ -89,12 +89,12 @@
 }
 
 .comments-scroll-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(183, 32, 46, 0.45);
+  background: rgba(228, 121, 112, 0.4);
   border-radius: var(--radius-full);
 }
 
 .comments-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-  background: rgba(183, 32, 46, 0.7);
+  background: rgba(228, 121, 112, 0.7);
 }
 
 .comment-input {
@@ -241,10 +241,10 @@
 }
 
 .post-gallery::-webkit-scrollbar-thumb {
-  background: rgba(183, 32, 46, 0.45);
+  background: rgba(228, 121, 112, 0.4);
   border-radius: var(--radius-full);
 }
 
 .post-gallery::-webkit-scrollbar-thumb:hover {
-  background: rgba(183, 32, 46, 0.7);
+  background: rgba(228, 121, 112, 0.7);
 }

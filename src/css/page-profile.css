@@ -111,7 +111,7 @@
 }
 
 .page-profile-posts-title {
-  margin-bottom: 1.5em;
+  margin-top: 1.5em;
 }
 
 .posts-card {
@@ -119,13 +119,21 @@
   border: none;
   box-shadow: none;
   position: relative;
-  /* Removed mask to avoid scrollbar clipping */
   padding-right: 0;
 }
 
 .posts-scroll-content {
   max-height: 55vh;
   overflow-y: auto;
+  position: relative;
+  -webkit-mask-image:
+    linear-gradient(to left, #000 14px, transparent 14px),
+    linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  mask-image:
+    linear-gradient(to left, #000 14px, transparent 14px),
+    linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-composite: source-over;
+  mask-composite: add;
 }
 
 .posts-scroll-content::-webkit-scrollbar {
@@ -137,12 +145,12 @@
 }
 
 .posts-scroll-content::-webkit-scrollbar-thumb {
-  background: rgba(183, 32, 46, 0.45);
+  background: rgba(228, 121, 112, 0.4);
   border-radius: var(--radius-full);
 }
 
 .posts-scroll-content::-webkit-scrollbar-thumb:hover {
-  background: rgba(183, 32, 46, 0.7);
+  background: rgba(228, 121, 112, 0.7);
 }
 
 
