@@ -40,6 +40,23 @@ textarea.input {
   resize: none;
 }
 
+textarea.input::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea.input::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea.input::-webkit-scrollbar-thumb {
+  background: rgba(228, 121, 112, 0.4);
+  border-radius: var(--radius-full);
+}
+
+textarea.input::-webkit-scrollbar-thumb:hover {
+  background: rgba(228, 121, 112, 0.7);
+}
+
 .form-actions {
   margin-top: 0.6rem;
   text-align: right;
