@@ -33,6 +33,8 @@ export class PagePost extends ScrollPage {
   @state() private commentsCount = 0;
   @state() private savesCount = 0;
   @state() private postImage = "";
+  @state() private postImages: string[] = [];
+  @state() private postCaption = "";
   @state() private postDescription = "";
   @state() private postAuthorId = "";
   @state() private tags: string[] = [];
@@ -63,6 +65,8 @@ export class PagePost extends ScrollPage {
     this.commentsCount = data.comments ?? data.commentsList?.length ?? 0;
     this.savesCount = data.saves ?? 0;
     this.postImage = data.imageUrl || data.imageUrls?.[0] || "";
+    this.postImages = data.imageUrls || (data.imageUrl ? [data.imageUrl] : []);
+    this.postCaption = data.caption || "";
     this.postDescription = data.description || "";
     this.postAuthorId = data.authorId;
     this.tags = data.tags || [];
@@ -226,14 +230,25 @@ export class PagePost extends ScrollPage {
                     </div>
                   </div>
                   <h2>${title}</h2>
-                  <div class="post-image">
-                    ${this.postImage
-                      ? html`<img src=${this.postImage} alt=${title} />`
-                      : html`<div class="image-placeholder">
-                          ${CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT}
-                        </div>`}
-                  </div>
+                  ${this.postImages.length > 1
+                    ? html`<div class="post-gallery">
+                        ${this.postImages.map(
+                          (url) => html`
+                            <div class="post-gallery-item">
+                              <img src=${url} alt=${title} />
+                            </div>
+                          `
+                        )}
+                      </div>`
+                    : this.postImage
+                      ? html`<div class="post-image">
+                          <img src=${this.postImage} alt=${title} />
+                        </div>`
+                      : null}
                   <p>${this.postDescription || CONSTANTS.POST_BODY}</p>
+                  ${this.postCaption
+                    ? html`<div class="post-caption">${this.postCaption}</div>`
+                    : null}
                   ${this.tags.length > 0
                     ? html`
                         <div class="post-tags">
@@ -263,54 +278,56 @@ export class PagePost extends ScrollPage {
         </div>
 
         <section class="card comments-section">
-          ${!this.isLoading
-            ? html`
-                <div>
-                  <div class="chip-muted chip-comments">
-                    ${CONSTANTS.POST_COMMENTS_TITLE}
+          <div class="comments-scroll-wrapper">
+            ${!this.isLoading
+              ? html`
+                  <div>
+                    <div class="chip-muted chip-comments">
+                      ${CONSTANTS.POST_COMMENTS_TITLE}
+                    </div>
                   </div>
-                </div>
-                <form class="comment-input" @submit=${this.onSubmitComment}>
-                  <input
-                    class="input"
-                    placeholder=${CONSTANTS.POST_COMMENT_PLACEHOLDER}
-                    .value=${this.newComment}
-                    @input=${this.onCommentInput}
-                  />
-                </form>
-              `
-            : null}
-          ${this.isLoading
-            ? html`<app-fallback
-                type="loading"
-                message=${CONSTANTS.LOADING_TEXT}
-              ></app-fallback>`
-            : null}
-          ${!this.isLoading && this.commentItems.length === 0
-            ? html`<app-fallback
-                type="empty"
-                message="No hay comentarios aún"
-              ></app-fallback>`
-            : null}
-          ${!this.isLoading && this.commentItems.length > 0
-            ? html`
-                <div class="comments-list">
-                  ${this.commentItems.map(
-                    (comment) => html`
-                      <div class="comment-card">
-                        <app-mini-profile
-                          .username=${comment.username}
-                          .profileId=${comment.profileId}
-                          .noSubtitle=${true}
-                          .hideAvatar=${true}
-                        ></app-mini-profile>
-                        <p class="comment-text">${comment.text}</p>
-                      </div>
-                    `
-                  )}
-                </div>
-              `
-            : null}
+                  <form class="comment-input" @submit=${this.onSubmitComment}>
+                    <input
+                      class="input"
+                      placeholder=${CONSTANTS.POST_COMMENT_PLACEHOLDER}
+                      .value=${this.newComment}
+                      @input=${this.onCommentInput}
+                    />
+                  </form>
+                `
+              : null}
+            ${this.isLoading
+              ? html`<app-fallback
+                  type="loading"
+                  message=${CONSTANTS.LOADING_TEXT}
+                ></app-fallback>`
+              : null}
+            ${!this.isLoading && this.commentItems.length === 0
+              ? html`<app-fallback
+                  type="empty"
+                  message="No hay comentarios aún"
+                ></app-fallback>`
+              : null}
+            ${!this.isLoading && this.commentItems.length > 0
+              ? html`
+                  <div class="comments-list">
+                    ${this.commentItems.map(
+                      (comment) => html`
+                        <div class="comment-card">
+                          <app-mini-profile
+                            .username=${comment.username}
+                            .profileId=${comment.profileId}
+                            .noSubtitle=${true}
+                            .hideAvatar=${true}
+                          ></app-mini-profile>
+                          <p class="comment-text">${comment.text}</p>
+                        </div>
+                      `
+                    )}
+                  </div>
+                `
+              : null}
+          </div>
         </section>
       </div>
     `;

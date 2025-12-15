@@ -320,31 +320,33 @@ export class PageProfile extends ScrollPage {
         </div>
 
         <div class="card posts-card">
-          <div class="chip-muted page-profile-posts-title">
-            ${CONSTANTS.PROFILE_PUBLISHED_RECIPES}
-          </div>
-          <div class="posts-container">
-            ${this.postsLoading
-              ? html`<app-fallback type="loading"></app-fallback>`
-              : this.posts.length === 0
-                ? html`<app-fallback type="empty"></app-fallback>`
-                : html`${this.posts.map((post) => {
-                    const username = cleanUsername;
-                    return html`<app-post-card
-                      .postId=${post.id}
-                      .authorId=${post.authorId}
-                      .username=${username}
-                      .showEdit=${isMe || isAdmin}
-                      .caption=${post.caption}
-                      .noProfile=${true}
-                      .image=${post.imageUrl || ""}
-                      .banned=${Boolean(post.banned)}
-                      .liked=${Boolean(post.liked)}
-                      .likes=${post.likes}
-                      .comments=${post.comments}
-                      .saves=${post.saves}
-                    ></app-post-card>`;
-                  })}`}
+          <div class="posts-scroll-content">
+            <div class="chip-muted page-profile-posts-title">
+              ${CONSTANTS.PROFILE_PUBLISHED_RECIPES}
+            </div>
+            <div class="posts-container">
+              ${this.postsLoading
+                ? html`<app-fallback type="loading"></app-fallback>`
+                : this.posts.length === 0
+                  ? html`<app-fallback type="empty"></app-fallback>`
+                  : html`${this.posts.map((post) => {
+                      const username = cleanUsername;
+                      return html`<app-post-card
+                        .postId=${post.id}
+                        .authorId=${post.authorId}
+                        .username=${username}
+                        .showEdit=${isMe || isAdmin}
+                        .caption=${post.title}
+                        .noProfile=${true}
+                        .image=${post.imageUrl || ""}
+                        .banned=${Boolean(post.banned)}
+                        .liked=${Boolean(post.liked)}
+                        .likes=${post.likes}
+                        .comments=${post.comments}
+                        .saves=${post.saves}
+                      ></app-post-card>`;
+                    })}`}
+            </div>
           </div>
         </div>
       </section>

@@ -1,5 +1,6 @@
 import { LitElement, html, unsafeCSS } from "lit";
 import layoutCSS from "../css/layout.css?inline";
+import mainCSS from "../css/main.css?inline";
 import { customElement, state } from "lit/decorators.js";
 import { AppLocation, parseLocation } from "../router";
 import { authStore } from "../state/auth-store";
@@ -216,7 +217,9 @@ export class AppRoot extends LitElement {
       case "new-post":
         return html`<page-new-post></page-new-post>`;
       case "edit-post":
-        return html`<page-edit-post .params=${this.location.params}></page-edit-post>`;
+        return html`<page-edit-post
+          .params=${this.location.params}
+        ></page-edit-post>`;
       case "search":
         return html`<page-search></page-search>`;
       case "conversations":
@@ -238,7 +241,7 @@ export class AppRoot extends LitElement {
     }
   }
 
-  static styles = [unsafeCSS(layoutCSS)];
+  static styles = [unsafeCSS(mainCSS), unsafeCSS(layoutCSS)];
 
   render() {
     const isAuth = authStore.isAuthenticated;

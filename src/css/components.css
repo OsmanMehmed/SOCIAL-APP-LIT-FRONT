@@ -98,3 +98,18 @@
   background: rgba(255, 75, 75, 0.1);
   color: var(--red-dark);
 }
+
+.component-container {
+  justify-self: center;
+  min-width: 25em;
+  width: 50%;
+  max-width: 52em;
+  padding-bottom: 0.8rem;
+  height: 90%;
+}
+
+@media (max-width: 65em) {
+  .component-container {
+    width: 90%;
+  }
+}

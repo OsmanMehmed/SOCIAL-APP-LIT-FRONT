@@ -23,9 +23,7 @@
 }
 
 .card {
-  border-radius: var(--radius-md);
   border: 1.25px solid rgba(255, 179, 71, 0.26);
-  box-shadow: var(--shadow-soft);
   padding-left: 0.75rem;
   padding-block: 1.2rem;
   padding-right: 1em;
@@ -78,6 +76,13 @@
   gap: 0.6rem;
   font-size: 0.8rem;
   color: var(--muted-foreground);
+}
+
+.stats > div {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
 }
 
 .footer {

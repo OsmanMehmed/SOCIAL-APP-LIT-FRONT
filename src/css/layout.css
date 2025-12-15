@@ -14,16 +14,12 @@ app-back-link {
   grid-row: 2;
 }
 
-.app-main {
-  grid-row: 3;
-}
-
 app-bottom-nav {
   grid-row: 4;
 }
 
 .app-main {
-  padding-block: 0.9rem;
+  grid-row: 3;
   justify-self: center;
   width: 80%;
   overflow-y: auto;
@@ -31,22 +27,7 @@ app-bottom-nav {
   min-height: 0;
 }
 
-.app-main::-webkit-scrollbar {
-  width: 8px;
-}
 
-.app-main::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.app-main::-webkit-scrollbar-thumb {
-  background: rgba(183, 32, 46, 0.45);
-  border-radius: var(--radius-full);
-}
-
-.app-main::-webkit-scrollbar-thumb:hover {
-  background: rgba(183, 32, 46, 0.7);
-}
 
 .toolbar {
   height: 2.5em;

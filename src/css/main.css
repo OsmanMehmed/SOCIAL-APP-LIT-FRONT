@@ -99,3 +99,21 @@ body::before {
   transform: scale(1.05);
   z-index: -1;
 }
+
+/* Global Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(183, 32, 46, 0.45);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(183, 32, 46, 0.7);
+}

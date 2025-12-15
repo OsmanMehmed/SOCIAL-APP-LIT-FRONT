@@ -109,5 +109,6 @@ export const CONSTANTS = {
   NEW_POST_SAVE_BUTTON: "Guardar receta",
   NEW_POST_REQUIRED_ERROR: "Debes indicar título, descripción y cuerpo.",
   EDIT_POST_SAVE_BUTTON: "Actualizar receta",
+  EDIT_POST_CANCEL_BUTTON: "Cancelar",
   EDIT_POST_CURRENT_IMAGE: "Imagen",
 };

@@ -67,11 +67,34 @@
 
 .comments-section {
   margin-top: 1.2rem;
+  /* Removed scroll properties to let the wrapper handle it */
+}
+
+.comments-scroll-wrapper {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
   max-height: 24rem;
   overflow-y: auto;
+  /* Ensure the scrollbar isn't flush against the content */
+  padding-right: 0.5rem; 
+}
+
+.comments-scroll-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.comments-scroll-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.comments-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(183, 32, 46, 0.45);
+  border-radius: var(--radius-full);
+}
+
+.comments-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(183, 32, 46, 0.7);
 }
 
 .comment-input {
@@ -169,4 +192,59 @@
   border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
+}
+
+.post-caption {
+  font-size: 1.1em;
+  font-style: italic;
+  color: var(--foreground);
+  border-left: 4px solid var(--primary);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  background: rgba(var(--primary-rgb), 0.05);
+  padding: 1rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  white-space: pre-wrap;
+}
+
+.post-gallery {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin: 1rem 0;
+}
+
+.post-gallery-item {
+  flex: 0 0 85%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.03);
+  scroll-snap-align: center;
+}
+
+.post-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Custom Scrollbar for Gallery */
+.post-gallery::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.post-gallery::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.post-gallery::-webkit-scrollbar-thumb {
+  background: rgba(183, 32, 46, 0.45);
+  border-radius: var(--radius-full);
+}
+
+.post-gallery::-webkit-scrollbar-thumb:hover {
+  background: rgba(183, 32, 46, 0.7);
 }

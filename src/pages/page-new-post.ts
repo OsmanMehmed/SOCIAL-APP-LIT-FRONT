@@ -248,7 +248,7 @@ export class PageNewPost extends LitElement {
       const updated = await postService.updateWithImages(postId, formData);
 
       if (updated.id) {
-        navigate(`/post/${updated.id}`);
+        this.goBack();
       } else {
         this.errorMessage = CONSTANTS.NO_RESULTS_TEXT;
       }
@@ -277,6 +277,20 @@ export class PageNewPost extends LitElement {
       return `${(size / (1024 * 1024)).toFixed(1)} MB`;
     }
     return `${(size / 1024).toFixed(1)} KB`;
+  }
+
+  private goBack() {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else if (this.params?.id) {
+      navigate(`/post/${this.params.id}`);
+    } else {
+      navigate("/");
+    }
+  }
+
+  private handleCancel() {
+    this.goBack();
   }
 
   render() {
@@ -494,6 +508,18 @@ export class PageNewPost extends LitElement {
             : null}
 
           <div class="form-actions">
+            ${this.isEdit
+              ? html`
+                  <button
+                    class="btn btn-secondary"
+                    type="button"
+                    @click=${this.handleCancel}
+                    style="margin-right: 0.5rem; background: var(--muted); border-color: transparent; color: var(--red-dark);"
+                  >
+                    ${CONSTANTS.EDIT_POST_CANCEL_BUTTON ?? "Cancelar"}
+                  </button>
+                `
+              : null}
             <button class="btn save-button" type="submit">
               ${submitLabel}
             </button>

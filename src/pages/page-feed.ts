@@ -87,6 +87,7 @@ export class PageFeed extends ScrollPage {
             <app-post-card
               .postId=${post.id}
               .authorId=${post.authorId}
+              .title=${post.title}
               .username=${username}
               .subtitle=${subtitle}
               .caption=${post.caption}

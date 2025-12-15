@@ -1,17 +1,4 @@
-.component-container {
-  justify-self: center;
-  min-width: 25em;
-  width: 50%;
-  max-width: 52em;
-  padding-bottom: 0.8rem;
-  height: 90%;
-}
 
-@media (max-width: 65em) {
-  .component-container {
-    width: 90%;
-  }
-}
 
 .profile-info {
   display: flex;
@@ -128,38 +115,39 @@
 }
 
 .posts-card {
-  max-height: 55vh;
-  overflow-y: auto;
   background: none;
   border: none;
   box-shadow: none;
-  padding-right: 1.5rem;
-  -webkit-mask-image:
-    linear-gradient(to left, #000 20px, transparent 20px),
-    linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
-  mask-image:
-    linear-gradient(to left, #000 20px, transparent 20px),
-    linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
-  -webkit-mask-composite: source-over;
-  mask-composite: add;
+  position: relative;
+  /* Removed mask to avoid scrollbar clipping */
+  padding-right: 0;
 }
 
-.posts-card::-webkit-scrollbar {
+.posts-scroll-content {
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.posts-scroll-content::-webkit-scrollbar {
   width: 8px;
 }
 
-.posts-card::-webkit-scrollbar-track {
+.posts-scroll-content::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.posts-card::-webkit-scrollbar-thumb {
+.posts-scroll-content::-webkit-scrollbar-thumb {
   background: rgba(183, 32, 46, 0.45);
   border-radius: var(--radius-full);
 }
 
-.posts-card::-webkit-scrollbar-thumb:hover {
+.posts-scroll-content::-webkit-scrollbar-thumb:hover {
   background: rgba(183, 32, 46, 0.7);
 }
+
+
+
+
 
 .posts-container {
   display: flex;

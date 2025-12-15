@@ -12,6 +12,7 @@ import { postService } from "../servicios/core/post-service";
 export class AppPostCard extends LitElement {
   @property() postId = "";
   @property() authorId = "";
+  @property() title = "";
   @property() description = "";
   @property() username = CONSTANTS.POST_CARD_DEFAULT_USERNAME;
   @property() subtitle = "";
@@ -111,15 +112,14 @@ export class AppPostCard extends LitElement {
         <article class=${
           !this.noShadow ? "card" : "card card-no-shadow"
         } @click=${this.openPost}>
-          <div class="image">
             ${
               this.image
-                ? html`<img src=${this.image} />`
-                : CONSTANTS.POST_CARD_FALLBACK_IMAGE_TEXT
+                ? html`<div class="image"><img src=${this.image} /></div>`
+                : null
             }
-          </div>
 
-          <div class="caption">${this.caption}</div>
+
+          <div class="title">${this.title}</div>
           <div class="footer">
             <div class="stats">
               <div>
