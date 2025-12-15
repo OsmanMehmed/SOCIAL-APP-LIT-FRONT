@@ -85,7 +85,7 @@ export class PagePost extends ScrollPage {
       if (this.postAuthorId) {
         const profile = await profileService.fetchProfile(this.postAuthorId);
         this.postAuthorUsername = profile.username.replace(/^@/, "");
-        this.postAuthorAvatar = profile.avatarUrl;
+        this.postAuthorAvatar = profile.avatarUrl || "";
         this.postAuthorSubtitle = profile.subtitle;
       }
     } catch (e) {
@@ -338,6 +338,12 @@ export class PagePost extends ScrollPage {
                       .value=${this.newComment}
                       @input=${this.onCommentInput}
                     />
+                    <button
+                      class="btn btn-pill btn-sm btn-send-comment"
+                      type="submit"
+                    >
+                      ${CONSTANTS.POST_COMMENT_SEND}
+                    </button>
                   </form>
                   ${this.commentItems.length === 0
                     ? html`<app-fallback

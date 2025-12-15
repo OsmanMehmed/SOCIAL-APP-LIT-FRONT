@@ -298,16 +298,29 @@ export class PageProfile extends ScrollPage {
                             </button>
                           `
                         : html`
-                            ${!this.isFriend
+                            ${this.isFriend
                               ? html`
+                                  <button
+                                    class="btn-no-fill btn-pill btn-sm friend-btn"
+                                    @click=${this.unfriend}
+                                    aria-label=${CONSTANTS.PROFILE_UNFRIEND_ALT}
+                                  >
+                                    <span class="label-default">
+                                      ${CONSTANTS.PROFILE_FRIEND_BUTTON}
+                                    </span>
+                                    <span class="label-hover">
+                                      ${CONSTANTS.PROFILE_UNFRIEND_SYMBOL}
+                                    </span>
+                                  </button>
+                                `
+                              : html`
                                   <button
                                     class="btn btn-pill btn-sm connect-btn"
                                     @click=${this.connect}
                                   >
                                     ${CONSTANTS.PROFILE_CONNECT_BUTTON}
                                   </button>
-                                `
-                              : null}
+                                `}
                             <button
                               class="btn-no-fill btn-pill btn-sm"
                               @click=${this.openDm}

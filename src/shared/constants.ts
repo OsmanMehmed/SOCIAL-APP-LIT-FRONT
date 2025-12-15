@@ -111,6 +111,9 @@ export const CONSTANTS = {
   EDIT_POST_SAVE_BUTTON: "Actualizar receta",
   EDIT_POST_CANCEL_BUTTON: "Cancelar",
   EDIT_POST_CURRENT_IMAGE: "Imagen",
+  DELETE_POST_BUTTON: "Eliminar receta",
+  DELETE_POST_CONFIRMATION:
+    "¿Estás seguro de que quieres eliminar esta receta?",
 
   // UI Icons
   ICON_EMPTY: "📂",

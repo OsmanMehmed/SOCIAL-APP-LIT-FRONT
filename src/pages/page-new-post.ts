@@ -290,6 +290,22 @@ export class PageNewPost extends LitElement {
     }
   }
 
+  private async handleDelete() {
+    if (!this.params?.id) return;
+    if (!confirm(CONSTANTS.DELETE_POST_CONFIRMATION)) return;
+
+    try {
+      this.isLoading = true;
+      await postService.delete(this.params.id);
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+      this.errorMessage = CONSTANTS.ERROR_TEXT;
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
   private handleCancel() {
     this.goBack();
   }
@@ -506,9 +522,20 @@ export class PageNewPost extends LitElement {
           ${this.errorMessage
             ? html`<div class="error">${this.errorMessage}</div>`
             : null}
-          <div class="form-actions">
+          <div
+            class="form-actions"
+            style="display: flex; align-items: center; justify-content: flex-end; width: 100%;"
+          >
             ${this.isEdit
               ? html`
+                  <button
+                    class="btn-no-fill btn-sm delete-btn"
+                    type="button"
+                    @click=${this.handleDelete}
+                    style="margin-right: auto; color: var(--error-color, #e74c3c);"
+                  >
+                    ${CONSTANTS.DELETE_POST_BUTTON}
+                  </button>
                   <button
                     class="btn-no-fill btn-sm"
                     type="button"
