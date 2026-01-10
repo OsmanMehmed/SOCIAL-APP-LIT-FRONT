@@ -60,8 +60,7 @@ export class PageRegister extends LitElement {
       authStore.loginWithAuth(auth);
       navigate("/feed");
     } catch (error) {
-      this.errorMessage = "Error al registrarse. El usuario podría existir.";
-      console.error("Register error:", error);
+      this.errorMessage = "Error al registrarse";
     } finally {
       this.isSubmitting = false;
     }

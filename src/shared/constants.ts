@@ -114,12 +114,8 @@ export const CONSTANTS = {
   DELETE_POST_BUTTON: "Eliminar receta",
   DELETE_POST_CONFIRMATION:
     "¿Estás seguro de que quieres eliminar esta receta?",
-
-  // UI Icons
   ICON_EMPTY: "📂",
   ICON_LOADING: "🥘",
   ICON_ERROR: "⚠️",
-
-  // Generic Messages
   ERROR_TEXT: "Ocurrió un error.",
 };

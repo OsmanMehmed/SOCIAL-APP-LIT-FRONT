@@ -61,7 +61,6 @@ export class PageLogin extends LitElement {
       navigate("/feed");
     } catch (error) {
       this.errorMessage = "Usuario o contraseña incorrectos.";
-      console.error("Login error:", error);
     } finally {
       this.isSubmitting = false;
     }
