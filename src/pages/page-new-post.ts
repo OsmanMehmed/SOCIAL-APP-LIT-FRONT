@@ -532,7 +532,7 @@ export class PageNewPost extends LitElement {
                     class="btn-no-fill btn-sm delete-btn"
                     type="button"
                     @click=${this.handleDelete}
-                    style="margin-right: auto; color: var(--error-color, #e74c3c);"
+                    style="margin-right: auto; color: var(#e74c3c);"
                   >
                     ${CONSTANTS.DELETE_POST_BUTTON}
                   </button>

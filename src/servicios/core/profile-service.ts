@@ -17,4 +17,7 @@ export const profileService = {
   async uploadAvatar(id: string, file: File): Promise<UserProfile> {
     return profileHttp.uploadAvatar(id, file);
   },
+  async deleteProfile(id: string): Promise<void> {
+    return profileHttp.deleteProfile(id);
+  },
 };

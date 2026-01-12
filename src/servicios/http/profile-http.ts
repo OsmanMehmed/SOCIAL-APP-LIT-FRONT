@@ -27,4 +27,9 @@ export const profileHttp = {
       headers: { "X-User-Id": authStore.currentUserId },
     });
   },
+  deleteProfile: (id: string) =>
+    request<void>(`/profiles/${id}`, {
+      method: "DELETE",
+      headers: { "X-User-Id": authStore.currentUserId },
+    }),
 };

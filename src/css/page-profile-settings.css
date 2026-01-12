@@ -21,6 +21,10 @@
   width: 50%;
 }
 
+.delete-btn {
+  float: right;
+}
+
 .form-error {
   color: #c5292a;
   font-size: 0.9rem;

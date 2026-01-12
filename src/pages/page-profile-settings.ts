@@ -139,6 +139,17 @@ export class PageProfileSettings extends LitElement {
       <div class="component-container">
         <form class="edit-profile-card card" @submit=${this.save}>
           <div class="chip-muted">${CONSTANTS.PROFILE_SETTINGS_TITLE}</div>
+          <div>
+            <button
+              class="btn-no-fill btn-sm delete-btn"
+              style="color: var(#e74c3c); border-color: var(#e74c3c);"
+              type="button"
+              @click=${this.deleteAccount}
+              ?disabled=${this.isSaving}
+            >
+              Eliminar Cuenta
+            </button>
+          </div>
 
           <div
             style="margin: 1rem 0; cursor: pointer; display: flex; justify-content: center;"
@@ -199,5 +210,32 @@ export class PageProfileSettings extends LitElement {
         </form>
       </div>
     `;
+  }
+
+  private deleteAccount() {
+    if (
+      confirm(
+        "¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer y borrará todo tu contenido."
+      )
+    ) {
+      const profileId =
+        this.profile?.id ||
+        authStore.currentUserId ||
+        CONSTANTS.CURRENT_USER_ID;
+      if (!profileId) return;
+
+      this.isSaving = true;
+      profileService
+        .deleteProfile(profileId)
+        .then(() => {
+          // Logout and redirect
+          authStore.logout();
+          navigate("/login");
+        })
+        .catch((err) => {
+          this.error = "Error al eliminar la cuenta. Inténtalo de nuevo.";
+          this.isSaving = false;
+        });
+    }
   }
 }
