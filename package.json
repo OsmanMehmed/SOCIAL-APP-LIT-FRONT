@@ -2,7 +2,7 @@
   "name": "social-app-lit",
   "version": "0.0.1",
   "private": true,
-  "description": "Web social application developed using Lit, and shadcn/ui",
+  "description": "Web social application developed using Lit",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
@@ -19,17 +19,6 @@
     "vite": "^4.5.0",
     "vite-plugin-static-copy": "^0.17.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/OsmanMehmed/SOCIAL-APP-LIT-FRONT.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/OsmanMehmed/SOCIAL-APP-LIT-FRONT/issues"
-  },
-  "homepage": "https://github.com/OsmanMehmed/SOCIAL-APP-LIT-FRONT#readme",
   "engines": {
     "node": ">=16.0.0"
   }
