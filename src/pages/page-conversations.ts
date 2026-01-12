@@ -12,7 +12,7 @@ import type { Conversation } from "../modelos/conversation";
 import type { UserProfile } from "../modelos/user-profile";
 import { authStore } from "../state/auth-store";
 import { CONSTANTS } from "./../shared/constants";
-import { formatTimestamp } from "../utils/dates";
+import { formatTimestamp } from "../shared/dates";
 
 @customElement("page-conversations")
 export class PageConversations extends ScrollPage {
