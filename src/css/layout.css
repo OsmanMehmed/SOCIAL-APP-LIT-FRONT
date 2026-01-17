@@ -1,0 +1,80 @@
+.app-shell {
+  display: grid;
+  grid-template-rows: var(--toolbar-height) auto 1fr var(--bottom-nav-height);
+  height: 100vh;
+  background: transparent;
+  overflow: hidden;
+}
+
+app-toolbar {
+  grid-row: 1;
+}
+
+app-back-link {
+  grid-row: 2;
+}
+
+app-bottom-nav {
+  grid-row: 4;
+}
+
+.app-main {
+  grid-row: 3;
+  justify-self: center;
+  width: 80%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  margin-bottom: 1.5em;
+}
+
+
+
+.toolbar {
+  height: 2.5em;
+  justify-self: center;
+  background-color: var(--background);
+  width: 82%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.9rem;
+  margin-top: 0.8em;
+  border-bottom: 1.25px solid var(--border-subtle);
+  backdrop-filter: blur(12.5px);
+  box-shadow: 0 5px 17.5px rgba(183, 32, 46, 0.12);
+  border-radius: var(--radius-md);
+}
+
+.bottom-nav {
+  height: 2.5em;
+  justify-self: center;
+  background-color: var(--background);
+  width: 82%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(12.5px);
+  border-bottom: 1.25px solid var(--border-subtle);
+  box-shadow: 0 5px 17.5px rgba(183, 32, 46, 0.12);
+}
+
+.page-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  color: var(--red-dark);
+  cursor: default;
+}
+
+.flow-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  place-content: space-between;
+}

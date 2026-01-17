@@ -1,0 +1,116 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.42rem 1rem;
+  border-radius: var(--radius-full);
+  border: 1.25px solid transparent;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 5px 12.5px rgba(255, 75, 75, 0.28);
+  width: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-0.875px);
+  box-shadow: 0 0.5em 0.8em rgba(129, 39, 39, 0.23);
+}
+
+.btn-no-fill {
+  font-weight: bold;
+  background: transparent;
+  border-width: 0px;
+  color: var(--accent);
+  box-shadow: none;
+  border-radius: 18.75px;
+  cursor: pointer;
+}
+
+.btn-no-fill:hover {
+  background: rgba(255, 75, 75, 0.08);
+}
+
+.btn-pill {
+  border-radius: var(--radius-full);
+}
+
+.btn-sm {
+  padding: 0.22rem 0.7rem;
+  font-size: 0.76rem;
+}
+
+.input {
+  width: 100%;
+  padding-block: 0.55rem;
+  padding-left: 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1.25px solid var(--border-subtle);
+  background: #ffffff;
+  color: var(--foreground);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.16s ease;
+}
+
+.input::placeholder {
+  color: rgba(138, 74, 79, 0.6);
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2.5px rgba(255, 75, 75, 0.16);
+}
+
+.card {
+  border-radius: var(--radius-md);
+  border: 1.25px solid var(--border-subtle);
+  background:
+    radial-gradient(circle at top left, rgba(255, 75, 75, 0.05), transparent),
+    #ffffff;
+  box-shadow: var(--shadow-soft);
+  padding-right: 1em;
+  padding-left: 0.8rem;
+  padding-block: 0.8rem;
+  margin-block: 0.9rem;
+  width: 100%;
+  height: max-content;
+}
+
+.chip-muted {
+  padding: 0.14rem 0.7rem;
+  font-size: 0.7rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 75, 75, 0.1);
+  color: var(--muted-foreground);
+  display: inline-flex;
+  align-self: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.recipe-tag {
+  padding: 0.16rem 0.6rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  background: rgba(255, 75, 75, 0.1);
+  color: var(--red-dark);
+}
+
+.component-container {
+  justify-self: center;
+  min-width: 25em;
+  width: 50%;
+  max-width: 52em;
+  padding-bottom: 0.8rem;
+  height: 90%;
+}
+
+@media (max-width: 65em) {
+  .component-container {
+    width: 90%;
+  }
+}

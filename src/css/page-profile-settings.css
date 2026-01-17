@@ -1,0 +1,32 @@
+.buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.edit-profile-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding-right: 1em;
+}
+
+.edit-profile-input {
+  width: 95%;
+}
+
+.component-container {
+  justify-self: center;
+  min-width: 20em;
+  width: 50%;
+}
+
+.delete-btn {
+  float: right;
+}
+
+.form-error {
+  color: #c5292a;
+  font-size: 0.9rem;
+  margin-top: -0.25rem;
+}

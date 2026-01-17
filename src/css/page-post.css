@@ -1,0 +1,257 @@
+.component-container {
+  justify-self: center;
+  min-width: 28em;
+  max-width: 90em;
+  width: 60%;
+  padding-right: 1.5em;
+}
+
+.back {
+  font-size: 1rem;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  margin-bottom: 0.4rem;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  justify-self: right;
+  gap: 1rem;
+}
+
+.post-image {
+  width: 100%;
+  margin: 1rem 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.post-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.image-placeholder {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--muted-foreground);
+  font-size: 0.95rem;
+}
+
+.post-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--foreground);
+  margin: 1rem 0;
+}
+
+.post-actions {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 8em;
+}
+
+.like-btn--active {
+  background: transparent;
+  border: 1px solid;
+  box-shadow: none;
+}
+
+.btn-send-comment {
+  width: 8em;
+  margin-right: 2em;
+}
+
+.comments-section {
+  margin-top: 1.2rem;
+  /* Removed scroll properties to let the wrapper handle it */
+}
+
+.comments-scroll-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-height: 24rem;
+  overflow-y: auto;
+  /* Ensure the scrollbar isn't flush against the content */
+  padding-right: 0.5rem; 
+}
+
+.comments-scroll-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.comments-scroll-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.comments-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(228, 121, 112, 0.4);
+  border-radius: var(--radius-full);
+}
+
+.comments-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(228, 121, 112, 0.7);
+}
+
+.comment-input {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  margin-left: 0.5em;
+  align-items: center;
+}
+
+.comments-title {
+  width: 100%;
+}
+
+.comment-input .input {
+  flex: 1;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.comment-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 179, 71, 0.26);
+  background: var(--background);
+  margin-right: 0.5em;
+}
+
+.comment-text {
+  margin: 0;
+  color: var(--muted-foreground);
+}
+
+.vet-btn {
+  width: 8em;
+}
+
+.vet-btn-vetted {
+  background: transparent;
+  border: 1px solid;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.vet-btn-vetted .label-hover {
+  display: none;
+}
+
+.vet-btn-vetted:hover .label-default {
+  display: none;
+}
+
+.vet-btn-vetted:hover .label-hover {
+  display: inline;
+}
+
+.edit-btn {
+  width: 7em;
+}
+
+.no-results {
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.post-stats {
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  margin: 0.6rem 0 0.2rem 0;
+  color: var(--muted-foreground);
+}
+
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.tag {
+  background-color: var(--accent);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.post-caption {
+  font-size: 1.1em;
+  font-style: italic;
+  color: var(--foreground);
+  border-left: 4px solid var(--primary);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  background: rgba(var(--primary-rgb), 0.05);
+  padding: 1rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  white-space: pre-wrap;
+}
+
+.post-gallery {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  margin: 1rem 0;
+}
+
+.post-gallery-item {
+  flex: 0 0 85%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.03);
+  scroll-snap-align: center;
+}
+
+.post-gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Custom Scrollbar for Gallery */
+.post-gallery::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.post-gallery::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.post-gallery::-webkit-scrollbar-thumb {
+  background: rgba(228, 121, 112, 0.4);
+  border-radius: var(--radius-full);
+}
+
+.post-gallery::-webkit-scrollbar-thumb:hover {
+  background: rgba(228, 121, 112, 0.7);
+}

@@ -1,0 +1,101 @@
+.component-container {
+  justify-self: center;
+  min-width: 20em;
+  max-width: 40em;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: calc(95vh - var(--toolbar-height) - var(--bottom-nav-height) - 2.5rem);
+  min-height: calc(95vh - var(--toolbar-height) - var(--bottom-nav-height) - 2.5rem);
+}
+
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-block: 1rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-inline: 1em;
+  padding-block: 1.25rem;
+  position: relative;
+  -webkit-mask-image:
+    linear-gradient(to left, #000 14px, transparent 14px),
+    linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  mask-image:
+    linear-gradient(to left, #000 14px, transparent 14px),
+    linear-gradient(to bottom, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  -webkit-mask-composite: source-over;
+  mask-composite: add;
+  flex: 1;
+  min-height: 0;
+}
+
+.thread::-webkit-scrollbar {
+  width: 8px;
+}
+
+.thread::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thread::-webkit-scrollbar-thumb {
+  background: rgba(183, 32, 46, 0.45);
+  border-radius: var(--radius-full);
+}
+
+.thread::-webkit-scrollbar-thumb:hover {
+  background: rgba(183, 32, 46, 0.7);
+}
+
+
+
+.msg-other {
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-md);
+  background: var(--color-tertiary);
+  font-size: 0.8rem;
+  max-width: 70%;
+}
+
+.msg-me {
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  max-width: 70%;
+  align-self: flex-end;
+  background: var(--color-quinary);
+  color: #290202;
+  
+}
+
+form {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+input {
+  flex: 1;
+}
+
+.send-message-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.send-button {
+  width: 9em;
+}
+
+.send-button-container {
+  width: 100%;
+  text-align: right;
+}
+
+.no-results {
+  text-align: center;
+  color: var(--muted-foreground);
+}
